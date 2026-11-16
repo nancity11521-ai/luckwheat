@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="dark scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LUCK WHEAT 幸运无限 - 官方网站</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            surface: '#000000',
+            'surface-elevated': '#161617',
+            'surface-card': '#1d1d1f',
+            'apple-blue': '#2997ff',
+            'apple-blue-hover': '#0077ed',
+            'amber-lucky': '#ff9500',
+            'amber-lucky-glow': '#ffaa33',
+            'apple-gray': '#86868b',
+            'apple-border': 'rgba(255, 255, 255, 0.12)'
+          },
+          fontFamily: {
+            sans: ['"Noto Sans SC"', '-apple-system', 'BlinkMacSystemFont', '"SF Pro Display"', '"SF Pro Icons"', '"Helvetica Neue"', 'Helvetica', 'Arial', 'sans-serif'],
+            mono: ['"Space Grotesk"', 'ui-monospace', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #000000;
+      color: #f5f5f7;
+      font-family: -apple-system, BlinkMacSystemFont, "Noto Sans SC", "SF Pro Text", "Helvetica Neue", sans-serif;
+      overflow-x: hidden;
+    }
+    .apple-glass {
+      background: rgba(22, 22, 23, 0.8);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+    }
+    .carousel-slide {
+      transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .carousel-slide.active {
+      opacity: 1;
+      visibility: visible;
+      transform: scale(1);
+      pointer-events: auto;
+    }
+    .carousel-slide.inactive {
+      opacity: 0;
+      visibility: hidden;
+      transform: scale(0.985);
+      pointer-events: none;
+    }
+    /* Dot progress indicator */
+    .indicator-pill {
+      transition: all 0.3s ease;
+    }
+    .indicator-pill.active {
+      width: 32px;
+      background-color: #f5f5f7;
+    }
+    .indicator-pill.inactive {
+      width: 8px;
+      background-color: rgba(255, 255, 255, 0.35);
+    }
+    .indicator-pill.inactive:hover {
+      background-color: rgba(255, 255, 255, 0.6);
+    }
+  </style>
+</head>
+<body class="bg-black text-[#f5f5f7] antialiased selection:bg-amber-lucky selection:text-black">
+
+  <!-- Apple Global Navigation Bar -->
+  <header class="fixed top-0 inset-x-0 z-50 apple-glass border-b border-white/[0.08] transition-all duration-300">
+    <div class="max-w-[1280px] mx-auto px-6 h-12 flex items-center justify-between text-xs font-normal tracking-tight text-[#d2d2d7]">
+      <!-- Brand Logo (中英文 LUCK WHEAT 幸运无限) -->
+      <a href="#" class="flex items-center gap-2.5 text-white hover:opacity-80 transition group">
+        <img src="https://lh3.googleusercontent.com/aida/AEtjO1VUKGHqoBnSlEOByROsD9ZIEiMD6sZ9SOAqZQcxqrU5NP0K5_kLk-cZyh0DmjjtSHFjeL2jbDBJLqPUyVUNoVELKpXGTVapUnutP-kKcpjNclgugLTyaA6Zu_KVn4Hta4JLyVm8C75SqAU9ddRJsH3n-KeaH61lGK6LNKm0s1VtF98Ayzh_-6QOOxxRITUZRn41I2do9cQwf0M8kX1frXyQ1kaT82gTqg89y0KFyf9lwV_MiPZt8U4GAPsy" alt="LUCK WHEAT 徽标" class="w-5 h-5 object-contain group-hover:scale-105 transition-transform" />
+        <div class="flex items-baseline gap-2">
+          <span class="font-mono font-bold tracking-wider text-sm text-white">LUCK WHEAT</span>
+          <span class="font-semibold text-sm text-[#e6e6ea]">幸运无限</span>
+        </div>
+      </a>
+
+      <!-- Primary Nav Items -->
+      <nav class="hidden md:flex items-center space-x-8 text-[12px] text-[#cccccc]">
+        <a href="#hero-banner" class="text-white font-medium hover:text-white transition">首页</a>
+        <a href="#products" class="hover:text-white transition">产品系列</a>
+        <a href="#lucky-mini" class="text-[#f5f5f7] flex items-center gap-1 hover:text-amber-lucky transition">
+          <span>Lucky Mini 3.7"</span>
+          <span class="w-1.5 h-1.5 rounded-full bg-amber-lucky animate-pulse"></span>
+        </a>
+        <a href="#lucky-tab" class="hover:text-white transition">Lucky Tab</a>
+        <a href="#ecosystem" class="hover:text-white transition">生态与配件</a>
+        <a href="#factory" class="hover:text-white transition">自研工厂</a>
+        <a href="#support" class="hover:text-white transition">服务与保障</a>
+      </nav>
+
+      <!-- Right CTAs (纯中文显示) -->
+      <div class="flex items-center gap-4">
+        <a href="#reserve" class="bg-white text-black hover:bg-[#e8e8ed] px-4 py-1.5 rounded-full text-xs font-medium transition shadow-sm hover:scale-105 active:scale-95 duration-150">
+          立即预约
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Section 1: Apple-style Full-width Interactive Carousel Hero Banner -->
+  <section id="hero-banner" class="relative pt-12 min-h-[760px] lg:min-h-[820px] w-full overflow-hidden bg-black flex flex-col justify-between border-b border-white/[0.06]">
+    
+    <!-- Carousel Slides Container -->
+    <div class="relative w-full h-[680px] lg:h-[720px] max-w-[1440px] mx-auto">
+
+      <!-- SLIDE 1: Lucky Mini 3.7" AI 旗舰手机 -->
+      <div id="slide-0" class="carousel-slide active absolute inset-0 flex flex-col items-center justify-between pt-14 pb-8 px-6 text-center">
+        <!-- Top Typography -->
+        <div class="z-20 max-w-3xl flex flex-col items-center">
+          <span class="text-xs font-mono uppercase tracking-[0.25em] text-amber-lucky font-medium mb-3 flex items-center gap-2">
+            <span class="inline-block w-1.5 h-1.5 rounded-full bg-amber-lucky"></span>
+            AI 时代的全新数字体态 // 旗靓小机
+          </span>
+          <h1 class="text-4xl sm:text-5xl lg:text-6xl font-semibold tracking-tight text-white mb-3">
+            Lucky Mini 3.7"
+          </h1>
+          <p class="text-2xl sm:text-3xl font-normal text-[#e6e6ea] tracking-tight mb-2">
+            拥有它，就拥有幸运。
+          </p>
+          <p class="text-sm sm:text-base text-[#86868b] max-w-xl font-normal leading-relaxed mb-4">
+            黄金小屏手感，专注「AI + 精致数码」。专属物理微动 Lucky 键，一键呼出端侧大模型。
+          </p>
+          <!-- Apple-style Blue Action Links -->
+          <div class="flex items-center justify-center gap-7 text-[15px]">
+            <a href="#specs" class="text-apple-blue hover:underline hover:text-apple-blue-hover flex items-center gap-1 font-normal group">
+              进一步了解 <span class="group-hover:translate-x-0.5 transition-transform">&gt;</span>
+            </a>
+            <a href="#reserve" class="text-apple-blue hover:underline hover:text-apple-blue-hover flex items-center gap-1 font-normal group">
+              立即预订 <span class="group-hover:translate-x-0.5 transition-transform">&gt;</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Center Floating Product Hero Visual -->
+        <div class="relative w-full max-w-4xl h-[360px] lg:h-[400px] flex items-center justify-center z-10 -mt-6">
+          <div class="absolute inset-0 bg-radial from-amber-lucky/15 via-transparent to-transparent blur-3xl pointer-events-none"></div>
+          <img src="https://lh3.googleusercontent.com/aida/AEtjO1XlX35iJhPXigpiMmyToZUDAAql71VGDOCLAx1LdV4ONET3B3lg51Y8dqBZB8n_tondgMCS6UzrrpLV1S5TDWrUBY_G1AsmjKzKWPHQdtn_RKYoj4Y0Cq56ciaY9BOD0BCUfKKYHJsSaejhPCPYzLa-OkSnQ3aRpZ3mUJt8rsigOwwzL7C3oGOA4EGTHrowJbRA4ViBrs8FXWxe7FwrHLFiT46xu-uaKVDiIa2Xg58-IdWF3JO-H99Ps7_j" alt="Lucky Mini 3.7 Flagship AI Phone" 
+               class="max-h-[340px] lg:max-h-[380px] w-auto object-contain drop-shadow-[0_25px_50px_rgba(0,0,0,0.9)] transform hover:scale-[1.01] transition-transform duration-700" />
+          
+          <!-- Floating Feature Pill Badge -->
+          <div class="absolute bottom-4 left-6 lg:left-12 bg-[#161617]/85 backdrop-blur-md border border-white/10 px-4 py-2 rounded-full flex items-center gap-2.5 shadow-2xl">
+            <span class="w-2.5 h-2.5 rounded-full bg-amber-lucky animate-ping"></span>
+            <span class="text-xs font-mono text-zinc-300">0.2s 极速直达专属 AI // 实体微动 Lucky 键</span>
+          </div>
+
+          <div class="absolute bottom-4 right-6 lg:right-12 bg-[#161617]/85 backdrop-blur-md border border-white/10 px-4 py-2 rounded-full hidden sm:flex items-center gap-2 shadow-2xl">
+            <span class="material-symbols-outlined text-xs text-zinc-400">precision_manufacturing</span>
+            <span class="text-xs font-mono text-zinc-300">CNC 钛金精工中框 · ￥1999 起</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 2: LUCKY Tab 8.68" 便携平板 -->
+      <div id="slide-1" class="carousel-slide inactive absolute inset-0 flex flex-col items-center justify-between pt-14 pb-8 px-6 text-center">
+        <!-- Top Typography -->
+        <div class="z-20 max-w-3xl flex flex-col items-center">
+          <span class="text-xs font-mono uppercase tracking-[0.25em] text-cyan-400 font-medium mb-3 flex items-center gap-2">
+            <span class="inline-block w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
+            全新形态硬件矩阵 // 预计 Q2 开售
+          </span>
+          <h2 class="text-4xl sm:text-5xl lg:text-6xl font-semibold tracking-tight text-white mb-3">
+            LUCKY Tab 8.68"
+          </h2>
+          <p class="text-2xl sm:text-3xl font-normal text-[#e6e6ea] tracking-tight mb-2">
+            轻薄在握，灵感无限。
+          </p>
+          <p class="text-sm sm:text-base text-[#86868b] max-w-xl font-normal leading-relaxed mb-4">
+            全铝一体化机身，CNC 倒角极窄边框。随身生产力与大模型协同双屏互联体验。
+          </p>
+          <!-- Apple Blue Links -->
+          <div class="flex items-center justify-center gap-7 text-[15px]">
+            <a href="#lucky-tab" class="text-apple-blue hover:underline hover:text-apple-blue-hover flex items-center gap-1 font-normal group">
+              查看详细规格 <span class="group-hover:translate-x-0.5 transition-transform">&gt;</span>
+            </a>
+            <a href="#reserve" class="text-apple-blue hover:underline hover:text-apple-blue-hover flex items-center gap-1 font-normal group">
+              加入预约清单 <span class="group-hover:translate-x-0.5 transition-transform">&gt;</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Center Tablet Visual -->
+        <div class="relative w-full max-w-4xl h-[360px] lg:h-[400px] flex items-center justify-center z-10 -mt-6">
+          <div class="absolute inset-0 bg-radial from-cyan-500/10 via-transparent to-transparent blur-3xl pointer-events-none"></div>
+          <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAvQDSCvwCAY_AL7_XrBen_pVFsD4d0IuzGrVH3bu4daeLD33NN-RrmPMKrMXIO_jxeO_sLnwdgI-mLc0ynU3lgE6GOU8rdzQFykHXhJu8AP1doEtYhU0MCPBqBKR58i404FINFBwYRyPWCgGFdvHDICSTQASabJFhsCbrGWkjDnkYiK6CLkG6-N3icTubkn4C2PBFDlGm8EB6hdiB_wR-47BMdtbWglfQ2QX6xRVFeddONjt5VYhgavLyALhjc28-EXrY6M3pWTwP1" alt="Lucky Tab 8.68 Product Studio Shot" 
+               class="max-h-[340px] lg:max-h-[380px] w-auto object-contain drop-shadow-[0_25px_50px_rgba(0,0,0,0.9)] transform hover:scale-[1.01] transition-transform duration-700" />
+          
+          <div class="absolute bottom-4 left-6 lg:left-12 bg-[#161617]/85 backdrop-blur-md border border-white/10 px-4 py-2 rounded-full flex items-center gap-2 shadow-2xl">
+            <span class="material-symbols-outlined text-xs text-cyan-400">tablet_mac</span>
+            <span class="text-xs font-mono text-zinc-300">单手可握黄金比例 · 钛银 Frost Silver</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 3: 专属 Lucky 键与配件生态 -->
+      <div id="slide-2" class="carousel-slide inactive absolute inset-0 flex flex-col items-center justify-between pt-14 pb-8 px-6 text-center">
+        <!-- Top Typography -->
+        <div class="z-20 max-w-3xl flex flex-col items-center">
+          <span class="text-xs font-mono uppercase tracking-[0.25em] text-emerald-400 font-medium mb-3 flex items-center gap-2">
+            <span class="inline-block w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+            生态与周边创新 // 告别小众买壳难
+          </span>
+          <h2 class="text-4xl sm:text-5xl lg:text-6xl font-semibold tracking-tight text-white mb-3">
+            配件全系通用，随手可买。
+          </h2>
+          <p class="text-2xl sm:text-3xl font-normal text-[#e6e6ea] tracking-tight mb-2">
+            街头机能挂绳，让科技成为佩戴的饰物。
+          </p>
+          <p class="text-sm sm:text-base text-[#86868b] max-w-xl font-normal leading-relaxed mb-4">
+            标配高密度伞绳与快拆不锈钢扣，全面兼容主流标准化磁吸生态与钢化膜。
+          </p>
+          <!-- Apple Blue Links -->
+          <div class="flex items-center justify-center gap-7 text-[15px]">
+            <a href="#ecosystem" class="text-apple-blue hover:underline hover:text-apple-blue-hover flex items-center gap-1 font-normal group">
+              探索配件生态 <span class="group-hover:translate-x-0.5 transition-transform">&gt;</span>
+            </a>
+            <a href="#reserve" class="text-apple-blue hover:underline hover:text-apple-blue-hover flex items-center gap-1 font-normal group">
+              挑选个性化绳扣 <span class="group-hover:translate-x-0.5 transition-transform">&gt;</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Center Lanyard Visual -->
+        <div class="relative w-full max-w-4xl h-[360px] lg:h-[400px] flex items-center justify-center z-10 -mt-6">
+          <div class="absolute inset-0 bg-radial from-amber-500/10 via-transparent to-transparent blur-3xl pointer-events-none"></div>
+          <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBI3jSsEooc3u6q3gC7fIadfHppdVrpKE-0Ycc7ubCkxEErRi_pUigc7W3J_S85UCWxwvpDCoJVjXHF0DiHS6qYbB1DrKczIcVZRYDfbCUTOpRcH8qbJHZ9QHAV-S4qcb96l3eQle1fIBv7_RzNipqFUFSji3gNSO9UOV6CEjm53dbXNzRbbT-X2oWgxUhrEXhtU_06lMErEhD-vLiNsAdXoWEj-oz0-ruU6FqNUhP5TiUU3ddxvCe6MjzC3bUxEuew6mBuXXiBDkv6" alt="Modular Tactical Tech Lanyard Cord" 
+               class="max-h-[340px] lg:max-h-[380px] w-auto object-contain drop-shadow-[0_25px_50px_rgba(0,0,0,0.9)] transform hover:scale-[1.01] transition-transform duration-700" />
+          
+          <div class="absolute bottom-4 left-6 lg:left-12 bg-[#161617]/85 backdrop-blur-md border border-white/10 px-4 py-2 rounded-full flex items-center gap-2 shadow-2xl">
+            <span class="material-symbols-outlined text-xs text-amber-lucky">verified</span>
+            <span class="text-xs font-mono text-zinc-300">CNC 钛金快拆扣环 · 50KG 抗拉强度伞绳</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Carousel Controls (Apple Style: Minimalist translucent arrows & capsule dots) -->
+    <!-- Previous Button -->
+    <button id="prevBtn" aria-label="上一张" 
+            class="absolute left-4 lg:left-10 top-1/2 -translate-y-1/2 z-30 w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 active:scale-95 text-white/80 hover:text-white flex items-center justify-center backdrop-blur-md border border-white/10 transition duration-200">
+      <span class="material-symbols-outlined text-2xl">chevron_left</span>
+    </button>
+    <!-- Next Button -->
+    <button id="nextBtn" aria-label="下一张" 
+            class="absolute right-4 lg:right-10 top-1/2 -translate-y-1/2 z-30 w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 active:scale-95 text-white/80 hover:text-white flex items-center justify-center backdrop-blur-md border border-white/10 transition duration-200">
+      <span class="material-symbols-outlined text-2xl">chevron_right</span>
+    </button>
+
+    <!-- Bottom Indicator Bar with Dot/Pill & Pause/Play Control -->
+    <div class="w-full pb-6 z-30 flex items-center justify-center gap-4">
+      <div class="flex items-center gap-2.5 px-3 py-1.5 rounded-full bg-white/5 backdrop-blur-md border border-white/10">
+        <button class="indicator-pill active h-2 rounded-full" data-slide="0" aria-label="Slide 1"></button>
+        <button class="indicator-pill inactive h-2 rounded-full" data-slide="1" aria-label="Slide 2"></button>
+        <button class="indicator-pill inactive h-2 rounded-full" data-slide="2" aria-label="Slide 3"></button>
+      </div>
+      <!-- Play/Pause Toggle -->
+      <button id="playPauseBtn" aria-label="暂停轮播" 
+              class="w-7 h-7 rounded-full bg-white/5 hover:bg-white/15 border border-white/10 flex items-center justify-center text-white/70 hover:text-white text-xs transition">
+        <span class="material-symbols-outlined text-[16px]" id="playPauseIcon">pause</span>
+      </button>
+    </div>
+
+  </section>
+
+  <!-- Section 2: Quick Highlights Ribbon (Apple Key Highlights) -->
+  <section class="border-b border-white/[0.08] bg-[#0c0c0d] py-6 px-6">
+    <div class="max-w-[1200px] mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+      <div class="flex flex-col items-center">
+        <span class="text-2xl font-bold font-mono text-white mb-0.5">3.7"</span>
+        <span class="text-xs text-[#86868b]">黄金小屏手感 · 极致便携</span>
+      </div>
+      <div class="flex flex-col items-center border-l border-white/[0.08]">
+        <span class="text-2xl font-bold font-mono text-amber-lucky mb-0.5">0.2s</span>
+        <span class="text-xs text-[#86868b]">专属硬件按键 · 瞬时一键直达 AI</span>
+      </div>
+      <div class="flex flex-col items-center border-l border-white/[0.08]">
+        <span class="text-2xl font-bold font-mono text-white mb-0.5">100%</span>
+        <span class="text-xs text-[#86868b]">全系通用标准 · 壳膜随买随用</span>
+      </div>
+      <div class="flex flex-col items-center border-l border-white/[0.08]">
+        <span class="text-2xl font-bold font-mono text-white mb-0.5">自研自产</span>
+        <span class="text-xs text-[#86868b]">高精自动化产线 · 直达全球</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 3: Apple-style Bento Grid Highlights (4 Distinct Feature Showcase Cards) -->
+  <section id="products" class="py-20 lg:py-28 px-6 max-w-[1240px] mx-auto">
+    
+    <div class="text-center max-w-2xl mx-auto mb-16">
+      <p class="text-xs font-mono uppercase tracking-[0.2em] text-[#86868b] mb-3">PRECISION ENGINEERING // 精克美学</p>
+      <h2 class="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight text-white mb-4">
+        每一处细节，都有幸运的份量。
+      </h2>
+      <p class="text-sm sm:text-base text-[#86868b]">
+        以工业理性重构克制小屏，用高级精工与灵动交互，对抗大屏同质化的无趣时代。
+      </p>
+    </div>
+
+    <!-- 2x2 Bento Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+      <!-- CARD 1: 专属 Lucky 硬件按键演示 -->
+      <div class="bg-[#161617] rounded-3xl p-8 lg:p-10 border border-white/[0.08] hover:border-white/20 transition-all duration-300 flex flex-col justify-between group overflow-hidden relative">
+        <div class="absolute -right-16 -top-16 w-64 h-64 bg-amber-lucky/10 rounded-full blur-3xl pointer-events-none group-hover:bg-amber-lucky/20 transition-colors"></div>
+        <div class="z-10">
+          <span class="text-[11px] font-mono tracking-wider text-amber-lucky uppercase bg-amber-lucky/10 px-2.5 py-1 rounded-full border border-amber-lucky/20">
+            01 / TACTILE KEY
+          </span>
+          <h3 class="text-2xl sm:text-3xl font-semibold text-white mt-4 mb-2 tracking-tight">
+            专属 Lucky 物理按键
+          </h3>
+          <p class="text-sm text-[#86868b] leading-relaxed max-w-md">
+            定制级微动机械触感，0.2 秒极速一键呼出端侧大模型。支持轻触、长按、双击三种模式，随手记录灵感与交互。
+          </p>
+        </div>
+
+        <!-- Visual representation of key trigger -->
+        <div class="mt-8 pt-6 border-t border-white/[0.06] flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-black border border-amber-lucky/40 flex items-center justify-center text-amber-lucky shadow-[0_0_15px_rgba(255,149,0,0.3)]">
+              <span class="material-symbols-outlined text-xl">touch_app</span>
+            </div>
+            <div>
+              <div class="text-xs font-medium text-white">微动机械回弹 (60gf 压感)</div>
+              <div class="text-[11px] text-[#86868b]">物理按压反馈 · 盲操准确率 99.8%</div>
+            </div>
+          </div>
+          <span class="text-xs font-mono text-amber-lucky font-medium">0.2s 延时</span>
+        </div>
+      </div>
+
+      <!-- CARD 2: 通用主流配件生态 -->
+      <div class="bg-[#161617] rounded-3xl p-8 lg:p-10 border border-white/[0.08] hover:border-white/20 transition-all duration-300 flex flex-col justify-between group overflow-hidden relative">
+        <div class="z-10">
+          <span class="text-[11px] font-mono tracking-wider text-cyan-400 uppercase bg-cyan-400/10 px-2.5 py-1 rounded-full border border-cyan-400/20">
+            02 / UNIVERSAL FIT
+          </span>
+          <h3 class="text-2xl sm:text-3xl font-semibold text-white mt-4 mb-2 tracking-tight">
+            告别配件难题 · 即买即用
+          </h3>
+          <p class="text-sm text-[#86868b] leading-relaxed max-w-md">
+            彻底打破小众设备“买不到保护套和贴膜”的痛点。精心设计标准曲率与四角圆弧，无缝适配市面主流标准化壳膜与车载生态。
+          </p>
+        </div>
+
+        <!-- Ecosystem visual icons -->
+        <div class="mt-8 pt-6 border-t border-white/[0.06] grid grid-cols-3 gap-3 text-center">
+          <div class="bg-black/50 p-3 rounded-2xl border border-white/[0.05]">
+            <span class="material-symbols-outlined text-cyan-400 text-lg mb-1">dashboard_customize</span>
+            <div class="text-xs font-medium text-white">标准壳膜库</div>
+            <div class="text-[10px] text-[#86868b]">全网随处可买</div>
+          </div>
+          <div class="bg-black/50 p-3 rounded-2xl border border-white/[0.05]">
+            <span class="material-symbols-outlined text-cyan-400 text-lg mb-1">sensors</span>
+            <div class="text-xs font-medium text-white">磁吸环生态</div>
+            <div class="text-[10px] text-[#86868b]">强磁全场景吸附</div>
+          </div>
+          <div class="bg-black/50 p-3 rounded-2xl border border-white/[0.05]">
+            <span class="material-symbols-outlined text-cyan-400 text-lg mb-1">directions_car</span>
+            <div class="text-xs font-medium text-white">车载即放即用</div>
+            <div class="text-[10px] text-[#86868b]">无线快捷充电</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 3: 有趣的灵魂，百里挑一 (潮玩机能) -->
+      <div class="bg-[#161617] rounded-3xl p-8 lg:p-10 border border-white/[0.08] hover:border-white/20 transition-all duration-300 flex flex-col justify-between group overflow-hidden relative">
+        <div class="z-10">
+          <span class="text-[11px] font-mono tracking-wider text-purple-400 uppercase bg-purple-400/10 px-2.5 py-1 rounded-full border border-purple-400/20">
+            03 / CYBER STREETWEAR
+          </span>
+          <h3 class="text-2xl sm:text-3xl font-semibold text-white mt-4 mb-2 tracking-tight">
+            有趣的灵魂，百里挑一
+          </h3>
+          <p class="text-sm text-[#86868b] leading-relaxed max-w-md">
+            拒绝千篇一律沉重无趣的巨屏方块砖。通过潮电美学与工装机能细节，重塑轻盈随行的个性化先锋数码体验。
+          </p>
+        </div>
+
+        <div class="mt-8 pt-6 border-t border-white/[0.06] flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-purple-400 text-2xl">cyclone</span>
+            <div class="text-xs text-zinc-300">附赠限定不锈钢伞绳配件套装 · 潮品属性出众</div>
+          </div>
+          <a href="#ecosystem" class="text-xs text-apple-blue hover:underline">查看图赏 &gt;</a>
+        </div>
+      </div>
+
+      <!-- CARD 4: 工厂 + 品牌方一体化 (全链路自研自产) -->
+      <div class="bg-[#161617] rounded-3xl p-8 lg:p-10 border border-white/[0.08] hover:border-white/20 transition-all duration-300 flex flex-col justify-between group overflow-hidden relative">
+        <div class="z-10">
+          <span class="text-[11px] font-mono tracking-wider text-emerald-400 uppercase bg-emerald-400/10 px-2.5 py-1 rounded-full border border-emerald-400/20">
+            04 / 自研自产体系
+          </span>
+          <h3 class="text-2xl sm:text-3xl font-semibold text-white mt-4 mb-2 tracking-tight">
+            自研工厂直达全球 · 品牌一体化
+          </h3>
+          <p class="text-sm text-[#86868b] leading-relaxed max-w-md">
+            自有高精密自动化产线与供应链。以顶级制造标准将「LUCK WHEAT 幸运无限」高品质数码直销全球 30+ 区域。
+          </p>
+        </div>
+
+        <div class="mt-8 pt-6 border-t border-white/[0.06] flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="px-2.5 py-1 rounded bg-black text-[11px] font-mono text-zinc-300 border border-white/10">LUCK WHEAT 幸运无限</span>
+          </div>
+          <span class="text-xs font-mono text-emerald-400">100% 自研直供</span>
+        </div>
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- Section 4: Apple-style Service & Confidence Ribbon -->
+  <section id="support" class="bg-[#111112] py-14 border-y border-white/[0.08] px-6">
+    <div class="max-w-[1240px] mx-auto">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+        
+        <div class="flex flex-col items-center text-center">
+          <span class="material-symbols-outlined text-3xl text-white mb-3">verified_user</span>
+          <h4 class="text-sm font-semibold text-white mb-1">全国联保与全球认证</h4>
+          <p class="text-xs text-[#86868b]">1000+ 线下售后服务网点，CE / FCC / RoHS 认证畅销欧美</p>
+        </div>
+
+        <div class="flex flex-col items-center text-center">
+          <span class="material-symbols-outlined text-3xl text-white mb-3">local_shipping</span>
+          <h4 class="text-sm font-semibold text-white mb-1">自研官方直发</h4>
+          <p class="text-xs text-[#86868b]">自研精密工厂直接发货，全程顺丰空运保价直达</p>
+        </div>
+
+        <div class="flex flex-col items-center text-center">
+          <span class="material-symbols-outlined text-3xl text-white mb-3">published_with_changes</span>
+          <h4 class="text-sm font-semibold text-white mb-1">7 天无理由退换</h4>
+          <p class="text-xs text-[#86868b]">体验不满意随时退换，全线产品享 12 个月官方硬核质保</p>
+        </div>
+
+        <div class="flex flex-col items-center text-center">
+          <span class="material-symbols-outlined text-3xl text-white mb-3">support_agent</span>
+          <h4 class="text-sm font-semibold text-white mb-1">一对一专属专家</h4>
+          <p class="text-xs text-[#86868b]">工程师与 AI 提示词顾问实时在线，答疑专属体验</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 5: Reservation / Priority Dispatch Call to Action -->
+  <section id="reserve" class="py-20 px-6 max-w-4xl mx-auto text-center">
+    <div class="bg-gradient-to-b from-[#1c1c1e] to-[#121213] p-10 lg:p-14 rounded-3xl border border-white/[0.1] shadow-2xl relative overflow-hidden">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-lucky/10 border border-amber-lucky/30 text-amber-lucky text-xs font-mono mb-4">
+        <span class="w-1.5 h-1.5 rounded-full bg-amber-lucky animate-pulse"></span>
+        EARLY ACCESS // LIMITED ALLOCATION
+      </div>
+      <h2 class="text-3xl sm:text-4xl font-semibold text-white mb-4 tracking-tight">
+        成为首批拥有“幸运”的人
+      </h2>
+      <p class="text-[#86868b] text-sm max-w-lg mx-auto mb-8">
+        立即预约享首发特惠。抢先预约用户免费赠送价值 ￥199 的「专属机身激光刻字」与「限定特种编织伞绳挂件套装」。
+      </p>
+
+      <form onsubmit="event.preventDefault(); alert('预约成功！专属客服将稍后与您联络。');" class="max-w-md mx-auto flex flex-col sm:flex-row gap-3">
+        <input type="text" placeholder="输入手机号 / Email 接收预约编号..." required
+               class="flex-1 bg-black/60 border border-white/20 rounded-full px-5 py-3 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-amber-lucky transition">
+        <button type="submit" 
+                class="bg-amber-lucky hover:bg-amber-lucky-glow text-black font-semibold text-sm px-6 py-3 rounded-full transition duration-150 whitespace-nowrap shadow-lg shadow-amber-lucky/20">
+          立即锁定名额
+        </button>
+      </form>
+      <div class="mt-4 text-[11px] text-[#86868b]">已有 28,490+ 位用户登记预约 · 第一批次预计 Q2 陆续分发</div>
+    </div>
+  </section>
+
+  <!-- Apple Standard Compliance Footer -->
+  <footer class="bg-[#161617] text-[#86868b] text-[11px] border-t border-white/[0.08] pt-12 pb-16 px-6">
+    <div class="max-w-[1024px] mx-auto space-y-6">
+      <!-- Legal Fine Print -->
+      <div class="border-b border-white/[0.08] pb-6 space-y-2 leading-relaxed text-[#6e6e73]">
+        <p>* 1. 0.2s 唤醒延时基于幸运无限实验室环境下 Lucky Key 端侧小模型激活实测数据，实际效果可能因网络环境与任务负载有所差异。</p>
+        <p>* 2. 全系通用配件指符合标准 R4 倒角与标准化无线磁吸协议之第三方外设，购买前请查阅产品尺寸指引。</p>
+        <p>* 3. 「LUCK WHEAT 幸运无限」属于全流程自研自产工业体系，均由直属精密供应链承制生产。</p>
+      </div>
+
+      <!-- Footer Columns (Apple Style Directory) -->
+      <div class="grid grid-cols-2 md:grid-cols-5 gap-6 py-4">
+        <div>
+          <h5 class="text-white font-medium mb-3 text-xs">探索产品</h5>
+          <ul class="space-y-2">
+            <li><a href="#hero-banner" class="hover:text-white transition">Lucky Mini 3.7"</a></li>
+            <li><a href="#lucky-tab" class="hover:text-white transition">Lucky Tab 8.68"</a></li>
+            <li><a href="#lucky-tab" class="hover:text-white transition">Lucky Tab 10.1" (Pro)</a></li>
+            <li><a href="#ecosystem" class="hover:text-white transition">潮流机能编织挂绳</a></li>
+            <li><a href="#ecosystem" class="hover:text-white transition">磁吸生态保护壳</a></li>
+          </ul>
+        </div>
+        <div>
+          <h5 class="text-white font-medium mb-3 text-xs">核心理念</h5>
+          <ul class="space-y-2">
+            <li><a href="#" class="hover:text-white transition">拥有它，就拥有幸运</a></li>
+            <li><a href="#" class="hover:text-white transition">克制硬件与大模型</a></li>
+            <li><a href="#" class="hover:text-white transition">工装机能数码美学</a></li>
+            <li><a href="#" class="hover:text-white transition">精密 CNC 工艺</a></li>
+          </ul>
+        </div>
+        <div>
+          <h5 class="text-white font-medium mb-3 text-xs">品质制造</h5>
+          <ul class="space-y-2">
+            <li><a href="#" class="hover:text-white transition">全链路自研工厂</a></li>
+            <li><a href="#" class="hover:text-white transition">百级无尘车间</a></li>
+            <li><a href="#" class="hover:text-white transition">全球分销网络</a></li>
+            <li><a href="#" class="hover:text-white transition">Lucky Key 软硬件生态</a></li>
+          </ul>
+        </div>
+        <div>
+          <h5 class="text-white font-medium mb-3 text-xs">服务与支持</h5>
+          <ul class="space-y-2">
+            <li><a href="#" class="hover:text-white transition">预约状态查询</a></li>
+            <li><a href="#" class="hover:text-white transition">1 年官方保修政策</a></li>
+            <li><a href="#" class="hover:text-white transition">线下体验网点</a></li>
+            <li><a href="#" class="hover:text-white transition">配件通用兼容表</a></li>
+          </ul>
+        </div>
+        <div>
+          <h5 class="text-white font-medium mb-3 text-xs">品牌价值</h5>
+          <ul class="space-y-2">
+            <li><a href="about.html" class="hover:text-white transition">关于幸运无限</a></li>
+            <li><a href="#" class="hover:text-white transition">可持续设计与环保包装</a></li>
+            <li><a href="#" class="hover:text-white transition">合规与隐私协议</a></li>
+            <li><a href="#" class="hover:text-white transition">企业资质说明</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Copyright and Bottom Line -->
+      <div class="border-t border-white/[0.08] pt-6 flex flex-col md:flex-row justify-between items-center gap-4 text-[#6e6e73]">
+        <div class="flex items-center gap-2">
+          <span>Copyright © 2026 LUCK WHEAT 幸运无限科技. 保留所有权利。</span>
+        </div>
+        <div class="flex items-center gap-4 text-[#86868b]">
+          <a href="#" class="hover:underline">隐私政策</a>
+          <span>|</span>
+          <a href="#" class="hover:underline">销售政策</a>
+          <span>|</span>
+          <a href="#" class="hover:underline">法律声明</a>
+          <span>|</span>
+          <a href="#" class="hover:underline">粤ICP备2026000000号</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Vanilla JS Interactive Carousel Logic -->
+  <script>
+    (function initCarousel() {
+      const slides = [
+        document.getElementById('slide-0'),
+        document.getElementById('slide-1'),
+        document.getElementById('slide-2')
+      ];
+      const indicators = document.querySelectorAll('.indicator-pill');
+      const prevBtn = document.getElementById('prevBtn');
+      const nextBtn = document.getElementById('nextBtn');
+      const playPauseBtn = document.getElementById('playPauseBtn');
+      const playPauseIcon = document.getElementById('playPauseIcon');
+
+      let currentIndex = 0;
+      let isPlaying = true;
+      let autoPlayInterval = null;
+      const INTERVAL_TIME = 5000;
+
+      function goToSlide(index) {
+        // Clear previous
+        slides[currentIndex].classList.remove('active');
+        slides[currentIndex].classList.add('inactive');
+        indicators[currentIndex].classList.remove('active');
+        indicators[currentIndex].classList.add('inactive');
+
+        // Set new
+        currentIndex = (index + slides.length) % slides.length;
+
+        slides[currentIndex].classList.remove('inactive');
+        slides[currentIndex].classList.add('active');
+        indicators[currentIndex].classList.remove('inactive');
+        indicators[currentIndex].classList.add('active');
+      }
+
+      function nextSlide() {
+        goToSlide(currentIndex + 1);
+      }
+
+      function prevSlide() {
+        goToSlide(currentIndex - 1);
+      }
+
+      function startAutoPlay() {
+        if (!autoPlayInterval) {
+          autoPlayInterval = setInterval(nextSlide, INTERVAL_TIME);
+        }
+        isPlaying = true;
+        playPauseIcon.textContent = 'pause';
+      }
+
+      function stopAutoPlay() {
+        if (autoPlayInterval) {
+          clearInterval(autoPlayInterval);
+          autoPlayInterval = null;
+        }
+        isPlaying = false;
+        playPauseIcon.textContent = 'play_arrow';
+      }
+
+      function togglePlayPause() {
+        if (isPlaying) {
+          stopAutoPlay();
+        } else {
+          startAutoPlay();
+        }
+      }
+
+      // Event Listeners
+      nextBtn.addEventListener('click', () => {
+        nextSlide();
+        if (isPlaying) {
+          stopAutoPlay();
+          startAutoPlay();
+        }
+      });
+
+      prevBtn.addEventListener('click', () => {
+        prevSlide();
+        if (isPlaying) {
+          stopAutoPlay();
+          startAutoPlay();
+        }
+      });
+
+      indicators.forEach((pill) => {
+        pill.addEventListener('click', () => {
+          const targetIndex = parseInt(pill.getAttribute('data-slide'), 10);
+          goToSlide(targetIndex);
+          if (isPlaying) {
+            stopAutoPlay();
+            startAutoPlay();
+          }
+        });
+      });
+
+      playPauseBtn.addEventListener('click', togglePlayPause);
+
+      // Start on load
+      startAutoPlay();
+    })();
+  </script>
+</body>
+</html>

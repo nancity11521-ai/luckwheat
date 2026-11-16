@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>幸运无限 // LUCK WHEAT · LUCK WHEAT Official</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&amp;family=Outfit:wght@300;400;500;600;700&amp;family=Space+Grotesk:wght@500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "error-container": "#93000a",
+            "on-error": "#690005",
+            "tertiary": "#ffbe64",
+            "primary-fixed-dim": "#ffb874",
+            "secondary-fixed-dim": "#00daf3",
+            "primary": "#ffbd7f",
+            "on-surface": "#e2e2e8",
+            "on-background": "#e2e2e8",
+            "surface-dim": "#111317",
+            "surface-container-low": "#1a1c20",
+            "surface-container": "#1e2024",
+            "on-primary-fixed": "#2d1600",
+            "surface-tint": "#ffb874",
+            "surface-container-lowest": "#0c0e12",
+            "surface-bright": "#37393e",
+            "surface-variant": "#333539",
+            "primary-container": "#ff9500",
+            "on-surface-variant": "#dbc2ad",
+            "outline-variant": "#554334",
+            "on-tertiary-fixed-variant": "#633f00",
+            "on-tertiary-fixed": "#291800",
+            "on-secondary-container": "#00616d",
+            "on-tertiary-container": "#5d3b00",
+            "on-secondary-fixed-variant": "#004f58",
+            "on-secondary-fixed": "#001f24",
+            "surface-container-high": "#282a2e",
+            "on-primary": "#4b2800",
+            "tertiary-fixed": "#ffddb4",
+            "primary-fixed": "#ffdcbf",
+            "outline": "#a38d7a",
+            "tertiary-container": "#e9a02e",
+            "inverse-surface": "#e2e2e8",
+            "surface": "#111317",
+            "on-error-container": "#ffdad6",
+            "on-secondary": "#00363d",
+            "on-tertiary": "#452b00",
+            "on-primary-fixed-variant": "#6a3b00",
+            "on-primary-container": "#643700",
+            "background": "#111317",
+            "secondary-fixed": "#9cf0ff",
+            "secondary-container": "#00e3fd",
+            "secondary": "#bdf4ff",
+            "inverse-primary": "#8c5000",
+            "inverse-on-surface": "#2f3035",
+            "surface-container-highest": "#333539",
+            "tertiary-fixed-dim": "#ffb955",
+            "error": "#ffb4ab"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "margin-mobile": "1.25rem",
+            "space-md": "1rem",
+            "space-2xl": "4rem",
+            "margin": "3rem",
+            "gutter": "1.5rem",
+            "space-xs": "0.25rem",
+            "gutter-mobile": "1rem",
+            "space-sm": "0.5rem",
+            "space-xl": "2.5rem",
+            "space-lg": "1.5rem"
+          },
+          "fontFamily": {
+            "label-caps": ["Space Grotesk"],
+            "body-md": ["Outfit"],
+            "display-xl": ["Space Grotesk"],
+            "body-lg": ["Outfit"],
+            "label-mono-sm": ["JetBrains Mono"],
+            "headline-lg-mobile": ["Space Grotesk"],
+            "headline-md": ["Space Grotesk"],
+            "body-sm": ["Outfit"],
+            "display-xl-mobile": ["Space Grotesk"],
+            "headline-lg": ["Space Grotesk"],
+            "label-mono-md": ["JetBrains Mono"]
+          },
+          "fontSize": {
+            "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.1em", "fontWeight": "600" }],
+            "body-md": ["15px", { "lineHeight": "24px", "fontWeight": "400" }],
+            "display-xl": ["64px", { "lineHeight": "72px", "letterSpacing": "-0.03em", "fontWeight": "700" }],
+            "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+            "label-mono-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.08em", "fontWeight": "500" }],
+            "headline-lg-mobile": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "body-sm": ["13px", { "lineHeight": "20px", "fontWeight": "400" }],
+            "display-xl-mobile": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "headline-lg": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "label-mono-md": ["13px", { "lineHeight": "18px", "letterSpacing": "0.04em", "fontWeight": "500" }]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    
+    /* Hardware Industrial glow effects */
+    .glow-amber-btn {
+      background: linear-gradient(135deg, #ff9500 0%, #ffb340 100%);
+      box-shadow: 0 0 24px -2px rgba(255, 149, 0, 0.45);
+      transition: all 0.2s ease-in-out;
+    }
+    .glow-amber-btn:hover {
+      box-shadow: 0 0 32px 4px rgba(255, 149, 0, 0.65);
+      transform: translateY(-1px);
+    }
+    .cold-glass-card {
+      background: rgba(18, 22, 31, 0.65);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .cold-glass-card:hover {
+      border-color: rgba(0, 229, 255, 0.25);
+      box-shadow: 0 12px 32px -8px rgba(0, 0, 0, 0.6), 0 0 20px -4px rgba(0, 229, 255, 0.1);
+    }
+    .telemetry-tag {
+      background: rgba(255, 149, 0, 0.08);
+      border: 1px solid rgba(255, 149, 0, 0.25);
+    }
+    .anisotropic-hairline {
+      background: linear-gradient(90deg, transparent, rgba(255, 149, 0, 0.35), transparent);
+    }
+  </style>
+</head>
+<body class="bg-background text-on-surface selection:bg-primary-container selection:text-surface-container-lowest font-body-md text-body-md antialiased overflow-x-hidden">
+<!-- ========================================================================= -->
+<!-- TopNavBar (Shared Component Anchor) -->
+<!-- ========================================================================= -->
+<header class="bg-surface-container-low/70 dark:bg-surface-container-low/70 backdrop-blur-md docked full-width top-0 fixed z-50 shadow-lg shadow-surface-container-lowest/50 border-b border-outline-variant/30 w-full transition-all duration-300">
+<div class="w-full px-6 lg:px-12 py-3 flex justify-between items-center max-w-7xl mx-auto">
+<!-- Brand Logo / Emblem -->
+<a class="font-headline-md text-headline-md tracking-wider text-on-surface dark:text-on-surface uppercase flex items-center gap-3 group" href="#">
+<div class="relative w-8 h-8 rounded-lg overflow-hidden flex items-center justify-center p-0.5 bg-surface-container-highest border border-outline-variant/50 group-hover:border-primary transition-colors">
+<img alt="Lucky Star Emblem" class="w-full h-full object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1VUKGHqoBnSlEOByROsD9ZIEiMD6sZ9SOAqZQcxqrU5NP0K5_kLk-cZyh0DmjjtSHFjeL2jbDBJLqPUyVUNoVELKpXGTVapUnutP-kKcpjNclgugLTyaA6Zu_KVn4Hta4JLyVm8C75SqAU9ddRJsH3n-KeaH61lGK6LNKm0s1VtF98Ayzh_-6QOOxxRITUZRn41I2do9cQwf0M8kX1frXyQ1kaT82gTqg89y0KFyf9lwV_MiPZt8U4GAPsy"/>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-md text-headline-md font-bold tracking-tight text-on-surface leading-none group-hover:text-primary transition-colors">
+            LUCK WHEAT // 幸运无限
+          </span>
+<span class="font-label-mono-sm text-label-mono-sm text-outline tracking-wider text-[10px] mt-0.5">
+            OVERSEAS: LUCK WHEAT · HARDWARE AI
+          </span>
+</div>
+</a>
+<!-- Desktop Nav Links -->
+<nav class="hidden md:flex items-center gap-8">
+<!-- Active link: Lucky Mini AI (closest match to flagship landing) -->
+<a class="text-primary font-label-mono-md border-b-2 border-primary pb-1 active:scale-95 transition-transform duration-150" href="#flagship">
+          Lucky Mini AI
+        </a>
+<a class="text-on-surface-variant font-label-mono-md hover:text-on-surface transition-colors hover:text-primary duration-200" href="#products">
+          Lucky Tab
+        </a>
+<a class="text-on-surface-variant font-label-mono-md hover:text-on-surface transition-colors hover:text-primary duration-200" href="#hardware">
+          Hardware &amp; Ecosystem
+        </a>
+<a class="text-on-surface-variant font-label-mono-md hover:text-on-surface transition-colors hover:text-primary duration-200" href="#global-strategy">
+          Global Brand // 出海战略
+        </a>
+<a class="text-on-surface-variant font-label-mono-md hover:text-on-surface transition-colors hover:text-primary duration-200" href="#philosophy">
+          About &amp; Philosophy
+        </a>
+</nav>
+<!-- Trailing Action Cluster -->
+<div class="flex items-center gap-4">
+<!-- Icon Actions from JSON -->
+<div class="hidden sm:flex items-center gap-2 text-on-surface-variant">
+<button class="p-1.5 rounded-lg hover:text-primary hover:bg-surface-container-high transition-colors" data-icon="star_half" title="Philosophy Star">
+<span class="material-symbols-outlined text-[20px]">star_half</span>
+</button>
+<button class="p-1.5 rounded-lg hover:text-primary hover:bg-surface-container-high transition-colors" data-icon="language" title="Switch Language">
+<span class="material-symbols-outlined text-[20px]">language</span>
+</button>
+<button class="p-1.5 rounded-lg hover:text-primary hover:bg-surface-container-high transition-colors" data-icon="shopping_bag" title="Reserve Cart">
+<span class="material-symbols-outlined text-[20px]">shopping_bag</span>
+</button>
+</div>
+<!-- Global Selector Label -->
+<span class="hidden xl:inline-block font-label-mono-sm text-label-mono-sm text-outline-variant px-2 py-0.5 border border-outline-variant/40 rounded">
+          Global (EN/中)
+        </span>
+<!-- Primary Reservation CTA -->
+<a class="glow-amber-btn text-surface-container-lowest font-label-caps text-label-caps font-bold px-4 py-2 rounded-lg flex items-center gap-1.5 active:scale-95 transition-all" href="#reserve">
+<span>立即预约 / Reserve</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</a>
+</div>
+</div>
+</header>
+<main class="relative pt-24">
+<!-- Ambient Radial Mesh Glows -->
+<div class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[680px] pointer-events-none overflow-hidden -z-10">
+<div class="absolute top-[-10%] left-[20%] w-[500px] h-[500px] bg-primary/10 rounded-full blur-[120px]"></div>
+<div class="absolute top-[10%] right-[15%] w-[420px] h-[420px] bg-secondary-container/10 rounded-full blur-[140px]"></div>
+</div>
+<!-- ========================================================================= -->
+<!-- 1. Hero Section -->
+<!-- ========================================================================= -->
+<section class="max-w-7xl mx-auto px-6 lg:px-12 py-12 lg:py-20" id="flagship">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+<!-- Left Editorial Structural Column (Cols 1-6) -->
+<div class="lg:col-span-6 flex flex-col gap-6">
+<!-- Micro Cyber Badge -->
+<div class="inline-flex items-center gap-2 self-start px-3 py-1 rounded-full bg-surface-container-low border border-primary/30">
+<span class="w-2 h-2 rounded-full bg-primary-container animate-pulse"></span>
+<span class="font-label-mono-sm text-label-mono-sm text-primary tracking-widest uppercase">
+              AI 时代的幸运数码品牌 // 潮电新物种
+            </span>
+</div>
+<!-- Main Slogan & Headline -->
+<div class="space-y-3">
+<h1 class="font-display-xl-mobile lg:font-display-xl text-display-xl-mobile lg:text-display-xl font-bold tracking-tight text-on-surface leading-[1.05]">
+              拥有它，就拥有幸运
+            </h1>
+<div class="text-primary font-headline-md text-headline-md font-semibold tracking-wide">
+              LUCK WHEAT · LUCKY MINI 旗舰登场
+            </div>
+</div>
+<!-- Subtitle / Tech Readout -->
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-xl leading-relaxed">
+<span class="font-label-mono-sm text-label-mono-sm text-outline block mb-1">SYS.01 // HARDWARE AI COMPANION · BORN FOR MINI SIZE</span>
+            专注「AI + 精致数码」，专属 Lucky 物理键一键唤醒多模态 AI。轻盈单手黄金手感，主流旗舰配件即买即用，打破小众数码配件孤岛。
+          </p>
+<!-- CTAs -->
+<div class="flex flex-wrap items-center gap-4 pt-2">
+<a class="glow-amber-btn text-surface-container-lowest font-headline-md text-body-md font-bold px-7 py-3.5 rounded-lg flex items-center gap-2" href="#reserve">
+<span>了解旗舰 Lucky Mini</span>
+<span class="material-symbols-outlined text-[20px]">bolt</span>
+</a>
+<a class="cold-glass-card hover:border-secondary-container/50 text-on-surface font-label-mono-md text-label-mono-md px-6 py-3.5 rounded-lg flex items-center gap-2 transition-all" href="#products">
+<span>浏览产品矩阵</span>
+<span class="material-symbols-outlined text-[18px]">keyboard_arrow_right</span>
+</a>
+</div>
+<!-- Spec Badges Bar -->
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-6 border-t border-outline-variant/30">
+<div class="flex flex-col">
+<span class="font-label-mono-sm text-label-mono-sm text-outline">SCREEN RATIO</span>
+<span class="font-headline-md text-headline-md text-primary font-bold">3.7"</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">黄金掌心握持</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-mono-sm text-label-mono-sm text-outline">HARDWARE KEY</span>
+<span class="font-headline-md text-headline-md text-primary font-bold">0.2s</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">1键瞬时直达 AI</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-mono-sm text-label-mono-sm text-outline">ACCESSORIES</span>
+<span class="font-headline-md text-headline-md text-secondary font-bold">100%</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">全系通用配件生态</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-mono-sm text-label-mono-sm text-outline">OUTBOUND</span>
+<span class="font-headline-md text-headline-md text-on-surface font-bold">双品牌</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">自研工厂全球直供</span>
+</div>
+</div>
+</div>
+<!-- Right Hardware Showcase Stage (Cols 7-12) -->
+<div class="lg:col-span-6 relative">
+<!-- Outer Decorative CNC Framing -->
+<div class="relative rounded-2xl p-2 cold-glass-card group overflow-hidden">
+<!-- Corner Technical Overlay Markings -->
+<div class="absolute top-4 left-4 z-20 flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary-container"></span>
+<span class="font-label-mono-sm text-label-mono-sm text-secondary-fixed text-[10px] tracking-widest uppercase">
+                CAM_SPEC // 48MP F/1.8 RETINA SENSOR
+              </span>
+</div>
+<div class="absolute top-4 right-4 z-20">
+<span class="telemetry-tag font-label-mono-sm text-label-mono-sm text-primary px-2 py-0.5 rounded text-[10px]">
+                STATUS: RESERVE OPEN
+              </span>
+</div>
+<!-- Image Asset Presentation -->
+<div class="relative rounded-xl overflow-hidden bg-surface-container-lowest">
+<img class="w-full h-[440px] sm:h-[500px] object-cover object-center group-hover:scale-[1.02] transition-transform duration-700" data-alt="Ultra-premium dark futuristic product photo of Lucky Mini 3.7-inch compact phone resting on an obsidian titanium surface. The side profile reveals an illuminated neon amber Lucky Key glowing with warm amber backlight, accompanied by a heavy-duty tactical paracord tech strap. Dramatic cold rim lighting highlights the precision CNC chamfered edges and matte dark carbon chassis in modern cyberpunk luxury style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuALOS94Q-2fQvIk4cGIUm-6_h4jU4Pl0d8rxRTq0ZmuN73yj9IqSOI_MUFazIoix2GpPM0XXhk3FKA39gRNOVyJZGu8GO5CEpOj7KCcxNRcfHJ5gFsEfva_jsZBFUlwhqTlEqvg2xa7r5ipqu7OAZn0nKZ_XTjm4XxXL6cTLC3YssB_QrDhfH3zg8t-rR-tfiv0VlKT1YX8CdBVDhnVKhUJ_KYZJt2R9inCh5ae9Zy9YNbzKPN4iD7sB3iNP05SPktg7lK0GNFChCDX"/>
+<!-- Subtle Vignette & Gradient scrim -->
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-transparent to-transparent opacity-80 pointer-events-none"></div>
+</div>
+<!-- Floating Hardware Telemetry Badges -->
+<div class="p-4 grid grid-cols-1 sm:grid-cols-2 gap-3 bg-surface-container-low/80 backdrop-blur-md rounded-xl mt-2 border border-outline-variant/30">
+<div class="flex items-center gap-3">
+<div class="p-2 rounded-lg bg-surface-container-highest text-primary">
+<span class="material-symbols-outlined text-[22px]">touch_app</span>
+</div>
+<div>
+<div class="font-label-caps text-label-caps text-on-surface">物理 Lucky 键</div>
+<div class="font-label-mono-sm text-label-mono-sm text-outline">极速硬件一键唤醒 AI</div>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="p-2 rounded-lg bg-surface-container-highest text-secondary">
+<span class="material-symbols-outlined text-[22px]">precision_manufacturing</span>
+</div>
+<div>
+<div class="font-label-caps text-label-caps text-on-surface">PRECISION CNC</div>
+<div class="font-label-mono-sm text-label-mono-sm text-outline">钛金属中框 + 极简挂绳孔</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom floating micro spec stamp -->
+<div class="absolute -bottom-4 -right-2 hidden sm:block bg-surface-container-lowest/90 border border-primary/40 px-3 py-1.5 rounded-lg shadow-xl font-label-mono-sm text-label-mono-sm text-primary">
+            LUCK WHEAT™ // DUAL-FLAGSHIP EDITION
+          </div>
+</div>
+</div>
+</section>
+<!-- Hairline Separator -->
+<div class="max-w-7xl mx-auto h-[1px] anisotropic-hairline my-8"></div>
+<!-- ========================================================================= -->
+<!-- 2. Brand Philosophy & Vision (品牌理念) -->
+<!-- ========================================================================= -->
+<section class="max-w-7xl mx-auto px-6 lg:px-12 py-16" id="philosophy">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+<div>
+<span class="font-label-mono-sm text-label-mono-sm text-primary tracking-widest block uppercase">
+            PHILOSOPHY &amp; VISION // 02
+          </span>
+<h2 class="font-headline-lg-mobile lg:font-headline-lg text-headline-lg-mobile lg:text-headline-lg font-bold text-on-surface mt-2">
+            拥有它，就拥有幸运
+          </h2>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-md">
+          在喧嚣同质化的智能时代，我们用精密工业与克制设计重新定义随身数码，让每一次触摸都充满愉悦与确定感。
+        </p>
+</div>
+<!-- 3 Feature Bento Cards -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Pillar 01 -->
+<div class="cold-glass-card p-8 rounded-2xl flex flex-col justify-between relative overflow-hidden group">
+<div class="absolute -right-8 -top-8 w-28 h-28 bg-primary/10 rounded-full blur-2xl group-hover:bg-primary/20 transition-all"></div>
+<div>
+<div class="font-label-mono-sm text-label-mono-sm text-primary mb-4 flex items-center justify-between">
+<span>PILLAR 01</span>
+<span class="material-symbols-outlined text-primary text-[20px]">auto_awesome</span>
+</div>
+<h3 class="font-headline-md text-headline-md font-bold text-on-surface mb-3">
+              “拥有它，就拥有幸运”
+            </h3>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+              黄金手感、顺手操作。不仅是一台极致便携的小屏设备，更是随时触手可及的幸运符号与灵感火花。
+            </p>
+</div>
+<div class="pt-8 border-t border-outline-variant/30 mt-6 flex items-center justify-between font-label-mono-sm text-label-mono-sm text-outline">
+<span>TACTILE LUXURY</span>
+<span>01 // INSPIRATION</span>
+</div>
+</div>
+<!-- Pillar 02 -->
+<div class="cold-glass-card p-8 rounded-2xl flex flex-col justify-between relative overflow-hidden group">
+<div class="absolute -right-8 -top-8 w-28 h-28 bg-secondary-container/10 rounded-full blur-2xl group-hover:bg-secondary-container/20 transition-all"></div>
+<div>
+<div class="font-label-mono-sm text-label-mono-sm text-secondary mb-4 flex items-center justify-between">
+<span>PILLAR 02</span>
+<span class="material-symbols-outlined text-secondary text-[20px]">psychology</span>
+</div>
+<h3 class="font-headline-md text-headline-md font-bold text-on-surface mb-3">
+              “有趣的灵魂，百里挑一”
+            </h3>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+              拒绝千篇一律沉重无趣的巨屏方块砖。通过潮电美学与工装机能细节，重塑轻盈随行的个性化先锋数码体验。
+            </p>
+</div>
+<div class="pt-8 border-t border-outline-variant/30 mt-6 flex items-center justify-between font-label-mono-sm text-label-mono-sm text-outline">
+<span>STREETWEAR AESTHETIC</span>
+<span>02 // CHARACTER</span>
+</div>
+</div>
+<!-- Pillar 03 -->
+<div class="cold-glass-card p-8 rounded-2xl flex flex-col justify-between relative overflow-hidden group">
+<div class="absolute -right-8 -top-8 w-28 h-28 bg-primary/10 rounded-full blur-2xl group-hover:bg-primary/20 transition-all"></div>
+<div>
+<div class="font-label-mono-sm text-label-mono-sm text-primary mb-4 flex items-center justify-between">
+<span>PILLAR 03</span>
+<span class="material-symbols-outlined text-primary text-[20px]">factory</span>
+</div>
+<h3 class="font-headline-md text-headline-md font-bold text-on-surface mb-3">
+              “自研工厂 + 品牌一体化”
+            </h3>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+              自有高精密自动化产线与供应链闭环。国内主推「幸运无限」，海外高端线协同「LUCK WHEAT」，品质无缝直达全球。
+            </p>
+</div>
+<div class="pt-8 border-t border-outline-variant/30 mt-6 flex items-center justify-between font-label-mono-sm text-label-mono-sm text-outline">
+<span>GLOBAL SUPPLY DUAL-BRAND</span>
+<span>03 // PRECISION</span>
+</div>
+</div>
+</div>
+</section>
+<!-- ========================================================================= -->
+<!-- 3. Product Matrix (产品矩阵) -->
+<!-- ========================================================================= -->
+<section class="max-w-7xl mx-auto px-6 lg:px-12 py-16" id="products">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+<div>
+<span class="font-label-mono-sm text-label-mono-sm text-primary tracking-widest block uppercase">
+            PORTFOLIO LINEUP // 03
+          </span>
+<h2 class="font-headline-lg-mobile lg:font-headline-lg text-headline-lg-mobile lg:text-headline-lg font-bold text-on-surface mt-2">
+            每一款，都是幸运之选
+          </h2>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+<span class="font-label-mono-sm text-label-mono-sm text-outline">2026 ROADMAP: 3 FLAGSHIP FORM FACTORS</span>
+</div>
+</div>
+<!-- Bento Product Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+<!-- Highlight Card: Lucky Mini (Cols 1-7) -->
+<div class="lg:col-span-7 cold-glass-card rounded-2xl p-6 sm:p-8 flex flex-col justify-between border border-primary/30 relative overflow-hidden group">
+<div class="flex items-start justify-between mb-4">
+<div>
+<span class="telemetry-tag text-primary font-label-mono-sm text-label-mono-sm px-2.5 py-1 rounded inline-block mb-2">
+                FLAGSHIP RELEASE // 现已开启预约
+              </span>
+<h3 class="font-headline-lg text-headline-lg font-bold text-on-surface">
+                Lucky Mini 3.7"
+              </h3>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">
+                AI 智能微感小机 · 潮感与算力的极致平衡
+              </p>
+</div>
+<div class="text-right">
+<div class="text-primary font-headline-lg text-headline-lg font-bold leading-none">
+                ¥1999
+              </div>
+<div class="font-label-mono-sm text-label-mono-sm text-outline">
+                $299 USD OVERSEAS
+              </div>
+</div>
+</div>
+<!-- Product Media & Callouts -->
+<div class="relative my-4 rounded-xl overflow-hidden bg-surface-container-lowest/80 border border-outline-variant/30">
+<img class="w-full h-64 sm:h-72 object-cover object-center group-hover:scale-105 transition-transform duration-500" data-alt="Precision studio shot of Lucky Mini compact smartphone highlighting the titanium frame, textured lanyard loop with paracord, and the distinct amber backlit Lucky Key. Studio lighting with warm amber and teal reflections casting crisp highlights along the bevels against a dark metallic slate background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDXOPoPYHi4sdpzwH0MjZ1UiorOQ5QkUrnPJf5kRZyqzKZ4QlYd3ed13ZTnmQ5AKzCElBSEC7kl0OyNjT4U-mg-PepLODu6c_NCCMm55fU7VhfMVV6ykXSlPRi7R91kgc_awDv8C5aPz5nwesPVRQsGa68hKZVbiAhSmn0pANTzug-V962ctVSN59c6tL3_9RB91GMBAj-ebKbVJrLizlLzNddhAlLNxn27x6tEJoZ3x2P9ZQNUCAb5cjD4w9rMMNLC0wv_979Vca8Q"/>
+<div class="absolute bottom-3 left-3 bg-surface-container-lowest/90 px-3 py-1 rounded border border-outline-variant/50 font-label-mono-sm text-label-mono-sm text-on-surface">
+              CHASSIS: TITANIUM OBSIDIAN COATING
+            </div>
+</div>
+<!-- Specs List -->
+<div class="grid grid-cols-2 gap-3 my-4">
+<div class="p-3 rounded-lg bg-surface-container-high/60 border border-outline-variant/30">
+<span class="font-label-mono-sm text-label-mono-sm text-outline block">DISPLAY</span>
+<span class="font-body-sm text-body-sm font-semibold text-on-surface">3.7" 高刷超感视网膜屏</span>
+</div>
+<div class="p-3 rounded-lg bg-surface-container-high/60 border border-outline-variant/30">
+<span class="font-label-mono-sm text-label-mono-sm text-outline block">DEDICATED KEY</span>
+<span class="font-body-sm text-body-sm font-semibold text-primary">专属物理 Lucky 键唤醒</span>
+</div>
+<div class="p-3 rounded-lg bg-surface-container-high/60 border border-outline-variant/30">
+<span class="font-label-mono-sm text-label-mono-sm text-outline block">SYSTEM OS</span>
+<span class="font-body-sm text-body-sm font-semibold text-on-surface">深度定制 AI 伴侣操作系统</span>
+</div>
+<div class="p-3 rounded-lg bg-surface-container-high/60 border border-outline-variant/30">
+<span class="font-label-mono-sm text-label-mono-sm text-outline block">CRAFT</span>
+<span class="font-body-sm text-body-sm font-semibold text-on-surface">精工钛金属质感机身中框</span>
+</div>
+</div>
+<a class="glow-amber-btn text-surface-container-lowest font-headline-md text-body-md font-bold py-3 text-center rounded-lg mt-2" href="#reserve">
+            预约抢先体验 Lucky Mini
+          </a>
+</div>
+<!-- Upcoming Ecosystem Cards (Cols 8-12) -->
+<div class="lg:col-span-5 flex flex-col gap-6">
+<!-- Product Card 2: Lucky Tab 8.68 -->
+<div class="cold-glass-card rounded-2xl p-6 sm:p-7 flex flex-col justify-between border border-outline-variant/30 flex-1 relative group">
+<div class="flex items-start justify-between">
+<div>
+<span class="font-label-mono-sm text-label-mono-sm text-secondary bg-surface-container-high px-2 py-0.5 rounded inline-block mb-2">
+                  UPCOMING // 预计 Q2 开售
+                </span>
+<h4 class="font-headline-md text-headline-md font-bold text-on-surface">
+                  LUCKY Tab 8.68"
+                </h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                  便携旗舰平板 · 单手握持黄金配比
+                </p>
+</div>
+<span class="material-symbols-outlined text-[28px] text-outline">tablet_mac</span>
+</div>
+<div class="my-4 p-4 rounded-xl bg-surface-container-lowest/60 border border-outline-variant/20 flex flex-col gap-2">
+<div class="flex items-center gap-2 text-on-surface text-body-sm">
+<span class="material-symbols-outlined text-secondary text-[18px]">check_circle</span>
+<span>全铝一体航空级金属机身，超轻薄设计</span>
+</div>
+<div class="flex items-center gap-2 text-on-surface text-body-sm">
+<span class="material-symbols-outlined text-secondary text-[18px]">check_circle</span>
+<span>Lucky AI 桌面工作流无缝互通协同</span>
+</div>
+<div class="flex items-center gap-2 text-on-surface text-body-sm">
+<span class="material-symbols-outlined text-secondary text-[18px]">check_circle</span>
+<span>全球双频定位 + 4G/5G 全网通互联支持</span>
+</div>
+</div>
+<div class="flex items-center justify-between pt-2">
+<span class="font-label-mono-sm text-label-mono-sm text-outline">COLOR: OBSIDIAN TITANIUM / FROST SILVER</span>
+<span class="text-primary font-label-mono-sm text-label-mono-sm flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                加入愿望单 <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+</span>
+</div>
+</div>
+<!-- Product Card 3: Lucky Tab 10.1 -->
+<div class="cold-glass-card rounded-2xl p-6 sm:p-7 flex flex-col justify-between border border-outline-variant/30 flex-1 relative group">
+<div class="flex items-start justify-between">
+<div>
+<span class="font-label-mono-sm text-label-mono-sm text-primary-fixed bg-surface-container-high px-2 py-0.5 rounded inline-block mb-2">
+                  GLOBAL LAUNCH // 预计 Q3 全球同步
+                </span>
+<h4 class="font-headline-md text-headline-md font-bold text-on-surface">
+                  LUCKY Tab 10.1"
+                </h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                  2K 超清视界大屏 · 百微毫米级声学调校
+                </p>
+</div>
+<span class="material-symbols-outlined text-[28px] text-outline">desktop_windows</span>
+</div>
+<div class="my-4 p-4 rounded-xl bg-surface-container-lowest/60 border border-outline-variant/20 flex flex-col gap-2">
+<div class="flex items-center gap-2 text-on-surface text-body-sm">
+<span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+<span>2K 超感原色护眼屏，德国莱茵低蓝光认证</span>
+</div>
+<div class="flex items-center gap-2 text-on-surface text-body-sm">
+<span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+<span>四立体声重低音音腔，影院级震撼视听</span>
+</div>
+<div class="flex items-center gap-2 text-on-surface text-body-sm">
+<span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+<span>大容量电池 + 45W 极速闪充技术</span>
+</div>
+</div>
+<div class="flex items-center justify-between pt-2">
+<span class="font-label-mono-sm text-label-mono-sm text-outline">GLOBAL CERTIFIED: CE / FCC / ROHS</span>
+<span class="text-primary font-label-mono-sm text-label-mono-sm flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                预约发布提醒 <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Hairline Separator -->
+<div class="max-w-7xl mx-auto h-[1px] anisotropic-hairline my-8"></div>
+<!-- ========================================================================= -->
+<!-- 4. Hardware & Precision Engineering (核心硬件特写) -->
+<!-- ========================================================================= -->
+<section class="max-w-7xl mx-auto px-6 lg:px-12 py-16" id="hardware">
+<div class="max-w-2xl mb-12">
+<span class="font-label-mono-sm text-label-mono-sm text-primary tracking-widest block uppercase">
+          HARDWARE &amp; ECOSYSTEM // 04
+        </span>
+<h2 class="font-headline-lg-mobile lg:font-headline-lg text-headline-lg-mobile lg:text-headline-lg font-bold text-on-surface mt-2">
+          精工工业美学，克制而不妥协
+        </h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-3">
+          每一道切角、每一颗螺丝、每一次微动反馈，都历经自研工厂百次调校，带来无可比拟的物理机械快感。
+        </p>
+</div>
+<!-- 3 Precision Detail Cards -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Precision 01 -->
+<div class="cold-glass-card p-6 sm:p-8 rounded-2xl relative flex flex-col justify-between">
+<div>
+<div class="w-12 h-12 rounded-xl bg-surface-container-highest border border-primary/30 flex items-center justify-center text-primary mb-6">
+<span class="material-symbols-outlined text-[28px]" data-weight="fill" style="font-variation-settings: 'FILL' 1;">power_settings_new</span>
+</div>
+<div class="font-label-mono-sm text-label-mono-sm text-primary mb-1">01 / TACTILE KEY</div>
+<h3 class="font-headline-md text-headline-md font-bold text-on-surface mb-3">
+              独立物理微动机械键
+            </h3>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+              采用定制级微动触点，具备干脆清脆的机械回弹手感。支持短按、长按、双击三种自定义宏，0.2 秒极速冷启动大模型语音助手与灵感备忘录。
+            </p>
+</div>
+<div class="mt-8 pt-4 border-t border-outline-variant/30 flex items-center justify-between text-outline font-label-mono-sm text-label-mono-sm">
+<span>KEY ACTUATION: 60GF</span>
+<span>LATENCY: &lt; 200MS</span>
+</div>
+</div>
+<!-- Precision 02 -->
+<div class="cold-glass-card p-6 sm:p-8 rounded-2xl relative flex flex-col justify-between">
+<div>
+<div class="w-12 h-12 rounded-xl bg-surface-container-highest border border-secondary/30 flex items-center justify-center text-secondary mb-6">
+<span class="material-symbols-outlined text-[28px]">fit_screen</span>
+</div>
+<div class="font-label-mono-sm text-label-mono-sm text-secondary mb-1">02 / UNIVERSAL FIT</div>
+<h3 class="font-headline-md text-headline-md font-bold text-on-surface mb-3">
+              告别配件难题 · 即买即用
+            </h3>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+              彻底打破小众设备“买不到保护套和贴膜”的痛点。精心设计标准化曲率与四角圆角，无缝适配市面主流标准化钢化膜、磁吸生态环及通用车载支架。
+            </p>
+</div>
+<div class="mt-8 pt-4 border-t border-outline-variant/30 flex items-center justify-between text-outline font-label-mono-sm text-label-mono-sm">
+<span>RADIUS STANDARD: R4</span>
+<span>ECOSYSTEM: OPEN FIT</span>
+</div>
+</div>
+<!-- Precision 03 -->
+<div class="cold-glass-card p-6 sm:p-8 rounded-2xl relative flex flex-col justify-between">
+<div>
+<div class="w-12 h-12 rounded-xl bg-surface-container-highest border border-primary/30 flex items-center justify-center text-primary mb-6">
+<span class="material-symbols-outlined text-[28px]">sports_martial_arts</span>
+</div>
+<div class="font-label-mono-sm text-label-mono-sm text-primary mb-1">03 / CYBER STREETWEAR</div>
+<h3 class="font-headline-md text-headline-md font-bold text-on-surface mb-3">
+              不锈钢挂绳孔与机能伞绳
+            </h3>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+              机身一体化精密 CNC 不锈钢受力锚点，标配特种高密度编织伞绳与快速调节扣。满足潮人穿搭、斜跨佩戴与户外机能出行，让科技成为身上耀眼的饰物。
+            </p>
+</div>
+<div class="mt-8 pt-4 border-t border-outline-variant/30 flex items-center justify-between text-outline font-label-mono-sm text-label-mono-sm">
+<span>TENSILE STRENGTH: 50KG</span>
+<span>WEAVING: 7-STRAND</span>
+</div>
+</div>
+</div>
+</section>
+<!-- ========================================================================= -->
+<!-- 5. Service Guarantees & Global Outbound (坚实服务保障 · 智造双品牌出海) -->
+<!-- ========================================================================= -->
+<section class="max-w-7xl mx-auto px-6 lg:px-12 py-16" id="global-strategy">
+<div class="cold-glass-card rounded-3xl p-8 lg:p-12 border border-outline-variant/40 relative overflow-hidden">
+<!-- Header -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center pb-12 border-b border-outline-variant/30">
+<div class="lg:col-span-7">
+<span class="font-label-mono-sm text-label-mono-sm text-primary tracking-widest uppercase block">
+              GLOBAL BRAND // 出海战略 &amp; 坚实保障
+            </span>
+<h3 class="font-headline-lg-mobile lg:font-headline-lg text-headline-lg-mobile lg:text-headline-lg font-bold text-on-surface mt-2">
+              自研工厂直达全球 · 每一份信任都有托付
+            </h3>
+<p class="font-body-md text-body-md text-on-surface-variant mt-3 max-w-xl">
+              「幸运无限」深耕国内精品潮电体验，海外以「LUCK WHEAT」高端独立品牌全面出海。自有百级无尘车间，全链路质检标准直通欧美日韩。
+            </p>
+</div>
+<!-- Dual Brand Badge -->
+<div class="lg:col-span-5 flex flex-col sm:flex-row items-center justify-end gap-4">
+<div class="bg-surface-container-high/80 border border-outline-variant/40 rounded-xl p-4 text-center w-full sm:w-auto">
+<span class="font-label-mono-sm text-label-mono-sm text-outline block">DOMESTIC BRAND</span>
+<span class="font-headline-md text-headline-md font-bold text-primary">幸运无限</span>
+</div>
+<div class="text-outline text-xl font-bold">⇄</div>
+<div class="bg-surface-container-high/80 border border-secondary/40 rounded-xl p-4 text-center w-full sm:w-auto">
+<span class="font-label-mono-sm text-label-mono-sm text-outline block">OVERSEAS BRAND</span>
+<span class="font-headline-md text-headline-md font-bold text-secondary">LUCK WHEAT</span>
+</div>
+</div>
+</div>
+<!-- Assurance Grid & Global Reach -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pt-10">
+<div class="flex items-start gap-4">
+<div class="p-3 rounded-lg bg-surface-container-highest text-primary">
+<span class="material-symbols-outlined text-[24px]">verified_user</span>
+</div>
+<div>
+<div class="font-headline-md text-body-lg font-bold text-on-surface">全国联保网点</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant mt-1">1000+ 线下售后服务站点支持，安心无忧保障</div>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<div class="p-3 rounded-lg bg-surface-container-highest text-primary">
+<span class="material-symbols-outlined text-[24px]">build</span>
+</div>
+<div>
+<div class="font-headline-md text-body-lg font-bold text-on-surface">1年官方工厂质保</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant mt-1">自研自动化原厂直修，全程顺丰双向寄修包邮</div>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<div class="p-3 rounded-lg bg-surface-container-highest text-secondary">
+<span class="material-symbols-outlined text-[24px]">assignment_return</span>
+</div>
+<div>
+<div class="font-headline-md text-body-lg font-bold text-on-surface">7天无理由退换</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant mt-1">体验不满意随时退换，保障消费者核心权益</div>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<div class="p-3 rounded-lg bg-surface-container-highest text-secondary">
+<span class="material-symbols-outlined text-[24px]">public</span>
+</div>
+<div>
+<div class="font-headline-md text-body-lg font-bold text-on-surface">全球认证畅销</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant mt-1">通过 CE / FCC / RoHS，热销欧美亚 30+ 区域</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- ========================================================================= -->
+<!-- 6. Pre-order / Reservation Banner (立即预约) -->
+<!-- ========================================================================= -->
+<section class="max-w-7xl mx-auto px-6 lg:px-12 py-16" id="reserve">
+<div class="relative rounded-3xl p-8 sm:p-14 overflow-hidden border border-primary/40 bg-gradient-to-br from-surface-container via-surface-container-low to-surface-container-lowest">
+<!-- Background Lighting Bloom -->
+<div class="absolute -right-24 -bottom-24 w-96 h-96 bg-primary/20 rounded-full blur-3xl pointer-events-none"></div>
+<div class="relative z-10 max-w-3xl">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/30 mb-6">
+<span class="w-2 h-2 rounded-full bg-primary-container"></span>
+<span class="font-label-mono-sm text-label-mono-sm text-primary font-bold">
+              EARLY ACCESS // LIMITED ALLOCATION
+            </span>
+</div>
+<h2 class="font-display-xl-mobile sm:font-display-xl text-display-xl-mobile sm:text-display-xl font-bold text-on-surface leading-tight">
+            成为首批拥有“幸运”的人
+          </h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant mt-4 leading-relaxed">
+            立即预约享首发特惠资格。抢先预约用户免费赠送价值 ¥199 的<strong class="text-on-surface">「专属机身激光刻字」</strong>与<strong class="text-primary">「限定特种编织伞绳挂件套装」</strong>。
+          </p>
+<!-- Reservation Form -->
+<form class="mt-8 flex flex-col sm:flex-row gap-3 max-w-xl" onsubmit="event.preventDefault(); alert('感谢您的预约！幸运无限顾问将第一时间与您联系。');">
+<div class="relative flex-1">
+<input class="w-full bg-surface-container-lowest text-on-surface border border-outline-variant/50 focus:border-secondary-container focus:ring-1 focus:ring-secondary-container rounded-lg px-4 py-3.5 font-label-mono-md text-label-mono-md placeholder:text-outline outline-none transition-all" placeholder="输入手机号 / Email 接收预约编号..." required="" type="text"/>
+</div>
+<button class="glow-amber-btn text-surface-container-lowest font-headline-md text-body-md font-bold px-8 py-3.5 rounded-lg flex items-center justify-center gap-2 whitespace-nowrap" type="submit">
+<span>立即锁定名额</span>
+<span class="material-symbols-outlined text-[18px]">verified</span>
+</button>
+</form>
+<!-- Social Proof / Counter -->
+<div class="flex items-center gap-6 mt-6 font-label-mono-sm text-label-mono-sm text-outline">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span>已有 <span class="text-primary font-bold">28,490+</span> 位用户登记预约</span>
+</div>
+<div class="hidden sm:block">
+              PRIORITY DISPATCH // Q2 第一批次发货
+            </div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- ========================================================================= -->
+<!-- Footer (Shared Component Anchor) -->
+<!-- ========================================================================= -->
+<footer class="bg-surface-container-lowest dark:bg-surface-container-lowest docked full-width bottom border-t border-outline-variant/20 mt-16">
+<div class="w-full px-6 lg:px-12 py-16 max-w-7xl mx-auto flex flex-col gap-12">
+<!-- Top Brand Row -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+<div>
+<div class="font-headline-lg text-headline-lg tracking-tight text-on-surface dark:text-on-surface font-bold flex items-center gap-3">
+<div class="w-7 h-7 rounded bg-surface-container-highest p-0.5 border border-outline-variant/40 flex items-center justify-center">
+<img alt="Lucy Star Logo" class="w-full h-full object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1VUKGHqoBnSlEOByROsD9ZIEiMD6sZ9SOAqZQcxqrU5NP0K5_kLk-cZyh0DmjjtSHFjeL2jbDBJLqPUyVUNoVELKpXGTVapUnutP-kKcpjNclgugLTyaA6Zu_KVn4Hta4JLyVm8C75SqAU9ddRJsH3n-KeaH61lGK6LNKm0s1VtF98Ayzh_-6QOOxxRITUZRn41I2do9cQwf0M8kX1frXyQ1kaT82gTqg89y0KFyf9lwV_MiPZt8U4GAPsy"/>
+</div>
+<span>LUCK WHEAT // 幸运无限</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">
+            拥有它，就拥有幸运 · 潮流数码与物理硬件 AI 的精密共生体
+          </p>
+</div>
+<div class="flex items-center gap-4">
+<span class="font-label-mono-sm text-label-mono-sm text-outline border border-outline-variant/30 px-3 py-1 rounded">
+            FACTORY: DUAL-CHANNEL ISO9001
+          </span>
+<span class="font-label-mono-sm text-label-mono-sm text-primary border border-primary/30 px-3 py-1 rounded">
+            OVERSEAS DISPATCH: ACTIVE
+          </span>
+</div>
+</div>
+<!-- Links Grid from JSON -->
+<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-6 pt-6 border-t border-outline-variant/20">
+<div class="flex flex-col gap-2">
+<span class="font-label-caps text-label-caps text-on-surface">HARDWARE</span>
+<a class="text-on-surface-variant font-label-mono-sm hover:text-on-surface hover:text-secondary-fixed transition-colors duration-150 hover:translate-x-0.5 transition-transform duration-150" href="#hardware">
+            Hardware Ecosystem &amp; Specs
+          </a>
+</div>
+<div class="flex flex-col gap-2">
+<span class="font-label-caps text-label-caps text-on-surface">BRANDING</span>
+<a class="text-on-surface-variant font-label-mono-sm hover:text-on-surface hover:text-secondary-fixed transition-colors duration-150 hover:translate-x-0.5 transition-transform duration-150" href="#global-strategy">
+            Global Dual-Brand Outbound
+          </a>
+</div>
+<div class="flex flex-col gap-2">
+<span class="font-label-caps text-label-caps text-on-surface">MANUFACTURING</span>
+<a class="text-on-surface-variant font-label-mono-sm hover:text-on-surface hover:text-secondary-fixed transition-colors duration-150 hover:translate-x-0.5 transition-transform duration-150" href="#philosophy">
+            Supply Chain &amp; Direct Factory
+          </a>
+</div>
+<div class="flex flex-col gap-2">
+<span class="font-label-caps text-label-caps text-on-surface">SOFTWARE</span>
+<a class="text-on-surface-variant font-label-mono-sm hover:text-on-surface hover:text-secondary-fixed transition-colors duration-150 hover:translate-x-0.5 transition-transform duration-150" href="#flagship">
+            Lucky Key AI SDK
+          </a>
+</div>
+<div class="flex flex-col gap-2">
+<span class="font-label-caps text-label-caps text-on-surface">SECURITY</span>
+<a class="text-on-surface-variant font-label-mono-sm hover:text-on-surface hover:text-secondary-fixed transition-colors duration-150 hover:translate-x-0.5 transition-transform duration-150" href="#global-strategy">
+            Privacy &amp; Compliance
+          </a>
+</div>
+<div class="flex flex-col gap-2">
+<span class="font-label-caps text-label-caps text-on-surface">SUPPORT</span>
+<a class="text-primary font-label-mono-sm hover:text-on-surface hover:text-secondary-fixed transition-colors duration-150 hover:translate-x-0.5 transition-transform duration-150" href="#reserve">
+            Contact Overseas Dispatch
+          </a>
+</div>
+</div>
+<!-- Bottom Bar & Mandatory Copyright String -->
+<div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-8 border-t border-outline-variant/20 font-label-mono-sm text-label-mono-sm text-outline">
+<div>
+          © 2025 LUCK WHEAT INC. // OVERSEAS BRAND: LUCK WHEAT. ALL RIGHTS RESERVED. PRECISION HARDWARE INDUSTRIALISM.
+        </div>
+<div class="flex items-center gap-6">
+<span class="hover:text-on-surface cursor-pointer">TERMS</span>
+<span class="hover:text-on-surface cursor-pointer">PRIVACY</span>
+<span class="hover:text-on-surface cursor-pointer">CE MARKING</span>
+<span class="text-primary font-bold cursor-pointer">LUCKY KEY REV 1.0</span>
+</div>
+</div>
+</div>
+</footer>
+</body></html>

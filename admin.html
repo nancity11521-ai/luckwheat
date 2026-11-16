@@ -1,0 +1,2356 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LUCK WHEAT 幸运无限 · 官网后台管理中心</title>
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --admin-bg: #f5f5f7;
+      --admin-sidebar-bg: #1d1d1f;
+      --admin-surface: #ffffff;
+      --admin-text-main: #1d1d1f;
+      --admin-text-muted: #86868b;
+      --admin-border: rgba(0, 0, 0, 0.08);
+      --admin-border-dark: rgba(255, 255, 255, 0.1);
+      --admin-blue: #0071e3;
+      --admin-blue-hover: #0077ed;
+      --admin-green: #34c759;
+      --admin-orange: #ff9500;
+      --admin-radius: 14px;
+      --admin-font: -apple-system, BlinkMacSystemFont, "Inter", "SF Pro Text", "PingFang SC", sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--admin-font);
+      background: var(--admin-bg);
+      color: var(--admin-text-main);
+      display: flex;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* 登录弹窗 (未登录拦截) */
+    .login-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.72);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      z-index: 100000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .login-overlay.hidden { display: none !important; }
+    .login-box {
+      width: 100%;
+      max-width: 400px;
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 36px 32px;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+      text-align: center;
+    }
+    .login-logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 1.15rem;
+      margin-bottom: 24px;
+    }
+    .login-input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid #d2d2d7;
+      border-radius: 10px;
+      font-size: 14px;
+      color: #1d1d1f;
+      background: #fff;
+      margin-bottom: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .login-input:focus { border-color: var(--admin-blue); }
+    .btn-login {
+      width: 100%;
+      padding: 12px;
+      background: var(--admin-sidebar-bg);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    .btn-login:hover { opacity: 0.9; }
+
+    /* 侧边导航栏 */
+    .admin-sidebar {
+      width: 260px;
+      background: var(--admin-sidebar-bg);
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+    .sidebar-header {
+      padding: 24px 20px 20px;
+      border-bottom: 1px solid var(--admin-border-dark);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .sidebar-brand-name {
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      line-height: 1.3;
+    }
+    .sidebar-brand-sub {
+      font-size: 11px;
+      color: #8e8e93;
+    }
+    .sidebar-nav {
+      padding: 18px 12px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 11px 16px;
+      border-radius: 10px;
+      color: #d1d1d6;
+      text-decoration: none;
+      font-size: 13.5px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .nav-item:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: #ffffff;
+    }
+    .nav-item.active {
+      background: var(--admin-blue);
+      color: #ffffff;
+      font-weight: 600;
+    }
+    .nav-item svg { width: 18px; height: 18px; flex-shrink: 0; opacity: 0.85; }
+    .sidebar-footer {
+      padding: 18px 20px;
+      border-top: 1px solid var(--admin-border-dark);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      color: #8e8e93;
+    }
+    .btn-logout {
+      background: none;
+      border: none;
+      color: #ff453a;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    /* 主内容区 */
+    .admin-main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      background: var(--admin-bg);
+    }
+    .admin-topbar {
+      height: 64px;
+      background: #ffffff;
+      border-bottom: 1px solid var(--admin-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .topbar-title {
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: #1d1d1f;
+    }
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .btn-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 16px;
+      border-radius: 980px;
+      font-size: 13px;
+      font-weight: 500;
+      text-decoration: none;
+      cursor: pointer;
+      border: 1px solid var(--admin-border);
+      background: #fff;
+      color: var(--admin-text-main);
+      transition: all 0.15s ease;
+    }
+    .btn-pill:hover { background: #f0f0f2; }
+    .btn-pill-primary {
+      background: var(--admin-sidebar-bg);
+      color: #fff;
+      border-color: var(--admin-sidebar-bg);
+    }
+    .btn-pill-primary:hover { background: #000; }
+    .btn-pill-blue {
+      background: var(--admin-blue);
+      color: #fff;
+      border-color: var(--admin-blue);
+    }
+    .btn-pill-blue:hover { background: var(--admin-blue-hover); }
+
+    .admin-content {
+      padding: 32px;
+      flex: 1;
+      max-width: 1400px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    /* 面板切换 */
+    .admin-panel { display: none; }
+    .admin-panel.active { display: block; }
+
+    /* 模块通用卡片 */
+    .panel-card {
+      background: var(--admin-surface);
+      border: 1px solid var(--admin-border);
+      border-radius: var(--admin-radius);
+      padding: 24px 28px;
+      margin-bottom: 24px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+    }
+    .panel-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+    }
+    .panel-card-title {
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: #1d1d1f;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* 表单控件 */
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .form-label {
+      display: block;
+      font-size: 13.5px;
+      font-weight: 600;
+      color: #1d1d1f;
+      margin-bottom: 8px;
+    }
+    .form-label span {
+      font-size: 12px;
+      color: var(--admin-text-muted);
+      font-weight: normal;
+      margin-left: 6px;
+    }
+    .form-input, .form-textarea, .form-select {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid #d2d2d7;
+      border-radius: 8px;
+      font-size: 14px;
+      color: #1d1d1f;
+      background: #ffffff;
+      outline: none;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+    .form-input:focus, .form-textarea:focus, .form-select:focus {
+      border-color: var(--admin-blue);
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.12);
+    }
+    .form-textarea { resize: vertical; min-height: 86px; line-height: 1.55; }
+
+    /* 图片上传控件 */
+    .image-field-wrap {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 16px;
+      background: #f8f8fa;
+      border-radius: 12px;
+      border: 1px dashed rgba(0,0,0,0.12);
+    }
+    .image-thumb-box {
+      width: 100px;
+      height: 70px;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #fff;
+      border: 1px solid var(--admin-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .image-thumb-box img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: cover;
+    }
+    .image-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      flex: 1;
+    }
+
+    /* 实时 SERP 模拟预览卡片 */
+    .serp-preview-box {
+      background: #ffffff;
+      border: 1px solid #dfe1e5;
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 14px;
+      max-width: 680px;
+      box-shadow: 0 1px 6px rgba(32,33,36,0.1);
+    }
+    .serp-url {
+      font-size: 13px;
+      color: #202124;
+      line-height: 1.3;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .serp-title {
+      font-size: 18px;
+      color: #1a0dab;
+      line-height: 1.3;
+      margin-bottom: 4px;
+      font-weight: 500;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+    .serp-desc {
+      font-size: 13.5px;
+      color: #4d5156;
+      line-height: 1.5;
+    }
+
+    /* 社交分享卡片模拟器 */
+    .social-share-card {
+      max-width: 480px;
+      border: 1px solid #cfd9de;
+      border-radius: 16px;
+      overflow: hidden;
+      background: #fff;
+      margin-top: 14px;
+    }
+    .social-share-cover {
+      width: 100%;
+      height: 200px;
+      background: #f7f9f9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .social-share-cover img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .social-share-info {
+      padding: 14px 16px;
+    }
+    .social-share-title {
+      font-size: 14.5px;
+      font-weight: 700;
+      color: #0f1419;
+      margin-bottom: 4px;
+    }
+    .social-share-desc {
+      font-size: 12.5px;
+      color: #536471;
+      line-height: 1.4;
+    }
+
+    /* 表格 */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13.5px;
+    }
+    .data-table th, .data-table td {
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+    }
+    .data-table th {
+      background: #fafafc;
+      color: var(--admin-text-muted);
+      font-weight: 600;
+    }
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      border-radius: 980px;
+      font-size: 11.5px;
+      font-weight: 600;
+    }
+    .status-confirmed { background: #e3f9e5; color: #1e7e34; }
+    .status-pending { background: #fff4e5; color: #b76e00; }
+
+    /* 顶部仪表盘指标网格 */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      margin-bottom: 28px;
+    }
+    .metric-card {
+      background: #ffffff;
+      border: 1px solid var(--admin-border);
+      border-radius: var(--admin-radius);
+      padding: 22px 24px;
+      display: flex;
+      flex-direction: column;
+    }
+    .metric-num {
+      font-size: 2.2rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-top: 6px;
+      font-family: "SF Pro Display", var(--admin-font);
+    }
+    .metric-lbl {
+      font-size: 13px;
+      color: var(--admin-text-muted);
+      font-weight: 500;
+    }
+
+    /* 提示消息 Toast */
+    .toast-msg {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      background: #1d1d1f;
+      color: #fff;
+      padding: 12px 22px;
+      border-radius: 12px;
+      font-size: 13.5px;
+      font-weight: 500;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+      z-index: 999999;
+      transform: translateY(80px);
+      opacity: 0;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .toast-msg.show { transform: translateY(0); opacity: 1; }
+  
+    /* 全站图片总库与素材卡片 */
+    .media-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 18px;
+      margin-top: 16px;
+    }
+    .media-card {
+      background: #ffffff;
+      border: 1px solid #e5e5ea;
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transition: all 0.2s;
+    }
+    .media-card:hover {
+      box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+      border-color: #d2d2d7;
+    }
+    .media-preview-box {
+      width: 100%;
+      height: 150px;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #f8f8fa;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(0,0,0,0.06);
+    }
+    .media-preview-box img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+    .media-card-title {
+      font-size: 13.5px;
+      font-weight: 600;
+      color: #1d1d1f;
+    }
+    .media-card-desc {
+      font-size: 11.5px;
+      color: var(--admin-text-muted);
+      line-height: 1.4;
+    }
+    .media-card-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: auto;
+    }
+    .btn-media-upload {
+      flex: 1;
+      padding: 7px 10px;
+      font-size: 12px;
+      border-radius: 6px;
+      background: var(--admin-sidebar-bg);
+      color: #fff;
+      text-align: center;
+      cursor: pointer;
+      font-weight: 500;
+    }
+    .btn-media-reset {
+      padding: 7px 10px;
+      font-size: 12px;
+      border-radius: 6px;
+      background: #f0f0f2;
+      color: #333;
+      border: none;
+      cursor: pointer;
+    }
+    .btn-media-reset:hover { background: #e5e5ea; }
+
+    /* 全局文字快速替换 */
+    .quick-replace-box {
+      background: #fafafc;
+      border: 1px solid #e5e5ea;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .replace-rule-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      background: #ffffff;
+      border: 1px solid #e5e5ea;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      font-size: 13px;
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- 登录校验遮罩 -->
+  <div class="login-overlay" id="login-overlay">
+    <div class="login-box">
+      <div class="login-logo">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v20M2 12h20M4.93 4.93l14.14 14.14M4.93 19.07L19.07 4.93"/></svg>
+        <span>LUCK WHEAT 管理控制台</span>
+      </div>
+      <p style="font-size: 13px; color: var(--admin-text-muted); margin-bottom: 20px;">
+        官方品牌全站图文内容与 SEO 优化管理系统
+      </p>
+      <input type="text" id="login-user" class="login-input" placeholder="管理员账号 (默认: admin)" value="admin">
+      <input type="password" id="login-pwd" class="login-input" placeholder="管理密码 (默认: luck2026)" value="luck2026">
+      <button type="button" class="btn-login" id="btn-login-submit">登 录 系 统</button>
+      <div style="font-size: 11.5px; color: var(--admin-text-muted); margin-top: 14px;">
+        仅限已授权管理人员操作 · 采用安全本地隔离技术
+      </div>
+    </div>
+  </div>
+
+  <!-- 侧边导航栏 -->
+  <aside class="admin-sidebar">
+    <div class="sidebar-header">
+      <div style="width: 32px; height: 32px; border-radius: 8px; background: #fff; display: flex; align-items: center; justify-content: center; color: #000;">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v20M2 12h20M4.93 4.93l14.14 14.14M4.93 19.07L19.07 4.93"/></svg>
+      </div>
+      <div>
+        <div class="sidebar-brand-name">LUCK WHEAT 幸运无限</div>
+        <div class="sidebar-brand-sub">品牌管理后台 v2.0</div>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-item active" data-target="dashboard">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+        <span>运营仪表盘</span>
+      </div>
+      <div class="nav-item" data-target="cms">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+        <span>全站图文内容 (CMS)</span>
+      </div>
+      <div class="nav-item" data-target="seo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        <span>SEO 优化中心</span>
+      </div>
+      <div class="nav-item" data-target="leads">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+        <span>预约与客户线索</span>
+      </div>
+      <div class="nav-item" data-target="partnerships">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+        <span>商业代理合作</span>
+      </div>
+      <div class="nav-item" data-target="settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+        <span>全站系统设置</span>
+      </div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <span>已登入: 管理员</span>
+      <button type="button" class="btn-logout" id="btn-logout">退出</button>
+    </div>
+  </aside>
+
+  <!-- 主工作区 -->
+  <main class="admin-main">
+    <header class="admin-topbar">
+      <div class="topbar-title" id="page-current-title">运营仪表盘</div>
+      <div class="topbar-actions">
+        <a href="index.html" target="_blank" class="btn-pill">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+          查看前台官网
+        </a>
+        <button type="button" class="btn-pill btn-pill-primary" id="btn-save-all">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+          一键保存全站变更
+        </button>
+      </div>
+    </header>
+
+    <div class="admin-content">
+
+      <!-- ================= 1. 运营仪表盘 ================= -->
+      <section class="admin-panel active" id="panel-dashboard">
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <span class="metric-lbl">Lucky Mini 累计预约量</span>
+            <div class="metric-num" style="color: var(--admin-blue);">1,286 <span style="font-size: 14px; font-weight: normal; color: var(--admin-green);">+12% 今日</span></div>
+          </div>
+          <div class="metric-card">
+            <span class="metric-lbl">待跟进商业代理申请</span>
+            <div class="metric-num" style="color: var(--admin-orange);">18 <span style="font-size: 14px; font-weight: normal; color: var(--admin-text-muted);">单</span></div>
+          </div>
+          <div class="metric-card">
+            <span class="metric-lbl">全站上架硬件系列</span>
+            <div class="metric-num">3 <span style="font-size: 14px; font-weight: normal; color: var(--admin-text-muted);">大系列 / 6款单品</span></div>
+          </div>
+          <div class="metric-card">
+            <span class="metric-lbl">SEO 页面健康度得分</span>
+            <div class="metric-num" style="color: var(--admin-green);">98 <span style="font-size: 14px; font-weight: normal; color: var(--admin-text-muted);">/ 100</span></div>
+          </div>
+        </div>
+
+        <div class="panel-card">
+          <div class="panel-card-header">
+            <div class="panel-card-title">最新预约客户名单 (实时前台同步)</div>
+            <button type="button" class="btn-pill" onclick="switchNav('leads')">查看全部线索 &gt;</button>
+          </div>
+          <table class="data-table" id="dashboard-leads-table">
+            <thead>
+              <tr>
+                <th>客户姓名</th>
+                <th>联系电话</th>
+                <th>意向硬件</th>
+                <th>提交时间</th>
+                <th>当前状态</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- 动态插入 -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ================= 2. 全站图文内容 (CMS) ================= -->
+            <!-- ================= 2. 全站图文内容 (CMS) ================= -->
+      <section class="admin-panel" id="panel-cms">
+        <div class="panel-card">
+          <div class="panel-card-header">
+            <div class="panel-card-title">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+              <span>选择要编辑的页面或功能</span>
+            </div>
+            <select class="form-select" id="cms-page-selector" style="max-width: 320px; font-weight: 500;">
+              <option value="index">官方首页 (index.html)</option>
+              <option value="products">产品中心 (products.html)</option>
+              <option value="lucky_mini">Lucky Mini 旗舰页 (lucky-mini.html)</option>
+              <option value="support">服务支持 (support.html)</option>
+              <option value="channels">购买渠道 (channels.html)</option>
+              <option value="partners">合作代理 (partners.html)</option>
+              <option value="about">关于我们 (about.html)</option>
+              <option value="contact">联系我们 (contact.html)</option>
+              <option value="global">全站通用公用区 (页眉/页脚/品牌/资质)</option>
+              <option value="media_library">🖼️ 全站所有图片素材总库 (集中上传替换)</option>
+              <option value="quick_replace">🔍 全站任意文字快速查找与批量替换</option>
+            </select>
+          </div>
+          <p style="font-size: 13px; color: var(--admin-text-muted); margin-bottom: 24px;">
+            提示：在此可编辑前台官网的<strong>所有文字、参数数值与各模块图片</strong>。点击右上角黑色「一键保存全站变更」后，前台各页面即刻同步呈现！
+          </p>
+
+          <!-- 1. 首页 CMS 编辑容器 -->
+          <div class="cms-page-view" id="cms-view-index">
+            <!-- 幻灯片 1 -->
+            <div class="panel-card" style="background: #fafafc;">
+              <h3 style="font-size: 15px; margin-bottom: 16px;">首屏轮播第 1 张 · Lucky Mini 旗舰</h3>
+              <div class="form-group">
+                <label class="form-label">顶部小标签</label>
+                <input type="text" class="form-input" id="cms-index-hero-badge">
+              </div>
+              <div class="form-group">
+                <label class="form-label">大标题文案 <span>(Apple 官方彩虹渐变主标题)</span></label>
+                <input type="text" class="form-input" id="cms-index-hero-title">
+              </div>
+              <div class="form-group">
+                <label class="form-label">副标语 <span>(品牌经典 Slogan)</span></label>
+                <input type="text" class="form-input" id="cms-index-hero-sub">
+              </div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+                <div class="form-group">
+                  <label class="form-label">主操作按钮文案</label>
+                  <input type="text" class="form-input" id="cms-index-hero-btn1">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">次操作按钮文案</label>
+                  <input type="text" class="form-input" id="cms-index-hero-btn2">
+                </div>
+              </div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+                <div class="form-group">
+                  <label class="form-label">左侧特性浮动徽章</label>
+                  <input type="text" class="form-input" id="cms-index-hero-b-left">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">右侧价格浮动徽章</label>
+                  <input type="text" class="form-input" id="cms-index-hero-b-right">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Hero 主轮播背景大图</label>
+                <div class="image-field-wrap">
+                  <div class="image-thumb-box">
+                    <img id="thumb-index-hero" src="images/hero_banner_lucky_mini.jpg" alt="预览">
+                  </div>
+                  <div class="image-actions">
+                    <label for="upload-index-hero" class="btn-pill" style="align-self: flex-start; cursor: pointer;">
+                      📷 上传 / 更换大图
+                    </label>
+                    <input type="file" id="upload-index-hero" accept="image/*" style="display:none;" onchange="handleCmsImageUpload(this, 'index', 'hero_image_mini', 'thumb-index-hero')">
+                    <span style="font-size: 11.5px; color: var(--admin-text-muted);">建议尺寸 1920×1080，支持 JPG、PNG、WEBP</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 幻灯片 2 -->
+            <div class="panel-card" style="background: #fafafc;">
+              <h3 style="font-size: 15px; margin-bottom: 16px;">首屏轮播第 2 张 · LUCKY Tab 平板</h3>
+              <div class="form-group">
+                <label class="form-label">顶部小标签</label>
+                <input type="text" class="form-input" id="cms-index-hero2-badge">
+              </div>
+              <div class="form-group">
+                <label class="form-label">大标题文案</label>
+                <input type="text" class="form-input" id="cms-index-hero2-title">
+              </div>
+              <div class="form-group">
+                <label class="form-label">副标语</label>
+                <input type="text" class="form-input" id="cms-index-hero2-sub">
+              </div>
+              <div class="form-group">
+                <label class="form-label">轮播背景大图</label>
+                <div class="image-field-wrap">
+                  <div class="image-thumb-box">
+                    <img id="thumb-index-hero2" src="images/hero_banner_lucky_tab.jpg" alt="平板轮播图">
+                  </div>
+                  <div class="image-actions">
+                    <label for="upload-index-hero2" class="btn-pill" style="align-self: flex-start; cursor: pointer;">
+                      📷 上传 / 更换大图
+                    </label>
+                    <input type="file" id="upload-index-hero2" accept="image/*" style="display:none;" onchange="handleCmsImageUpload(this, 'index', 'hero_image_tab', 'thumb-index-hero2')">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 幻灯片 3 -->
+            <div class="panel-card" style="background: #fafafc;">
+              <h3 style="font-size: 15px; margin-bottom: 16px;">首屏轮播第 3 张 · 配件生态与机能挂绳</h3>
+              <div class="form-group">
+                <label class="form-label">大标题文案</label>
+                <input type="text" class="form-input" id="cms-index-hero3-title">
+              </div>
+              <div class="form-group">
+                <label class="form-label">副标语</label>
+                <input type="text" class="form-input" id="cms-index-hero3-sub">
+              </div>
+              <div class="form-group">
+                <label class="form-label">轮播背景大图</label>
+                <div class="image-field-wrap">
+                  <div class="image-thumb-box">
+                    <img id="thumb-index-hero3" src="images/hero_banner_accessories.jpg" alt="配件轮播图">
+                  </div>
+                  <div class="image-actions">
+                    <label for="upload-index-hero3" class="btn-pill" style="align-self: flex-start; cursor: pointer;">
+                      📷 上传 / 更换大图
+                    </label>
+                    <input type="file" id="upload-index-hero3" accept="image/*" style="display:none;" onchange="handleCmsImageUpload(this, 'index', 'hero_image_acc', 'thumb-index-hero3')">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 核心数据度量条 -->
+            <div class="panel-card" style="background: #fafafc;">
+              <h3 style="font-size: 15px; margin-bottom: 16px;">首页四大核心度量条</h3>
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px;">
+                <div>
+                  <label class="form-label">数据 1 数值与说明</label>
+                  <input type="text" class="form-input" id="cms-index-stat1-val" style="margin-bottom:6px;">
+                  <input type="text" class="form-input" id="cms-index-stat1-lbl">
+                </div>
+                <div>
+                  <label class="form-label">数据 2 数值与说明</label>
+                  <input type="text" class="form-input" id="cms-index-stat2-val" style="margin-bottom:6px;">
+                  <input type="text" class="form-input" id="cms-index-stat2-lbl">
+                </div>
+                <div>
+                  <label class="form-label">数据 3 数值与说明</label>
+                  <input type="text" class="form-input" id="cms-index-stat3-val" style="margin-bottom:6px;">
+                  <input type="text" class="form-input" id="cms-index-stat3-lbl">
+                </div>
+                <div>
+                  <label class="form-label">数据 4 数值与说明</label>
+                  <input type="text" class="form-input" id="cms-index-stat4-val" style="margin-bottom:6px;">
+                  <input type="text" class="form-input" id="cms-index-stat4-lbl">
+                </div>
+              </div>
+            </div>
+
+            <!-- 品牌理念与三张卡片 -->
+            <div class="panel-card" style="background: #fafafc;">
+              <h3 style="font-size: 15px; margin-bottom: 16px;">品牌理念区块 (Brand Philosophy)</h3>
+              <div class="form-group">
+                <label class="form-label">主标题 <span>(渐变大字)</span></label>
+                <input type="text" class="form-input" id="cms-index-concept-title">
+              </div>
+              <div class="form-group">
+                <label class="form-label">长段落阐述</label>
+                <textarea class="form-textarea" id="cms-index-concept-desc"></textarea>
+              </div>
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; margin-top: 14px;">
+                <div>
+                  <label class="form-label">卡片 1 标题与说明</label>
+                  <input type="text" class="form-input" id="cms-index-card1-title" style="margin-bottom:6px;">
+                  <textarea class="form-textarea" id="cms-index-card1-desc"></textarea>
+                </div>
+                <div>
+                  <label class="form-label">卡片 2 标题与说明</label>
+                  <input type="text" class="form-input" id="cms-index-card2-title" style="margin-bottom:6px;">
+                  <textarea class="form-textarea" id="cms-index-card2-desc"></textarea>
+                </div>
+                <div>
+                  <label class="form-label">卡片 3 标题与说明</label>
+                  <input type="text" class="form-input" id="cms-index-card3-title" style="margin-bottom:6px;">
+                  <textarea class="form-textarea" id="cms-index-card3-desc"></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- 底部合作 CTA -->
+            <div class="panel-card" style="background: #fafafc;">
+              <h3 style="font-size: 15px; margin-bottom: 16px;">底部合作 CTA 横幅</h3>
+              <div class="form-group">
+                <label class="form-label">大卡片标题 <span>(渐变色)</span></label>
+                <input type="text" class="form-input" id="cms-index-cta-title">
+              </div>
+              <div class="form-group">
+                <label class="form-label">合作招募说明文字</label>
+                <textarea class="form-textarea" id="cms-index-cta-desc"></textarea>
+              </div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+                <div class="form-group">
+                  <label class="form-label">按钮 1 文案</label>
+                  <input type="text" class="form-input" id="cms-index-cta-btn1">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">按钮 2 文案</label>
+                  <input type="text" class="form-input" id="cms-index-cta-btn2">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. 产品中心 CMS 编辑容器 -->
+          <div class="cms-page-view" id="cms-view-products" style="display: none;">
+            <div class="panel-card" style="background: #fafafc;">
+              <h3 style="font-size: 15px; margin-bottom: 16px;">产品中心 · 页面标题与导言</h3>
+              <div class="form-group">
+                <label class="form-label">主标题 <span>(彩虹渐变大字)</span></label>
+                <input type="text" class="form-input" id="cms-products-title">
+              </div>
+              <div class="form-group">
+                <label class="form-label">描述引言</label>
+                <textarea class="form-textarea" id="cms-products-desc"></textarea>
+              </div>
+            </div>
+
+            <!-- 手机系列 -->
+            <div class="panel-card" style="background: #fafafc;">
+              <h3 style="font-size: 15px; margin-bottom: 16px;">手机系列 · Lucky Mini 3.7" 单品管理</h3>
+              <div class="form-group">
+                <label class="form-label">单品实拍大图</label>
+                <div class="image-field-wrap">
+                  <div class="image-thumb-box">
+                    <img id="thumb-prod-phone" src="images/showcase_lucky_mini.jpg" alt="手机预览">
+                  </div>
+                  <div class="image-actions">
+                    <label for="upload-prod-phone" class="btn-pill" style="align-self: flex-start; cursor: pointer;">
+                      📷 上传 / 更换手机大图
+                    </label>
+                    <input type="file" id="upload-prod-phone" accept="image/*" style="display:none;" onchange="handleCmsImageUpload(this, 'products', 'phone_card_img', 'thumb-prod-phone')">
+                    <span style="font-size: 11.5px; color: var(--admin-text-muted);">同步更新产品中心双列大展台、详情弹窗及详情页！</span>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">产品名称</label>
+                <input type="text" class="form-input" id="cms-products-phone-title">
+              </div>
+              <div class="form-group">
+                <label class="form-label">单品副标语</label>
+                <input type="text" class="form-input" id="cms-products-phone-sub">
+              </div>
+              <div class="form-group">
+                <label class="form-label">产品详情描述</label>
+                <textarea class="form-textarea" id="cms-products-phone-desc"></textarea>
+              </div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+                <div class="form-group">
+                  <label class="form-label">官方售价</label>
+                  <input type="text" class="form-input" id="cms-products-phone-price">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">优惠说明</label>
+                  <input type="text" class="form-input" id="cms-products-phone-price-sub">
+                </div>
+              </div>
+            </div>
+
+            <!-- 平板系列 -->
+            <div class="panel-card" style="background: #fafafc;">
+              <h3 style="font-size: 15px; margin-bottom: 16px;">平板系列 · LUCKY Tab 8.68" & 10.1"</h3>
+              <div class="form-group">
+                <label class="form-label">平板展台实拍大图</label>
+                <div class="image-field-wrap">
+                  <div class="image-thumb-box">
+                    <img id="thumb-prod-tab" src="images/showcase_lucky_tab.jpg" alt="平板预览">
+                  </div>
+                  <div class="image-actions">
+                    <label for="upload-prod-tab" class="btn-pill" style="align-self: flex-start; cursor: pointer;">
+                      📷 上传 / 更换平板实拍大图
+                    </label>
+                    <input type="file" id="upload-prod-tab" accept="image/*" style="display:none;" onchange="handleCmsImageUpload(this, 'products', 'tablet_8_img', 'thumb-prod-tab')">
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">8.68 英寸平板标题与描述</label>
+                <input type="text" class="form-input" id="cms-products-tab8-title" style="margin-bottom:6px;">
+                <textarea class="form-textarea" id="cms-products-tab8-desc"></textarea>
+              </div>
+              <div class="form-group">
+                <label class="form-label">10.1 英寸平板标题与描述</label>
+                <input type="text" class="form-input" id="cms-products-tab10-title" style="margin-bottom:6px;">
+                <textarea class="form-textarea" id="cms-products-tab10-desc"></textarea>
+              </div>
+            </div>
+
+            <!-- 配件系列 -->
+            <div class="panel-card" style="background: #fafafc;">
+              <h3 style="font-size: 15px; margin-bottom: 16px;">配件系列 · 机能工装伞绳、闪充与壳膜</h3>
+              <div class="form-group">
+                <label class="form-label">配件展台实拍大图</label>
+                <div class="image-field-wrap">
+                  <div class="image-thumb-box">
+                    <img id="thumb-prod-acc" src="images/showcase_accessories.jpg" alt="配件预览">
+                  </div>
+                  <div class="image-actions">
+                    <label for="upload-prod-acc" class="btn-pill" style="align-self: flex-start; cursor: pointer;">
+                      📷 上传 / 更换配件实拍大图
+                    </label>
+                    <input type="file" id="upload-prod-acc" accept="image/*" style="display:none;" onchange="handleCmsImageUpload(this, 'products', 'acc_rope_img', 'thumb-prod-acc')">
+                  </div>
+                </div>
+              </div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+                <div class="form-group">
+                  <label class="form-label">机能伞绳标题与价格</label>
+                  <input type="text" class="form-input" id="cms-products-rope-title" style="margin-bottom:6px;">
+                  <input type="text" class="form-input" id="cms-products-rope-price">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">45W 闪充标题与状态</label>
+                  <input type="text" class="form-input" id="cms-products-charge-title" style="margin-bottom:6px;">
+                  <input type="text" class="form-input" id="cms-products-charge-price">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. Lucky Mini 旗舰页 CMS 编辑容器 -->
+          <div class="cms-page-view" id="cms-view-lucky_mini" style="display: none;">
+            <div class="panel-card" style="background: #fafafc;">
+              <h3 style="font-size: 15px; margin-bottom: 16px;">旗舰单品展示、售价与亮点</h3>
+              <div class="form-group">
+                <label class="form-label">顶部首发徽标</label>
+                <input type="text" class="form-input" id="cms-mini-badge">
+              </div>
+              <div class="form-group">
+                <label class="form-label">旗舰单品主标题</label>
+                <input type="text" class="form-input" id="cms-mini-title">
+              </div>
+              <div class="form-group">
+                <label class="form-label">核心副标语</label>
+                <textarea class="form-textarea" id="cms-mini-sub"></textarea>
+              </div>
+              <div class="form-group">
+                <label class="form-label">长篇详细阐述</label>
+                <textarea class="form-textarea" id="cms-mini-desc"></textarea>
+              </div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+                <div class="form-group">
+                  <label class="form-label">官方售价</label>
+                  <input type="text" class="form-input" id="cms-mini-price">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">价格换算说明</label>
+                  <input type="text" class="form-input" id="cms-mini-price-sub">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">首发活动限时特权说明</label>
+                <input type="text" class="form-input" id="cms-mini-promo">
+              </div>
+              <div class="form-group">
+                <label class="form-label">五大核心能力大标题与说明</label>
+                <input type="text" class="form-input" id="cms-mini-feat-title" style="margin-bottom:6px;">
+                <input type="text" class="form-input" id="cms-mini-feat-desc">
+              </div>
+            </div>
+          </div>
+
+          <!-- 4. 服务支持 CMS 编辑容器 -->
+          <div class="cms-page-view" id="cms-view-support" style="display: none;">
+            <div class="panel-card" style="background: #fafafc;">
+              <h3 style="font-size: 15px; margin-bottom: 16px;">服务支持 (support.html)</h3>
+              <div class="form-group">
+                <label class="form-label">页面大标题</label>
+                <input type="text" class="form-input" id="cms-support-title">
+              </div>
+              <div class="form-group">
+                <label class="form-label">引言描述</label>
+                <textarea class="form-textarea" id="cms-support-desc"></textarea>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Lucky OS 生态标题</label>
+                <input type="text" class="form-input" id="cms-support-os">
+              </div>
+              <div class="form-group">
+                <label class="form-label">保修政策板块标题</label>
+                <input type="text" class="form-input" id="cms-support-warranty">
+              </div>
+              <div class="form-group">
+                <label class="form-label">常见问题 FAQ 标题</label>
+                <input type="text" class="form-input" id="cms-support-faq">
+              </div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+                <div class="form-group">
+                  <label class="form-label">客服服务电话</label>
+                  <input type="text" class="form-input" id="cms-support-hotline">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">售后支持邮箱</label>
+                  <input type="text" class="form-input" id="cms-support-email">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 5. 购买渠道 CMS 编辑容器 -->
+          <div class="cms-page-view" id="cms-view-channels" style="display: none;">
+            <div class="panel-card" style="background: #fafafc;">
+              <h3 style="font-size: 15px; margin-bottom: 16px;">购买渠道 (channels.html)</h3>
+              <div class="form-group">
+                <label class="form-label">页面大标题</label>
+                <input type="text" class="form-input" id="cms-channels-title">
+              </div>
+              <div class="form-group">
+                <label class="form-label">引言描述</label>
+                <textarea class="form-textarea" id="cms-channels-desc"></textarea>
+              </div>
+              <div class="form-group">
+                <label class="form-label">渠道政策板块标题</label>
+                <input type="text" class="form-input" id="cms-channels-policy">
+              </div>
+              <div class="form-group">
+                <label class="form-label">采购意向咨询标题</label>
+                <input type="text" class="form-input" id="cms-channels-form">
+              </div>
+            </div>
+          </div>
+
+          <!-- 6. 合作代理 CMS 编辑容器 -->
+          <div class="cms-page-view" id="cms-view-partners" style="display: none;">
+            <div class="panel-card" style="background: #fafafc;">
+              <h3 style="font-size: 15px; margin-bottom: 16px;">合作代理 (partners.html)</h3>
+              <div class="form-group">
+                <label class="form-label">页面大标题</label>
+                <input type="text" class="form-input" id="cms-partners-title">
+              </div>
+              <div class="form-group">
+                <label class="form-label">引言描述</label>
+                <textarea class="form-textarea" id="cms-partners-desc"></textarea>
+              </div>
+              <div class="form-group">
+                <label class="form-label">赋能支持板块标题</label>
+                <input type="text" class="form-input" id="cms-partners-support">
+              </div>
+              <div class="form-group">
+                <label class="form-label">合作四阶段标题</label>
+                <input type="text" class="form-input" id="cms-partners-steps">
+              </div>
+              <div class="form-group">
+                <label class="form-label">申请表单板块标题</label>
+                <input type="text" class="form-input" id="cms-partners-apply">
+              </div>
+            </div>
+          </div>
+
+          <!-- 7. 关于我们 CMS 编辑容器 -->
+          <div class="cms-page-view" id="cms-view-about" style="display: none;">
+            <div class="panel-card" style="background: #fafafc;">
+              <h3 style="font-size: 15px; margin-bottom: 16px;">关于我们 (about.html) · 文字与资质原件</h3>
+              <div class="form-group">
+                <label class="form-label">页面大标题</label>
+                <input type="text" class="form-input" id="cms-about-title">
+              </div>
+              <div class="form-group">
+                <label class="form-label">引言描述</label>
+                <textarea class="form-textarea" id="cms-about-desc"></textarea>
+              </div>
+              <div class="form-group">
+                <label class="form-label">成长历程标题</label>
+                <input type="text" class="form-input" id="cms-about-timeline">
+              </div>
+              <div class="form-group">
+                <label class="form-label">核心优势标题</label>
+                <input type="text" class="form-input" id="cms-about-strengths">
+              </div>
+              <div class="form-group">
+                <label class="form-label">企业文化标题</label>
+                <input type="text" class="form-input" id="cms-about-culture">
+              </div>
+
+              <!-- 资质证照图片上传 -->
+              <h4 style="font-size: 14px; margin: 20px 0 12px; color: #1d1d1f;">企业资质与合规证照高清扫描图</h4>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                <div>
+                  <label class="form-label">营业执照扫描件</label>
+                  <div class="image-field-wrap">
+                    <div class="image-thumb-box"><img id="thumb-about-license" src="images/business-license.png" alt="营业执照"></div>
+                    <div class="image-actions">
+                      <label for="upload-about-license" class="btn-pill" style="cursor:pointer;">📷 更换执照</label>
+                      <input type="file" id="upload-about-license" accept="image/*" style="display:none;" onchange="handleCmsImageUpload(this, 'about', 'cert_license_img', 'thumb-about-license', 'images/business-license.png')">
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <label class="form-label">中国商标注册证</label>
+                  <div class="image-field-wrap">
+                    <div class="image-thumb-box"><img id="thumb-about-cn" src="images/trademark-cn.jpg" alt="中国商标证"></div>
+                    <div class="image-actions">
+                      <label for="upload-about-cn" class="btn-pill" style="cursor:pointer;">📷 更换商标证</label>
+                      <input type="file" id="upload-about-cn" accept="image/*" style="display:none;" onchange="handleCmsImageUpload(this, 'about', 'cert_cn_img', 'thumb-about-cn', 'images/trademark-cn.jpg')">
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <label class="form-label">美国 USPTO 商标注册证</label>
+                  <div class="image-field-wrap">
+                    <div class="image-thumb-box"><img id="thumb-about-us" src="images/trademark-uspto.jpg" alt="美国商标证"></div>
+                    <div class="image-actions">
+                      <label for="upload-about-us" class="btn-pill" style="cursor:pointer;">📷 更换美国证</label>
+                      <input type="file" id="upload-about-us" accept="image/*" style="display:none;" onchange="handleCmsImageUpload(this, 'about', 'cert_us_img', 'thumb-about-us', 'images/trademark-uspto.jpg')">
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <label class="form-label">商标转让核准证明</label>
+                  <div class="image-field-wrap">
+                    <div class="image-thumb-box"><img id="thumb-about-trans" src="images/trademark-transfer.png" alt="商标转让"></div>
+                    <div class="image-actions">
+                      <label for="upload-about-trans" class="btn-pill" style="cursor:pointer;">📷 更换核准函</label>
+                      <input type="file" id="upload-about-trans" accept="image/*" style="display:none;" onchange="handleCmsImageUpload(this, 'about', 'cert_trans_img', 'thumb-about-trans', 'images/trademark-transfer.png')">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 8. 联系我们 CMS 编辑容器 -->
+          <div class="cms-page-view" id="cms-view-contact" style="display: none;">
+            <div class="panel-card" style="background: #fafafc;">
+              <h3 style="font-size: 15px; margin-bottom: 16px;">联系我们 (contact.html)</h3>
+              <div class="form-group">
+                <label class="form-label">页面大标题</label>
+                <input type="text" class="form-input" id="cms-contact-title">
+              </div>
+              <div class="form-group">
+                <label class="form-label">引言描述</label>
+                <textarea class="form-textarea" id="cms-contact-desc"></textarea>
+              </div>
+              <div class="form-group">
+                <label class="form-label">总部信息标题</label>
+                <input type="text" class="form-input" id="cms-contact-hq-title">
+              </div>
+              <div class="form-group">
+                <label class="form-label">总部详细物理地址</label>
+                <textarea class="form-textarea" id="cms-contact-address"></textarea>
+              </div>
+              <div class="form-group">
+                <label class="form-label">业务线官方邮箱标题</label>
+                <input type="text" class="form-input" id="cms-contact-dept-title">
+              </div>
+            </div>
+          </div>
+
+          <!-- 9. 全局通用公用区 CMS 编辑容器 -->
+          <div class="cms-page-view" id="cms-view-global" style="display: none;">
+            <div class="panel-card" style="background: #fafafc;">
+              <h3 style="font-size: 15px; margin-bottom: 16px;">品牌、导航与页脚信息</h3>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+                <div class="form-group">
+                  <label class="form-label">品牌中文名称</label>
+                  <input type="text" class="form-input" id="cms-global-cn">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">品牌英文名称</label>
+                  <input type="text" class="form-input" id="cms-global-en">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">品牌口号 (Slogan)</label>
+                <input type="text" class="form-input" id="cms-global-slogan">
+              </div>
+              <div class="form-group">
+                <label class="form-label">顶部导航 CTA 预约按钮文案</label>
+                <input type="text" class="form-input" id="cms-global-cta-btn">
+              </div>
+              <div class="form-group">
+                <label class="form-label">页脚简短品牌阐述</label>
+                <input type="text" class="form-input" id="cms-global-footer-desc">
+              </div>
+              <div class="form-group">
+                <label class="form-label">官方客服服务时间</label>
+                <input type="text" class="form-input" id="cms-global-hours">
+              </div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+                <div class="form-group">
+                  <label class="form-label">客服支持邮箱</label>
+                  <input type="text" class="form-input" id="cms-global-email-supp">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">商务合作邮箱</label>
+                  <input type="text" class="form-input" id="cms-global-email-b2b">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">底部版权所有声明</label>
+                <input type="text" class="form-input" id="cms-global-copyright">
+              </div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+                <div class="form-group">
+                  <label class="form-label">工信部 ICP 备案号</label>
+                  <input type="text" class="form-input" id="cms-global-icp">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">工信部备案系统链接</label>
+                  <input type="text" class="form-input" id="cms-global-icp-link">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 10. 全站所有图片素材总库 (集中上传替换) -->
+          <div class="cms-page-view" id="cms-view-media_library" style="display: none;">
+            <div class="panel-card" style="background: #fafafc;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <div>
+                  <h3 style="font-size: 16px; margin-bottom: 4px;">🖼️ 全站图片素材总库</h3>
+                  <p style="font-size: 12.5px; color: var(--admin-text-muted);">
+                    集中罗列了全站 8 大页面使用的所有核心实拍图、海报 Banner 与官方资质原件。在此直接替换任意图片，全站所有引用处将立即同步生效！
+                  </p>
+                </div>
+              </div>
+              <div class="media-grid" id="media-library-grid">
+                <!-- 动态渲染图片卡片 -->
+              </div>
+            </div>
+          </div>
+
+          <!-- 11. 全站文字快速查找与批量替换 -->
+          <div class="cms-page-view" id="cms-view-quick_replace" style="display: none;">
+            <div class="panel-card" style="background: #fafafc;">
+              <h3 style="font-size: 16px; margin-bottom: 4px;">🔍 全站文字查找与批量替换</h3>
+              <p style="font-size: 12.5px; color: var(--admin-text-muted); margin-bottom: 20px;">
+                如果您想在全站范围内一次性修改某段文字（如修改旧联系电话、旧公司地址、产品别名、Slogan 等），可在此设定替换规则。前台所有页面加载时将自动全局替换！
+              </p>
+              <div class="quick-replace-box">
+                <div style="display: grid; grid-template-columns: 1fr 1fr auto; gap: 12px; align-items: flex-end;">
+                  <div>
+                    <label class="form-label">要查找替换的原词 (Exact Search)</label>
+                    <input type="text" class="form-input" id="replace-search-input" placeholder="例如：旧电话号码、旧价格或指定词句">
+                  </div>
+                  <div>
+                    <label class="form-label">替换为的新词 (Replacement)</label>
+                    <input type="text" class="form-input" id="replace-target-input" placeholder="例如：新电话号码、新价格或新词句">
+                  </div>
+                  <button type="button" class="btn-pill btn-pill-blue" style="height: 42px;" onclick="addQuickReplacement()">
+                    ＋ 添加替换规则
+                  </button>
+                </div>
+              </div>
+
+              <h4 style="font-size: 14px; margin-bottom: 12px; color: #1d1d1f;">当前已生效的全局替换规则表：</h4>
+              <div id="active-replace-rules-list">
+                <!-- 动态插入规则 -->
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+
+      <!-- ================= 3. SEO 优化中心 ================= -->
+      <section class="admin-panel" id="panel-seo">
+        <div class="panel-card">
+          <div class="panel-card-header">
+            <div class="panel-card-title">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+              <span>页面级 SEO 精细化调优与搜索结果实时模拟</span>
+            </div>
+            <select class="form-select" id="seo-page-selector" style="max-width: 240px;">
+              <option value="index">官方首页 (index.html)</option>
+              <option value="products">产品中心 (products.html)</option>
+              <option value="lucky_mini">Lucky Mini 旗舰 (lucky-mini.html)</option>
+              <option value="support">服务支持 (support.html)</option>
+              <option value="channels">购买渠道 (channels.html)</option>
+              <option value="partners">合作代理 (partners.html)</option>
+              <option value="about">关于我们 (about.html)</option>
+              <option value="contact">联系我们 (contact.html)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">
+              SEO 网页标题 (Page Title) 
+              <span id="seo-title-count">健康度检测: 良好</span>
+            </label>
+            <input type="text" class="form-input" id="seo-input-title" oninput="updateSerpPreview()">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">
+              SEO 网页摘要描述 (Meta Description)
+              <span id="seo-desc-count">建议 80~160 字符</span>
+            </label>
+            <textarea class="form-textarea" id="seo-input-desc" oninput="updateSerpPreview()"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">核心搜索关键词 (Meta Keywords)</label>
+            <input type="text" class="form-input" id="seo-input-keywords" placeholder="以英文逗号分隔">
+          </div>
+
+          <!-- Google / 百度搜索结果卡片实时模拟器 -->
+          <div class="form-group">
+            <label class="form-label">🔍 Google / 百度 搜索结果实时展示模拟 (SERP Live Preview)</label>
+            <div class="serp-preview-box">
+              <div class="serp-url">
+                <span>https://lucky-infinite.com</span>
+                <span id="serp-preview-slug">&gt; products</span>
+              </div>
+              <div class="serp-title" id="serp-preview-title">
+                产品中心 - 每一样，都是幸运之选 | LUCK WHEAT 幸运无限官方网站
+              </div>
+              <div class="serp-desc" id="serp-preview-desc">
+                探索幸运无限三大核心产品矩阵：按系列分层陈列，黄金比例展现...
+              </div>
+            </div>
+          </div>
+
+          <!-- 社交分享卡片模拟 -->
+          <div class="form-group" style="margin-top: 24px;">
+            <label class="form-label">💬 微信 / X (Twitter) 社交分享大图卡片 (Open Graph Preview)</label>
+            <div class="social-share-card">
+              <div class="social-share-cover">
+                <img id="og-preview-img" src="images/hero_banner_lucky_mini.jpg" alt="社交封面">
+              </div>
+              <div class="social-share-info">
+                <div class="social-share-title" id="og-preview-title">LUCK WHEAT 幸运无限 - 拥有它，就拥有幸运</div>
+                <div class="social-share-desc" id="og-preview-desc">巴掌大小的完整安卓 AI 智能小机，0.2 秒直达端侧大模型...</div>
+              </div>
+            </div>
+            <div style="margin-top: 10px;">
+              <label for="upload-og-img" class="btn-pill" style="cursor: pointer;">
+                📷 上传专属社交分享大图 (建议 1200×630px)
+              </label>
+              <input type="file" id="upload-og-img" accept="image/*" style="display: none;" onchange="handleOgImageUpload(this)">
+            </div>
+          </div>
+
+          <!-- Sitemap 与站长验证辅助 -->
+          <div class="panel-card" style="margin-top: 24px; background: #fafafc;">
+            <div class="panel-card-title" style="margin-bottom: 12px;">网站地图与站长平台验证</div>
+            <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+              <button type="button" class="btn-pill btn-pill-blue" onclick="generateAndDownloadSitemap()">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                一键生成并下载 Sitemap.xml 网站地图
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 4. 预约与客户线索 ================= -->
+      <section class="admin-panel" id="panel-leads">
+        <div class="panel-card">
+          <div class="panel-card-header">
+            <div class="panel-card-title">Lucky Mini 首发预约与上市通知名单</div>
+            <button type="button" class="btn-pill btn-pill-primary" onclick="exportLeadsToCSV()">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              导出 Excel (CSV)
+            </button>
+          </div>
+          <table class="data-table" id="all-leads-table">
+            <thead>
+              <tr>
+                <th>线索单号</th>
+                <th>客户姓名</th>
+                <th>手机号码</th>
+                <th>电子邮箱</th>
+                <th>意向硬件</th>
+                <th>提交时间</th>
+                <th>跟进状态</th>
+                <th>备注诉求</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- 动态插入 -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ================= 5. 商业代理合作 ================= -->
+      <section class="admin-panel" id="panel-partnerships">
+        <div class="panel-card">
+          <div class="panel-card-header">
+            <div class="panel-card-title">渠道加盟、跨境电商分销与采购意向</div>
+            <button type="button" class="btn-pill" onclick="exportPartnershipsToCSV()">导出合作表单</button>
+          </div>
+          <table class="data-table" id="partnerships-table">
+            <thead>
+              <tr>
+                <th>意向单号</th>
+                <th>企业/组织全称</th>
+                <th>联系人</th>
+                <th>联系方式</th>
+                <th>合作渠道类型</th>
+                <th>目标市场区域</th>
+                <th>预期规模</th>
+                <th>当前状态</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- 动态插入 -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ================= 6. 全局系统设置 ================= -->
+      <section class="admin-panel" id="panel-settings">
+        <div class="panel-card">
+          <div class="panel-card-header">
+            <div class="panel-card-title">全站数据安全备份与一键恢复</div>
+          </div>
+          <p style="font-size: 13.5px; color: var(--admin-text-muted); margin-bottom: 18px;">
+            系统支持将全站所有修改的文字、图片元数据、SEO 配置及客户线索一键导出为单个独立 JSON 备份文件，方便随时在多台电脑间同步转移！
+          </p>
+          <div style="display: flex; gap: 14px; flex-wrap: wrap;">
+            <button type="button" class="btn-pill btn-pill-blue" onclick="exportFullSiteBackup()">
+              💾 下载全站数据备份包 (.json)
+            </button>
+            <label for="import-backup-file" class="btn-pill" style="cursor: pointer;">
+              📂 导入数据备份包恢复
+            </label>
+            <input type="file" id="import-backup-file" accept=".json" style="display:none;" onchange="importFullSiteBackup(this)">
+            <button type="button" class="btn-pill" style="color: #ff453a;" onclick="resetToFactoryDefault()">
+              ⚠️ 恢复出厂初始设置
+            </button>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <div class="toast-msg" id="toast-msg">已成功保存并同步！</div>
+
+  <!-- 引入全站默认数据字典 -->
+  <script src="data/site_default_data.js"></script>
+  <script>
+    // 管理后台交互与数据逻辑
+    let currentActivePanel = 'dashboard';
+    let localSiteData = null;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      checkLoginStatus();
+      loadDataCenter();
+      initNavInteractions();
+      renderDashboard();
+      initCmsForm();
+      initSeoForm();
+      renderLeadsTable();
+      renderPartnersTable();
+    });
+
+    // 1. 登录校验
+    function checkLoginStatus() {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('auth') === '1') {
+        sessionStorage.setItem('LUCK_ADMIN_AUTH', 'true');
+      }
+
+      const isAuth = sessionStorage.getItem('LUCK_ADMIN_AUTH');
+      const overlay = document.getElementById('login-overlay');
+      if (isAuth === 'true') {
+        overlay.classList.add('hidden');
+      } else {
+        overlay.classList.remove('hidden');
+      }
+
+      document.getElementById('btn-login-submit').addEventListener('click', () => {
+        const u = document.getElementById('login-user').value.trim();
+        const p = document.getElementById('login-pwd').value.trim();
+        if (u === 'admin' && p === 'luck2026') {
+          sessionStorage.setItem('LUCK_ADMIN_AUTH', 'true');
+          overlay.classList.add('hidden');
+          showToast('欢迎登录 LUCK WHEAT 管理后台！');
+        } else {
+          alert('账号或密码错误！(默认账号: admin，默认密码: luck2026)');
+        }
+      });
+
+      document.getElementById('btn-logout').addEventListener('click', () => {
+        sessionStorage.removeItem('LUCK_ADMIN_AUTH');
+        location.reload();
+      });
+    }
+
+    // 2. 数据中心载入
+    function deepMerge(target, source) {
+      const output = Object.assign({}, target);
+      if (isObject(target) && isObject(source)) {
+        Object.keys(source).forEach(key => {
+          if (isObject(source[key])) {
+            if (!(key in target)) Object.assign(output, { [key]: source[key] });
+            else output[key] = deepMerge(target[key], source[key]);
+          } else {
+            Object.assign(output, { [key]: source[key] });
+          }
+        });
+      }
+      return output;
+    }
+
+    function isObject(item) {
+      return (item && typeof item === 'object' && !Array.isArray(item));
+    }
+
+    function loadDataCenter() {
+      const defaultData = window.LUCK_SITE_DEFAULT_DATA || {};
+      const saved = localStorage.getItem('LUCK_SITE_CONTENT_DATA');
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          localSiteData = deepMerge(defaultData, parsed);
+        } catch(e) {
+          localSiteData = JSON.parse(JSON.stringify(defaultData));
+        }
+      } else {
+        localSiteData = JSON.parse(JSON.stringify(defaultData));
+      }
+    }
+
+    function saveAllChanges() {
+      // 收集 CMS 字段
+      syncCmsInputsToData();
+      // 收集 SEO 字段
+      syncSeoInputsToData();
+
+      localStorage.setItem('LUCK_SITE_CONTENT_DATA', JSON.stringify(localSiteData));
+      showToast('全站文字、图片与 SEO 变更已全部保存生效！');
+    }
+    document.getElementById('btn-save-all').addEventListener('click', saveAllChanges);
+
+    // 3. 导航切换
+    function initNavInteractions() {
+      document.querySelectorAll('.sidebar-nav .nav-item').forEach(item => {
+        item.addEventListener('click', () => {
+          const target = item.getAttribute('data-target');
+          switchNav(target);
+        });
+      });
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const tabParam = urlParams.get('tab');
+      if (tabParam) {
+        switchNav(tabParam);
+      }
+      const cmsParam = urlParams.get('cms_page');
+      if (cmsParam) {
+        const sel = document.getElementById('cms-page-selector');
+        if (sel) {
+          sel.value = cmsParam;
+          sel.dispatchEvent(new Event('change'));
+        }
+      }
+    }
+
+    function switchNav(targetId) {
+      document.querySelectorAll('.sidebar-nav .nav-item').forEach(i => i.classList.remove('active'));
+      const activeNav = document.querySelector(`.sidebar-nav .nav-item[data-target="${targetId}"]`);
+      if (activeNav) activeNav.classList.add('active');
+
+      document.querySelectorAll('.admin-panel').forEach(p => p.classList.remove('active'));
+      const panel = document.getElementById(`panel-${targetId}`);
+      if (panel) panel.classList.add('active');
+
+      const titles = {
+        dashboard: '运营仪表盘',
+        cms: '全站图文内容可视化编辑 (CMS)',
+        seo: 'SEO 优化中心与搜索结果模拟',
+        leads: '预约与客户线索管理',
+        partnerships: '商业代理合作意向',
+        settings: '全站系统设置与数据备份'
+      };
+      document.getElementById('page-current-title').textContent = titles[targetId] || '管理后台';
+      currentActivePanel = targetId;
+    }
+
+    // 4. 仪表盘渲染
+    function renderDashboard() {
+      const leads = getLeadsData();
+      const tbody = document.querySelector('#dashboard-leads-table tbody');
+      if (!tbody) return;
+      tbody.innerHTML = leads.slice(0, 5).map(l => `
+        <tr>
+          <td><strong>${l.name}</strong></td>
+          <td>${l.phone}</td>
+          <td>${l.product}</td>
+          <td>${l.date}</td>
+          <td><span class="status-badge ${l.status === '已确认' ? 'status-confirmed' : 'status-pending'}">${l.status}</span></td>
+        </tr>
+      `).join('');
+    }
+
+        // 5. CMS 图文编辑全套逻辑
+    function initCmsForm() {
+      const selector = document.getElementById('cms-page-selector');
+      function updateCmsPageView() {
+        const val = selector.value;
+        document.querySelectorAll('.cms-page-view').forEach(v => v.style.display = 'none');
+        const view = document.getElementById(`cms-view-${val}`);
+        if (view) view.style.display = 'block';
+        if (val === 'media_library') renderMediaLibrary();
+        if (val === 'quick_replace') renderQuickReplacements();
+      }
+      selector.addEventListener('change', updateCmsPageView);
+      updateCmsPageView();
+
+      // 填充表单数据
+      const c = localSiteData.content || {};
+      const idx = c.index || {};
+      const pro = c.products || {};
+      const mini = c.lucky_mini || {};
+      const supp = c.support || {};
+      const chan = c.channels || {};
+      const part = c.partners || {};
+      const abt = c.about || {};
+      const cont = c.contact || {};
+      const glob = c.global || {};
+
+      // 1. 首页
+      safeSetVal('cms-index-hero-badge', idx.hero_badge);
+      safeSetVal('cms-index-hero-title', idx.hero_title);
+      safeSetVal('cms-index-hero-sub', idx.hero_subtitle);
+      safeSetVal('cms-index-hero-btn1', idx.hero_btn_primary);
+      safeSetVal('cms-index-hero-btn2', idx.hero_btn_secondary);
+      safeSetVal('cms-index-hero-b-left', idx.hero_badge_left);
+      safeSetVal('cms-index-hero-b-right', idx.hero_badge_right);
+
+      safeSetVal('cms-index-hero2-badge', idx.hero_slide2_badge);
+      safeSetVal('cms-index-hero2-title', idx.hero_slide2_title);
+      safeSetVal('cms-index-hero2-sub', idx.hero_slide2_sub);
+
+      safeSetVal('cms-index-hero3-title', idx.hero_slide3_title);
+      safeSetVal('cms-index-hero3-sub', idx.hero_slide3_sub);
+
+      safeSetVal('cms-index-stat1-val', idx.stat_1_val);
+      safeSetVal('cms-index-stat1-lbl', idx.stat_1_lbl);
+      safeSetVal('cms-index-stat2-val', idx.stat_2_val);
+      safeSetVal('cms-index-stat2-lbl', idx.stat_2_lbl);
+      safeSetVal('cms-index-stat3-val', idx.stat_3_val);
+      safeSetVal('cms-index-stat3-lbl', idx.stat_3_lbl);
+      safeSetVal('cms-index-stat4-val', idx.stat_4_val);
+      safeSetVal('cms-index-stat4-lbl', idx.stat_4_lbl);
+
+      safeSetVal('cms-index-concept-title', idx.concept_title);
+      safeSetVal('cms-index-concept-desc', idx.concept_desc);
+      safeSetVal('cms-index-card1-title', idx.concept_card1_title);
+      safeSetVal('cms-index-card1-desc', idx.concept_card1_desc);
+      safeSetVal('cms-index-card2-title', idx.concept_card2_title);
+      safeSetVal('cms-index-card2-desc', idx.concept_card2_desc);
+      safeSetVal('cms-index-card3-title', idx.concept_card3_title);
+      safeSetVal('cms-index-card3-desc', idx.concept_card3_desc);
+
+      safeSetVal('cms-index-cta-title', idx.cta_title);
+      safeSetVal('cms-index-cta-desc', idx.cta_desc);
+      safeSetVal('cms-index-cta-btn1', idx.cta_btn1_text);
+      safeSetVal('cms-index-cta-btn2', idx.cta_btn2_text);
+
+      // 2. 产品中心
+      safeSetVal('cms-products-title', pro.page_title);
+      safeSetVal('cms-products-desc', pro.page_desc);
+      safeSetVal('cms-products-phone-title', pro.phone_card_title);
+      safeSetVal('cms-products-phone-sub', pro.phone_card_sub);
+      safeSetVal('cms-products-phone-desc', pro.phone_card_desc);
+      safeSetVal('cms-products-phone-price', pro.phone_card_price);
+      safeSetVal('cms-products-phone-price-sub', pro.phone_card_price_sub);
+      safeSetVal('cms-products-tab8-title', pro.tablet_8_title);
+      safeSetVal('cms-products-tab8-desc', pro.tablet_8_desc);
+      safeSetVal('cms-products-tab10-title', pro.tablet_10_title);
+      safeSetVal('cms-products-tab10-desc', pro.tablet_10_desc);
+      safeSetVal('cms-products-rope-title', pro.acc_rope_title);
+      safeSetVal('cms-products-rope-price', pro.acc_rope_price);
+      safeSetVal('cms-products-charge-title', pro.acc_charge_title);
+      safeSetVal('cms-products-charge-price', pro.acc_charge_price);
+
+      // 3. Lucky Mini
+      safeSetVal('cms-mini-badge', mini.badge);
+      safeSetVal('cms-mini-title', mini.title);
+      safeSetVal('cms-mini-sub', mini.sub);
+      safeSetVal('cms-mini-desc', mini.desc);
+      safeSetVal('cms-mini-price', mini.price);
+      safeSetVal('cms-mini-price-sub', mini.price_sub);
+      safeSetVal('cms-mini-promo', mini.promo_tip);
+      safeSetVal('cms-mini-feat-title', mini.features_title);
+      safeSetVal('cms-mini-feat-desc', mini.features_desc);
+
+      // 4. 服务支持
+      safeSetVal('cms-support-title', supp.page_title);
+      safeSetVal('cms-support-desc', supp.page_desc);
+      safeSetVal('cms-support-os', supp.os_heading);
+      safeSetVal('cms-support-warranty', supp.warranty_heading);
+      safeSetVal('cms-support-faq', supp.faq_heading);
+      safeSetVal('cms-support-hotline', supp.service_hotline);
+      safeSetVal('cms-support-email', supp.service_email);
+
+      // 5. 购买渠道
+      safeSetVal('cms-channels-title', chan.page_title);
+      safeSetVal('cms-channels-desc', chan.page_desc);
+      safeSetVal('cms-channels-policy', chan.policy_heading);
+      safeSetVal('cms-channels-form', chan.form_heading);
+
+      // 6. 合作代理
+      safeSetVal('cms-partners-title', part.page_title);
+      safeSetVal('cms-partners-desc', part.page_desc);
+      safeSetVal('cms-partners-support', part.support_offerings);
+      safeSetVal('cms-partners-steps', part.steps_title);
+      safeSetVal('cms-partners-apply', part.apply_heading);
+
+      // 7. 关于我们
+      safeSetVal('cms-about-title', abt.page_title);
+      safeSetVal('cms-about-desc', abt.page_desc);
+      safeSetVal('cms-about-timeline', abt.timeline_title);
+      safeSetVal('cms-about-strengths', abt.strengths_title);
+      safeSetVal('cms-about-culture', abt.culture_title);
+
+      // 8. 联系我们
+      safeSetVal('cms-contact-title', cont.page_title);
+      safeSetVal('cms-contact-desc', cont.page_desc);
+      safeSetVal('cms-contact-hq-title', cont.hq_title);
+      safeSetVal('cms-contact-address', cont.hq_address);
+      safeSetVal('cms-contact-dept-title', cont.dept_table_heading);
+
+      // 9. 全局通用
+      safeSetVal('cms-global-cn', glob.brandCn);
+      safeSetVal('cms-global-en', glob.brandEn);
+      safeSetVal('cms-global-slogan', glob.slogan);
+      safeSetVal('cms-global-cta-btn', glob.headerCtaText);
+      safeSetVal('cms-global-footer-desc', glob.footerDesc);
+      safeSetVal('cms-global-hours', glob.serviceHours);
+      safeSetVal('cms-global-email-supp', glob.contactEmail);
+      safeSetVal('cms-global-email-b2b', glob.b2bEmail);
+      safeSetVal('cms-global-copyright', glob.copyright);
+      safeSetVal('cms-global-icp', glob.icpNumber);
+      safeSetVal('cms-global-icp-link', glob.icpLink);
+
+      // 缩略图渲染
+      if (idx.hero_image_mini) document.getElementById('thumb-index-hero').src = idx.hero_image_mini;
+      if (idx.hero_image_tab) document.getElementById('thumb-index-hero2').src = idx.hero_image_tab;
+      if (idx.hero_image_acc) document.getElementById('thumb-index-hero3').src = idx.hero_image_acc;
+      if (pro.phone_card_img) document.getElementById('thumb-prod-phone').src = pro.phone_card_img;
+      if (pro.tablet_8_img) document.getElementById('thumb-prod-tab').src = pro.tablet_8_img;
+      if (pro.acc_rope_img) document.getElementById('thumb-prod-acc').src = pro.acc_rope_img;
+      if (abt.cert_license_img) document.getElementById('thumb-about-license').src = abt.cert_license_img;
+      if (abt.cert_cn_img) document.getElementById('thumb-about-cn').src = abt.cert_cn_img;
+      if (abt.cert_us_img) document.getElementById('thumb-about-us').src = abt.cert_us_img;
+      if (abt.cert_trans_img) document.getElementById('thumb-about-trans').src = abt.cert_trans_img;
+    }
+
+    function syncCmsInputsToData() {
+      if (!localSiteData.content) localSiteData.content = {};
+      const c = localSiteData.content;
+      if (!c.index) c.index = {};
+      if (!c.products) c.products = {};
+      if (!c.lucky_mini) c.lucky_mini = {};
+      if (!c.support) c.support = {};
+      if (!c.channels) c.channels = {};
+      if (!c.partners) c.partners = {};
+      if (!c.about) c.about = {};
+      if (!c.contact) c.contact = {};
+      if (!c.global) c.global = {};
+
+      // 1. 首页
+      c.index.hero_badge = getVal('cms-index-hero-badge');
+      c.index.hero_title = getVal('cms-index-hero-title');
+      c.index.hero_subtitle = getVal('cms-index-hero-sub');
+      c.index.hero_btn_primary = getVal('cms-index-hero-btn1');
+      c.index.hero_btn_secondary = getVal('cms-index-hero-btn2');
+      c.index.hero_badge_left = getVal('cms-index-hero-b-left');
+      c.index.hero_badge_right = getVal('cms-index-hero-b-right');
+      c.index.hero_slide2_badge = getVal('cms-index-hero2-badge');
+      c.index.hero_slide2_title = getVal('cms-index-hero2-title');
+      c.index.hero_slide2_sub = getVal('cms-index-hero2-sub');
+      c.index.hero_slide3_title = getVal('cms-index-hero3-title');
+      c.index.hero_slide3_sub = getVal('cms-index-hero3-sub');
+      c.index.stat_1_val = getVal('cms-index-stat1-val');
+      c.index.stat_1_lbl = getVal('cms-index-stat1-lbl');
+      c.index.stat_2_val = getVal('cms-index-stat2-val');
+      c.index.stat_2_lbl = getVal('cms-index-stat2-lbl');
+      c.index.stat_3_val = getVal('cms-index-stat3-val');
+      c.index.stat_3_lbl = getVal('cms-index-stat3-lbl');
+      c.index.stat_4_val = getVal('cms-index-stat4-val');
+      c.index.stat_4_lbl = getVal('cms-index-stat4-lbl');
+      c.index.concept_title = getVal('cms-index-concept-title');
+      c.index.concept_desc = getVal('cms-index-concept-desc');
+      c.index.concept_card1_title = getVal('cms-index-card1-title');
+      c.index.concept_card1_desc = getVal('cms-index-card1-desc');
+      c.index.concept_card2_title = getVal('cms-index-card2-title');
+      c.index.concept_card2_desc = getVal('cms-index-card2-desc');
+      c.index.concept_card3_title = getVal('cms-index-card3-title');
+      c.index.concept_card3_desc = getVal('cms-index-card3-desc');
+      c.index.cta_title = getVal('cms-index-cta-title');
+      c.index.cta_desc = getVal('cms-index-cta-desc');
+      c.index.cta_btn1_text = getVal('cms-index-cta-btn1');
+      c.index.cta_btn2_text = getVal('cms-index-cta-btn2');
+
+      // 2. 产品中心
+      c.products.page_title = getVal('cms-products-title');
+      c.products.page_desc = getVal('cms-products-desc');
+      c.products.phone_card_title = getVal('cms-products-phone-title');
+      c.products.phone_card_sub = getVal('cms-products-phone-sub');
+      c.products.phone_card_desc = getVal('cms-products-phone-desc');
+      c.products.phone_card_price = getVal('cms-products-phone-price');
+      c.products.phone_card_price_sub = getVal('cms-products-phone-price-sub');
+      c.products.tablet_8_title = getVal('cms-products-tab8-title');
+      c.products.tablet_8_desc = getVal('cms-products-tab8-desc');
+      c.products.tablet_10_title = getVal('cms-products-tab10-title');
+      c.products.tablet_10_desc = getVal('cms-products-tab10-desc');
+      c.products.acc_rope_title = getVal('cms-products-rope-title');
+      c.products.acc_rope_price = getVal('cms-products-rope-price');
+      c.products.acc_charge_title = getVal('cms-products-charge-title');
+      c.products.acc_charge_price = getVal('cms-products-charge-price');
+
+      // 3. Lucky Mini
+      c.lucky_mini.badge = getVal('cms-mini-badge');
+      c.lucky_mini.title = getVal('cms-mini-title');
+      c.lucky_mini.sub = getVal('cms-mini-sub');
+      c.lucky_mini.desc = getVal('cms-mini-desc');
+      c.lucky_mini.price = getVal('cms-mini-price');
+      c.lucky_mini.price_sub = getVal('cms-mini-price-sub');
+      c.lucky_mini.promo_tip = getVal('cms-mini-promo');
+      c.lucky_mini.features_title = getVal('cms-mini-feat-title');
+      c.lucky_mini.features_desc = getVal('cms-mini-feat-desc');
+
+      // 4. 服务支持
+      c.support.page_title = getVal('cms-support-title');
+      c.support.page_desc = getVal('cms-support-desc');
+      c.support.os_heading = getVal('cms-support-os');
+      c.support.warranty_heading = getVal('cms-support-warranty');
+      c.support.faq_heading = getVal('cms-support-faq');
+      c.support.service_hotline = getVal('cms-support-hotline');
+      c.support.service_email = getVal('cms-support-email');
+
+      // 5. 购买渠道
+      c.channels.page_title = getVal('cms-channels-title');
+      c.channels.page_desc = getVal('cms-channels-desc');
+      c.channels.policy_heading = getVal('cms-channels-policy');
+      c.channels.form_heading = getVal('cms-channels-form');
+
+      // 6. 合作代理
+      c.partners.page_title = getVal('cms-partners-title');
+      c.partners.page_desc = getVal('cms-partners-desc');
+      c.partners.support_offerings = getVal('cms-partners-support');
+      c.partners.steps_title = getVal('cms-partners-steps');
+      c.partners.apply_heading = getVal('cms-partners-apply');
+
+      // 7. 关于我们
+      c.about.page_title = getVal('cms-about-title');
+      c.about.page_desc = getVal('cms-about-desc');
+      c.about.timeline_title = getVal('cms-about-timeline');
+      c.about.strengths_title = getVal('cms-about-strengths');
+      c.about.culture_title = getVal('cms-about-culture');
+
+      // 8. 联系我们
+      c.contact.page_title = getVal('cms-contact-title');
+      c.contact.page_desc = getVal('cms-contact-desc');
+      c.contact.hq_title = getVal('cms-contact-hq-title');
+      c.contact.hq_address = getVal('cms-contact-address');
+      c.contact.dept_table_heading = getVal('cms-contact-dept-title');
+
+      // 9. 全局通用
+      c.global.brandCn = getVal('cms-global-cn');
+      c.global.brandEn = getVal('cms-global-en');
+      c.global.slogan = getVal('cms-global-slogan');
+      c.global.headerCtaText = getVal('cms-global-cta-btn');
+      c.global.footerDesc = getVal('cms-global-footer-desc');
+      c.global.serviceHours = getVal('cms-global-hours');
+      c.global.contactEmail = getVal('cms-global-email-supp');
+      c.global.b2bEmail = getVal('cms-global-email-b2b');
+      c.global.copyright = getVal('cms-global-copyright');
+      c.global.icpNumber = getVal('cms-global-icp');
+      c.global.icpLink = getVal('cms-global-icp-link');
+    }
+
+    // 上传图片处理 (支持页面专用字段与全局图片总库同步)
+    window.handleCmsImageUpload = function(inputEl, pageKey, imgKey, thumbId, globalImgPath) {
+      const file = inputEl.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const dataUrl = e.target.result;
+        const thumb = document.getElementById(thumbId);
+        if (thumb) thumb.src = dataUrl;
+
+        if (!localSiteData.content) localSiteData.content = {};
+        if (!localSiteData.content[pageKey]) localSiteData.content[pageKey] = {};
+        localSiteData.content[pageKey][imgKey] = dataUrl;
+
+        // 若有关联全局图片路径，同步注册到 images
+        if (globalImgPath) {
+          if (!localSiteData.images) localSiteData.images = {};
+          localSiteData.images[globalImgPath] = dataUrl;
+        }
+
+        showToast('图片上传成功！请点击右上角保存生效');
+      };
+      reader.readAsDataURL(file);
+    };
+
+    // 全站图片素材总库渲染
+    const MEDIA_ITEMS = [
+      { key: "images/hero_banner_lucky_mini.jpg", title: "首页首屏 Hero 轮播大图 1", desc: "Lucky Mini 3.7 英寸旗舰小手机暗黑微光海报" },
+      { key: "images/hero_banner_lucky_tab.jpg", title: "首页首屏 Hero 轮播大图 2", desc: "LUCKY Tab 8.68 英寸全铝一体平板海报" },
+      { key: "images/hero_banner_accessories.jpg", title: "首页首屏 Hero 轮播大图 3", desc: "先锋街头机能挂绳与配件生态海报" },
+      { key: "images/showcase_lucky_mini.jpg", title: "Lucky Mini 旗舰展台实拍大图", desc: "产品中心双列大展台、详情弹窗与详情页主图" },
+      { key: "images/showcase_lucky_tab.jpg", title: "LUCKY Tab 便携平板展台实拍大图", desc: "产品中心平板系列展示主图" },
+      { key: "images/showcase_accessories.jpg", title: "Lucky 机能工装挂绳展台实拍大图", desc: "产品中心配件系列展示主图" },
+      { key: "images/business-license.png", title: "企业主体资质 · 营业执照扫描件", desc: "关于我们 (about.html) 资质弹窗高清扫描件" },
+      { key: "images/trademark-cn.jpg", title: "中国国家知识产权局商标注册证", desc: "关于我们 (about.html) 中华人民共和国商标证书" },
+      { key: "images/trademark-uspto.jpg", title: "美国 USPTO 联邦商标注册证书", desc: "关于我们 (about.html) 美国专利商标局证书" },
+      { key: "images/trademark-transfer.png", title: "国家知识产权局商标转让核准证明", desc: "关于我们 (about.html) 商标转让核准公告证明文件" }
+    ];
+
+    function renderMediaLibrary() {
+      const grid = document.getElementById('media-library-grid');
+      if (!grid) return;
+      if (!localSiteData.images) localSiteData.images = {};
+
+      grid.innerHTML = MEDIA_ITEMS.map((item, idx) => {
+        const currentSrc = localSiteData.images[item.key] || item.key;
+        return `
+          <div class="media-card">
+            <div class="media-preview-box">
+              <img id="media-thumb-${idx}" src="${currentSrc}" alt="${item.title}">
+            </div>
+            <div>
+              <div class="media-card-title">${item.title}</div>
+              <div class="media-card-desc">${item.desc}</div>
+              <code style="font-size:11px; color:#86868b; display:block; margin-top:4px;">${item.key}</code>
+            </div>
+            <div class="media-card-actions">
+              <label for="media-file-${idx}" class="btn-media-upload">📷 上传替换</label>
+              <input type="file" id="media-file-${idx}" accept="image/*" style="display:none;" onchange="handleMediaUpload(this, '${item.key}', 'media-thumb-${idx}')">
+              <button type="button" class="btn-media-reset" onclick="restoreMediaDefault('${item.key}', 'media-thumb-${idx}')" title="恢复默认">↺ 恢复</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    window.handleMediaUpload = function(inputEl, imageKey, thumbId) {
+      const file = inputEl.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const dataUrl = e.target.result;
+        document.getElementById(thumbId).src = dataUrl;
+        if (!localSiteData.images) localSiteData.images = {};
+        localSiteData.images[imageKey] = dataUrl;
+        showToast('图片替换成功！请点击右上角保存生效');
+      };
+      reader.readAsDataURL(file);
+    };
+
+    window.restoreMediaDefault = function(imageKey, thumbId) {
+      if (!localSiteData.images) localSiteData.images = {};
+      delete localSiteData.images[imageKey];
+      document.getElementById(thumbId).src = imageKey;
+      showToast('已恢复为官方默认图片！');
+    };
+
+    // 全局文字快速查找与批量替换
+    function renderQuickReplacements() {
+      const listEl = document.getElementById('active-replace-rules-list');
+      if (!listEl) return;
+      const reps = localSiteData.textReplacements || {};
+      const keys = Object.keys(reps);
+
+      if (keys.length === 0) {
+        listEl.innerHTML = '<div style="font-size:13px; color:var(--admin-text-muted); padding:16px; text-align:center; background:#fff; border-radius:8px;">暂无自定义文本替换规则。在上方输入查找词与替换词即可添加。</div>';
+        return;
+      }
+
+      listEl.innerHTML = keys.map(k => `
+        <div class="replace-rule-row">
+          <div>
+            <span style="color:#d93025; text-decoration:line-through; font-weight:500;">${escapeHtml(k)}</span>
+            <span style="margin: 0 8px; color:var(--admin-text-muted);">➔</span>
+            <span style="color:#188038; font-weight:600;">${escapeHtml(reps[k])}</span>
+          </div>
+          <button type="button" class="btn-pill" style="padding:4px 10px; font-size:12px; color:#d93025;" onclick="removeQuickReplacement('${escapeJs(k)}')">删除</button>
+        </div>
+      `).join('');
+    }
+
+    window.addQuickReplacement = function() {
+      const searchVal = document.getElementById('replace-search-input').value.trim();
+      const targetVal = document.getElementById('replace-target-input').value.trim();
+      if (!searchVal) {
+        alert('请输入要查找的原词');
+        return;
+      }
+      if (!localSiteData.textReplacements) localSiteData.textReplacements = {};
+      localSiteData.textReplacements[searchVal] = targetVal;
+      document.getElementById('replace-search-input').value = '';
+      document.getElementById('replace-target-input').value = '';
+      renderQuickReplacements();
+      showToast('替换规则已添加！请点击右上角保存生效');
+    };
+
+    window.removeQuickReplacement = function(key) {
+      if (localSiteData.textReplacements && localSiteData.textReplacements[key] !== undefined) {
+        delete localSiteData.textReplacements[key];
+        renderQuickReplacements();
+        showToast('替换规则已移除！');
+      }
+    };
+
+    function escapeHtml(str) {
+      return (str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+    function escapeJs(str) {
+      return (str || '').replace(/'/g, "\\'");
+    }
+
+
+    // 6. SEO 优化中心逻辑
+    let currentSeoPage = 'index';
+    function initSeoForm() {
+      const selector = document.getElementById('seo-page-selector');
+      selector.addEventListener('change', () => {
+        syncSeoInputsToData();
+        currentSeoPage = selector.value;
+        loadSeoForPage(currentSeoPage);
+      });
+      loadSeoForPage(currentSeoPage);
+    }
+
+    function loadSeoForPage(pageKey) {
+      const seo = (localSiteData.seo && localSiteData.seo.pages && localSiteData.seo.pages[pageKey]) || {};
+      safeSetVal('seo-input-title', seo.title || '');
+      safeSetVal('seo-input-desc', seo.description || '');
+      safeSetVal('seo-input-keywords', seo.keywords || '');
+
+      document.getElementById('serp-preview-slug').textContent = pageKey === 'index' ? '' : `> ${pageKey}`;
+      if (seo.ogImage) {
+        document.getElementById('og-preview-img').src = seo.ogImage;
+      }
+      updateSerpPreview();
+    }
+
+    function syncSeoInputsToData() {
+      if (!localSiteData.seo) localSiteData.seo = {};
+      if (!localSiteData.seo.pages) localSiteData.seo.pages = {};
+      if (!localSiteData.seo.pages[currentSeoPage]) localSiteData.seo.pages[currentSeoPage] = {};
+
+      const p = localSiteData.seo.pages[currentSeoPage];
+      p.title = getVal('seo-input-title');
+      p.description = getVal('seo-input-desc');
+      p.keywords = getVal('seo-input-keywords');
+      p.ogTitle = p.title;
+      p.ogDescription = p.description;
+    }
+
+    window.updateSerpPreview = function() {
+      const title = getVal('seo-input-title') || 'LUCK WHEAT 幸运无限官方网站';
+      const desc = getVal('seo-input-desc') || '暂无网页描述内容...';
+
+      document.getElementById('serp-preview-title').textContent = title;
+      document.getElementById('serp-preview-desc').textContent = desc;
+      document.getElementById('og-preview-title').textContent = title;
+      document.getElementById('og-preview-desc').textContent = desc;
+
+      // 字符健康度
+      const tLen = title.length;
+      const countEl = document.getElementById('seo-title-count');
+      if (tLen >= 25 && tLen <= 65) {
+        countEl.innerHTML = `<span style="color:var(--admin-green);">长度健康 (${tLen} 字符)</span>`;
+      } else if (tLen > 65) {
+        countEl.innerHTML = `<span style="color:var(--admin-orange);">略长，搜索结果易被截断 (${tLen} 字符)</span>`;
+      } else {
+        countEl.innerHTML = `<span style="color:var(--admin-blue);">偏短 (${tLen} 字符)</span>`;
+      }
+    };
+
+    window.handleOgImageUpload = function(inputEl) {
+      const file = inputEl.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const dataUrl = e.target.result;
+        document.getElementById('og-preview-img').src = dataUrl;
+        if (!localSiteData.seo.pages[currentSeoPage]) localSiteData.seo.pages[currentSeoPage] = {};
+        localSiteData.seo.pages[currentSeoPage].ogImage = dataUrl;
+        showToast('社交大图已更新！');
+      };
+      reader.readAsDataURL(file);
+    };
+
+    // 7. 一键生成 Sitemap.xml
+    window.generateAndDownloadSitemap = function() {
+      const baseUrl = (localSiteData.seo && localSiteData.seo.global && localSiteData.seo.global.canonicalBase) || 'https://lucky-infinite.com';
+      const pages = ['index.html', 'products.html', 'lucky-mini.html', 'support.html', 'channels.html', 'partners.html', 'about.html', 'contact.html'];
+      const now = new Date().toISOString().split('T')[0];
+
+      let xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
+      pages.forEach(p => {
+        xml += `  <url>\n    <loc>${baseUrl}/${p}</loc>\n    <lastmod>${now}</lastmod>\n    <changefreq>daily</changefreq>\n    <priority>${p === 'index.html' || p === 'lucky-mini.html' ? '1.0' : '0.8'}</priority>\n  </url>\n`;
+      });
+      xml += `</urlset>`;
+
+      downloadFile('sitemap.xml', xml, 'application/xml');
+      showToast('Sitemap.xml 生成成功，已自动开始下载！');
+    };
+
+    // 8. 线索与合作表格渲染及导出 CSV
+    function getLeadsData() {
+      const saved = localStorage.getItem('LUCK_SITE_LEADS_DATA');
+      if (saved) {
+        try { return JSON.parse(saved); } catch(e){}
+      }
+      return (localSiteData.leads || []);
+    }
+
+    function renderLeadsTable() {
+      const leads = getLeadsData();
+      const tbody = document.querySelector('#all-leads-table tbody');
+      if (!tbody) return;
+      tbody.innerHTML = leads.map(l => `
+        <tr>
+          <td><code style="font-size:12px;">${l.id}</code></td>
+          <td><strong>${l.name}</strong></td>
+          <td>${l.phone}</td>
+          <td>${l.email}</td>
+          <td>${l.product}</td>
+          <td>${l.date}</td>
+          <td><span class="status-badge ${l.status === '已确认' ? 'status-confirmed' : 'status-pending'}">${l.status}</span></td>
+          <td style="font-size:12px; color:var(--admin-text-muted);">${l.notes}</td>
+        </tr>
+      `).join('');
+    }
+
+    window.exportLeadsToCSV = function() {
+      const leads = getLeadsData();
+      let csv = '\uFEFF线索单号,客户姓名,联系电话,电子邮箱,意向硬件,提交时间,跟进状态,备注诉求\n';
+      leads.forEach(l => {
+        csv += `"${l.id}","${l.name}","${l.phone}","${l.email}","${l.product}","${l.date}","${l.status}","${l.notes.replace(/"/g, '""')}"\n`;
+      });
+      downloadFile('Lucky_Mini_预约线索表_' + new Date().toISOString().slice(0,10) + '.csv', csv, 'text/csv;charset=utf-8');
+    };
+
+    function renderPartnersTable() {
+      const list = localSiteData.partnerships || [];
+      const tbody = document.querySelector('#partnerships-table tbody');
+      if (!tbody) return;
+      tbody.innerHTML = list.map(p => `
+        <tr>
+          <td><code style="font-size:12px;">${p.id}</code></td>
+          <td><strong>${p.company}</strong></td>
+          <td>${p.contact}</td>
+          <td>${p.phone}</td>
+          <td>${p.channelType}</td>
+          <td>${p.region}</td>
+          <td>${p.expectedVolume}</td>
+          <td><span class="status-badge status-confirmed">${p.status}</span></td>
+        </tr>
+      `).join('');
+    }
+
+    window.exportPartnershipsToCSV = function() {
+      const list = localSiteData.partnerships || [];
+      let csv = '\uFEFF单号,企业全称,联系人,电话,渠道类型,市场区域,预期规模,状态\n';
+      list.forEach(p => {
+        csv += `"${p.id}","${p.company}","${p.contact}","${p.phone}","${p.channelType}","${p.region}","${p.expectedVolume}","${p.status}"\n`;
+      });
+      downloadFile('Lucky_Infinite_商业代理申请表.csv', csv, 'text/csv;charset=utf-8');
+    };
+
+    // 9. 全站数据备份与导入恢复
+    window.exportFullSiteBackup = function() {
+      saveAllChanges();
+      const json = JSON.stringify(localSiteData, null, 2);
+      downloadFile('luck_site_full_backup_' + new Date().toISOString().slice(0,10) + '.json', json, 'application/json');
+      showToast('全站数据备份包导出成功！');
+    };
+
+    window.importFullSiteBackup = function(inputEl) {
+      const file = inputEl.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const parsed = JSON.parse(e.target.result);
+          localSiteData = parsed;
+          localStorage.setItem('LUCK_SITE_CONTENT_DATA', JSON.stringify(parsed));
+          showToast('数据恢复成功，页面将自动刷新！');
+          setTimeout(() => location.reload(), 1200);
+        } catch(err) {
+          alert('备份文件格式不正确！');
+        }
+      };
+      reader.readAsText(file);
+    };
+
+    window.resetToFactoryDefault = function() {
+      if (confirm('确定要恢复出厂初始设置吗？所有自定义修改将还原为出厂状态！')) {
+        localStorage.removeItem('LUCK_SITE_CONTENT_DATA');
+        localStorage.removeItem('LUCK_SITE_LEADS_DATA');
+        showToast('已重置为出厂初始数据！');
+        setTimeout(() => location.reload(), 1000);
+      }
+    };
+
+    // 辅助通用函数
+    function safeSetVal(id, val) {
+      const el = document.getElementById(id);
+      if (el && val !== undefined) el.value = val;
+    }
+    function getVal(id) {
+      const el = document.getElementById(id);
+      return el ? el.value.trim() : '';
+    }
+    function showToast(msg) {
+      const t = document.getElementById('toast-msg');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2600);
+    }
+    function downloadFile(filename, text, type) {
+      const blob = new Blob([text], { type: type });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+  </script>
+</body>
+</html>
