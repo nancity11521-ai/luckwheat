@@ -1267,18 +1267,30 @@
               </div>
 
               <!-- 购买跳转链接配置 -->
-              <div style="background: #f0f6fc; border: 1px solid rgba(0, 113, 227, 0.2); border-radius: 12px; padding: 16px; margin-bottom: 20px;">
-                <h4 style="font-size: 13.5px; font-weight: 600; color: #1d1d1f; margin-bottom: 10px;">🛒 产品购买跳转链接设置</h4>
+              <div style="background: #f0f6fc; border: 1.5px solid rgba(0, 113, 227, 0.25); border-radius: 12px; padding: 16px; margin-bottom: 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                  <h4 style="font-size: 13.5px; font-weight: 700; color: #1d1d1f; margin: 0;">🛒 产品购买跳转链接设置 (前台卡片与详情弹窗同步生效)</h4>
+                  <span style="font-size: 11.5px; color: var(--admin-blue); font-weight: 600;">✓ 支持任意外部电商链接或站内渠道</span>
+                </div>
                 <div style="display: grid; grid-template-columns: 2fr 1fr auto; gap: 10px; align-items: end;">
                   <div>
-                    <label class="form-label" style="font-size: 12.5px;">购买跳转 URL <span>(支持淘宝/京东/独立站 https://... 或站内页面)</span></label>
+                    <label class="form-label" style="font-size: 12.5px;">购买跳转 URL <span>(例如：淘宝、京东、微店、官网商城 https://... 或 channels.html?product=...)</span></label>
                     <input type="text" class="form-input" id="edit-prod-buy-url" placeholder="https://shop.example.com/product/..." oninput="updateBuyLinkTestBtn()">
                   </div>
                   <div>
                     <label class="form-label" style="font-size: 12.5px;">购买按钮文案</label>
                     <input type="text" class="form-input" id="edit-prod-buy-text" placeholder="立即购买">
                   </div>
-                  <a id="edit-prod-buy-test" href="#" target="_blank" rel="noopener noreferrer" class="btn-pill" style="height: 40px; white-space: nowrap;">测试跳转 ↗</a>
+                  <a id="edit-prod-buy-test" href="#" target="_blank" rel="noopener noreferrer" class="btn-pill btn-pill-blue" style="height: 40px; white-space: nowrap; font-weight: 600;">🔗 测试跳转 ↗</a>
+                </div>
+
+                <!-- 快捷渠道模板填充按钮组 -->
+                <div style="margin-top: 12px; padding-top: 10px; border-top: 1px dashed rgba(0, 113, 227, 0.2); display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+                  <span style="font-size: 11.5px; color: var(--admin-text-muted); font-weight: 600;">⚡ 快捷模板填入:</span>
+                  <button type="button" class="btn-pill" style="padding: 2px 8px; font-size: 11px;" onclick="applyQuickBuyUrlTemplate('channels')">📌 官方购买渠道页</button>
+                  <button type="button" class="btn-pill" style="padding: 2px 8px; font-size: 11px;" onclick="applyQuickBuyUrlTemplate('shop')">🛒 官方独立站商城</button>
+                  <button type="button" class="btn-pill" style="padding: 2px 8px; font-size: 11px;" onclick="applyQuickBuyUrlTemplate('jd')">🏬 京东官方自营</button>
+                  <button type="button" class="btn-pill" style="padding: 2px 8px; font-size: 11px;" onclick="applyQuickBuyUrlTemplate('tmall')">🛍️ 天猫品牌旗舰</button>
                 </div>
               </div>
 
@@ -2458,6 +2470,32 @@
         testBtn.style.opacity = '0.45';
         testBtn.style.pointerEvents = 'none';
       }
+    };
+
+    window.applyQuickBuyUrlTemplate = function(type) {
+      const idx = parseInt(getVal('edit-prod-index'), 10);
+      const items = getProductItemsArray();
+      const currentId = items[idx]?.id || 'lucky-mini';
+
+      const urlInput = document.getElementById('edit-prod-buy-url');
+      const textInput = document.getElementById('edit-prod-buy-text');
+      if (!urlInput) return;
+
+      if (type === 'channels') {
+        urlInput.value = `channels.html?product=${currentId}`;
+        if (textInput) textInput.value = '立即购买';
+      } else if (type === 'shop') {
+        urlInput.value = `https://shop.luckwheat.com/products/${currentId}`;
+        if (textInput) textInput.value = '官网直购';
+      } else if (type === 'jd') {
+        urlInput.value = `https://item.jd.com/luckwheat-${currentId}.html`;
+        if (textInput) textInput.value = '京东自营';
+      } else if (type === 'tmall') {
+        urlInput.value = `https://detail.tmall.com/item.htm?id=luckwheat-${currentId}`;
+        if (textInput) textInput.value = '天猫旗舰店';
+      }
+      updateBuyLinkTestBtn();
+      showToast('已填入购买链接模板，可根据需要调整并点击保存！');
     };
 
     function renderEditorDetailImages(item) {

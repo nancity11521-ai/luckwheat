@@ -581,22 +581,19 @@ function initProductDetailModal() {
       }
     }
 
-    // 购买跳转链接
+    // 购买跳转链接 (保证每个产品必定拥有可用跳转购买链接)
     if (buyLinkEl) {
-      if (p.buyUrl && p.buyUrl.trim() !== '') {
-        buyLinkEl.href = p.buyUrl;
-        buyLinkEl.textContent = `${p.buyText || '立即购买'} ↗`;
-        if (/^https?:\/\//i.test(p.buyUrl)) {
-          buyLinkEl.setAttribute('target', '_blank');
-          buyLinkEl.setAttribute('rel', 'noopener noreferrer');
-        } else {
-          buyLinkEl.removeAttribute('target');
-          buyLinkEl.removeAttribute('rel');
-        }
-        buyLinkEl.style.display = 'inline-flex';
+      const buyUrl = (p.buyUrl && p.buyUrl.trim()) ? p.buyUrl : `channels.html?product=${encodeURIComponent(p.id)}`;
+      buyLinkEl.href = buyUrl;
+      buyLinkEl.textContent = `🛒 ${p.buyText || '立即购买'} ↗`;
+      if (/^https?:\/\//i.test(buyUrl)) {
+        buyLinkEl.setAttribute('target', '_blank');
+        buyLinkEl.setAttribute('rel', 'noopener noreferrer');
       } else {
-        buyLinkEl.style.display = 'none';
+        buyLinkEl.removeAttribute('target');
+        buyLinkEl.removeAttribute('rel');
       }
+      buyLinkEl.style.display = 'inline-flex';
     }
 
     // 详细了解外链

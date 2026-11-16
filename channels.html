@@ -73,6 +73,31 @@
 
     <section class="section" style="padding-top: 10px; padding-bottom: 40px;" aria-label="购买渠道矩阵">
       <div class="container">
+
+        <!-- 专属定向选购横幅 (当从产品中心点击立即购买直达时高亮展示) -->
+        <div id="channel-product-direct-bar" class="channel-product-direct-bar" style="display: none; margin-bottom: 32px; background: linear-gradient(135deg, #f0f7ff 0%, #ffffff 100%); border: 1.5px solid rgba(0, 113, 227, 0.4); border-radius: 16px; padding: 20px 24px; box-shadow: 0 8px 30px rgba(0, 113, 227, 0.08);">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+            <div style="display: flex; align-items: center; gap: 16px;">
+              <img id="direct-prod-img" src="images/showcase_lucky_mini.jpg" alt="" style="width: 60px; height: 60px; border-radius: 12px; object-fit: cover; border: 1px solid rgba(0,0,0,0.08); background: #f5f5f7;">
+              <div>
+                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+                  <span style="font-size: 11px; background: #e8f3ff; color: var(--apple-blue); padding: 2px 8px; border-radius: 980px; font-weight: 700; letter-spacing: 0.03em;">🎯 正在选购</span>
+                  <h3 id="direct-prod-title" style="font-size: 1.2rem; font-weight: 700; color: #1d1d1f; margin: 0;">Lucky Mini 3.7 英寸</h3>
+                </div>
+                <div style="font-size: 13px; color: var(--text-secondary);">
+                  官方定价：<strong id="direct-prod-price" style="color: var(--apple-blue); font-size: 1.1rem; font-family: var(--font-mono);">$299</strong>
+                  <span id="direct-prod-sub" style="margin-left: 8px; font-size: 12px; color: #86868b;"></span>
+                </div>
+              </div>
+            </div>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+              <a id="direct-prod-buy-btn" href="https://shop.luckwheat.com" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-md">🛒 前往官方独立站/电商直购 ↗</a>
+              <a id="direct-prod-detail-btn" href="products.html?product=lucky-mini" class="btn btn-secondary btn-md">查看完整详情页</a>
+              <a id="direct-prod-consult-btn" href="contact.html?type=consult" class="btn btn-secondary btn-md">批量采购咨询</a>
+            </div>
+          </div>
+        </div>
+
         <!-- 6.2 渠道卡六位 -->
         <div class="grid-3" style="gap: 24px; margin-bottom: 70px;">
           <!-- 渠道 1 -->
@@ -317,5 +342,61 @@
   <script src="data/site_default_data.js"></script>
   <script src="js/cms-bridge.js"></script>
   <script src="js/main.js"></script>
+  <script>
+    (function initChannelProductDirect() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const pid = urlParams.get('product');
+      if (!pid) return;
+
+      let items = [];
+      try {
+        const savedStr = localStorage.getItem('LUCK_SITE_CONTENT_DATA');
+        if (savedStr) {
+          const parsed = JSON.parse(savedStr);
+          if (parsed.content?.products?.items) items = parsed.content.products.items;
+        }
+      } catch (e) {}
+
+      if (!items.length && window.LUCK_SITE_DEFAULT_DATA?.content?.products?.items) {
+        items = window.LUCK_SITE_DEFAULT_DATA.content.products.items;
+      }
+
+      const item = items.find(p => p.id === pid);
+      if (!item) return;
+
+      const bar = document.getElementById('channel-product-direct-bar');
+      if (!bar) return;
+
+      bar.style.display = 'block';
+      const imgEl = document.getElementById('direct-prod-img');
+      const titleEl = document.getElementById('direct-prod-title');
+      const priceEl = document.getElementById('direct-prod-price');
+      const subEl = document.getElementById('direct-prod-sub');
+      const buyBtn = document.getElementById('direct-prod-buy-btn');
+      const detailBtn = document.getElementById('direct-prod-detail-btn');
+      const consultBtn = document.getElementById('direct-prod-consult-btn');
+
+      if (imgEl && item.image) imgEl.src = item.image;
+      if (titleEl && item.title) titleEl.textContent = item.title;
+      if (priceEl && item.price) priceEl.textContent = item.price;
+      if (subEl && item.priceSub) subEl.textContent = item.priceSub;
+      if (detailBtn) detailBtn.href = `products.html?product=${encodeURIComponent(item.id)}`;
+      if (consultBtn) consultBtn.href = `contact.html?type=consult&product=${encodeURIComponent(item.title || item.id)}`;
+
+      if (buyBtn) {
+        // 若配置了外链，则直接跳转外链
+        if (item.buyUrl && /^https?:\/\//i.test(item.buyUrl)) {
+          buyBtn.href = item.buyUrl;
+          buyBtn.textContent = `🛒 前往 ${item.buyText || '官方电商平台/独立站购买'} ↗`;
+        } else {
+          // 默认官方海外独立站 / 天猫旗舰通道
+          buyBtn.href = 'https://shop.luckwheat.com';
+          buyBtn.textContent = '🛒 前往官方独立站购买 ↗';
+        }
+      }
+
+      bar.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    })();
+  </script>
 </body>
 </html>
