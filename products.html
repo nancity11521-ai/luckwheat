@@ -387,26 +387,37 @@
         </svg>
       </button>
 
-      <!-- 左侧：实拍大图展示与上传交互 -->
+      <!-- 左侧：商品详情页长图展示与上传交互 (支持单张大长图或多张切片长图垂直顺滑滚动) -->
       <div class="modal-visual-col">
-        <div class="modal-preview-box" id="modal-dropzone" title="点击或拖拽图片至此处上传">
-          <img id="modal-product-img" src="images/showcase_lucky_mini.jpg" alt="产品实拍大图预览" class="modal-preview-img">
+        <div class="modal-detail-head-bar">
+          <div class="modal-detail-pill">
+            <span class="detail-pulse-dot"></span>
+            <span>商品详情页 · 官方画册与长图</span>
+          </div>
+          <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+            <label for="product-img-upload-input" class="btn-detail-upload-action" title="上传/追加此产品详情图">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="17 8 12 3 7 8"></polyline>
+                <line x1="12" y1="3" x2="12" y2="15"></line>
+              </svg>
+              <span>上传商品详情图</span>
+            </label>
+            <input type="file" id="product-img-upload-input" accept="image/*" multiple style="display: none;">
+            <button type="button" class="btn-upload-reset" id="btn-reset-image" style="display: none;" title="恢复官方默认详情图">
+              ↺ 恢复默认
+            </button>
+          </div>
         </div>
 
-        <div class="modal-upload-bar">
-          <label for="product-img-upload-input" class="btn-upload-trigger">
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-              <polyline points="17 8 12 3 7 8"></polyline>
-              <line x1="12" y1="3" x2="12" y2="15"></line>
-            </svg>
-            上传 / 更换图片
-          </label>
-          <input type="file" id="product-img-upload-input" accept="image/*" style="display: none;">
-          <button type="button" class="btn-upload-reset" id="btn-reset-image" style="display: none;">
-            ↺ 恢复官方原图
-          </button>
-          <div class="upload-tip">支持 JPG、PNG、WEBP，点击或拖拽至图片区上传</div>
+        <!-- 详情长图卷轴容器 -->
+        <div class="modal-detail-scroll-area" id="modal-detail-scroll-area">
+          <div class="modal-detail-images-container" id="modal-detail-images-container">
+            <!-- 动态渲染单张或多张详情长图 -->
+          </div>
+          <div class="modal-detail-bottom-tip">
+            <span>✨ 以上为该产品的完整商品详情页</span>
+          </div>
         </div>
       </div>
 
@@ -417,7 +428,16 @@
           <h2 class="modal-product-title" id="modal-p-title">Lucky Mini 3.7 英寸</h2>
           <div class="modal-product-subtitle" id="modal-p-sub">拥有它，就拥有幸运。</div>
           <p class="modal-product-desc" id="modal-p-desc"></p>
-          <ul class="modal-specs-list" id="modal-p-specs"></ul>
+          
+          <div id="modal-detail-extra-desc-wrap" style="display: none; margin-bottom: 16px; padding: 12px 14px; background: #f0f7ff; border-left: 3px solid var(--admin-blue); border-radius: 6px;">
+            <div style="font-size: 11.5px; font-weight: 700; color: var(--admin-blue); margin-bottom: 4px;">商品详情补充说明</div>
+            <div id="modal-p-extra-desc" style="font-size: 13px; color: #1d1d1f; line-height: 1.5;"></div>
+          </div>
+
+          <div style="margin-bottom: 20px;">
+            <h4 style="font-size: 12.5px; font-weight: 700; color: #1d1d1f; margin-bottom: 10px; letter-spacing: 0.05em; text-transform: uppercase;">核心硬件规格</h4>
+            <ul class="modal-specs-list" id="modal-p-specs"></ul>
+          </div>
         </div>
 
         <div class="modal-footer-action">
@@ -426,7 +446,8 @@
             <div id="modal-p-price-sub" style="font-size: 0.85rem; color: var(--text-muted);">约 ¥1999 / 首发前1000名优惠</div>
           </div>
           <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-            <a href="lucky-mini.html" id="modal-detail-link" class="btn btn-primary btn-md">进一步了解详情 &gt;</a>
+            <a href="#" id="modal-buy-link" class="btn btn-primary btn-md" target="_blank" rel="noopener" style="display: none;">立即购买 &gt;</a>
+            <a href="lucky-mini.html" id="modal-detail-link" class="btn btn-secondary btn-md">进一步了解详情 &gt;</a>
             <a href="contact.html?type=consult" id="modal-action-link" class="btn btn-secondary btn-md">立即预约咨询</a>
           </div>
         </div>

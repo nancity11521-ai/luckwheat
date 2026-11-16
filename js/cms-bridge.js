@@ -358,15 +358,21 @@
       safeSetText('#heading-acc-series', pageContent.acc_series_title);
       safeSetText('#desc-acc-series', pageContent.acc_series_desc);
 
-      // 单品手机卡
-      safeSetText('.featured-phone-title', pageContent.phone_card_title);
-      safeSetText('.featured-phone-sub', pageContent.phone_card_sub);
-      safeSetText('.featured-phone-desc', pageContent.phone_card_desc);
-      safeSetText('.featured-phone-price', pageContent.phone_card_price);
-      safeSetText('.featured-phone-price-sub', pageContent.phone_card_price_sub);
-      if (pageContent.phone_card_img) {
-        const phoneImg = document.querySelector('img[alt*="Lucky Mini"]');
-        if (phoneImg) phoneImg.src = pageContent.phone_card_img;
+      // 结构化产品中心单品卡片同步更新
+      if (pageContent.items && Array.isArray(pageContent.items)) {
+        pageContent.items.forEach(it => {
+          const card = document.querySelector(`[data-product-id="${it.id}"]`);
+          if (card) {
+            const img = card.querySelector('img');
+            if (img && it.image) img.src = it.image;
+            const nameEl = card.querySelector('.product-name, .hero-phone-title');
+            if (nameEl && it.title) nameEl.textContent = it.title;
+            const priceEl = card.querySelector('.price-main');
+            if (priceEl && it.price) priceEl.textContent = it.price;
+            const priceSubEl = card.querySelector('.price-sub');
+            if (priceSubEl && it.priceSub) priceSubEl.textContent = it.priceSub;
+          }
+        });
       }
     }
 

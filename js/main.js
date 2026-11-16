@@ -449,8 +449,8 @@ function initSeriesNav() {
 
 /**
  * 产品中心 - 产品详情视窗 (Product Detail Modal)
- * 移动端全屏，PC端显示 2/3 的屏
- * 支持上传图片、即时本地渲染与持久化保存
+ * 移动端全屏 (100vw x 100vh)，PC端严格显示 2/3 的屏 (66.666vw)
+ * 支持上传商品详情长图/切片图、即时本地渲染与全站持久化保存
  */
 function initProductDetailModal() {
   const modal = document.getElementById('product-detail-modal');
@@ -458,8 +458,7 @@ function initProductDetailModal() {
 
   const modalBackdrop = document.getElementById('modal-backdrop');
   const closeBtn = document.getElementById('modal-close-btn');
-  const previewImg = document.getElementById('modal-product-img');
-  const dropzone = document.getElementById('modal-dropzone');
+  const detailImgsContainer = document.getElementById('modal-detail-images-container');
   const fileInput = document.getElementById('product-img-upload-input');
   const resetBtn = document.getElementById('btn-reset-image');
 
@@ -467,170 +466,162 @@ function initProductDetailModal() {
   const titleEl = document.getElementById('modal-p-title');
   const subEl = document.getElementById('modal-p-sub');
   const descEl = document.getElementById('modal-p-desc');
+  const extraDescWrap = document.getElementById('modal-detail-extra-desc-wrap');
+  const extraDescEl = document.getElementById('modal-p-extra-desc');
   const specsEl = document.getElementById('modal-p-specs');
   const priceEl = document.getElementById('modal-p-price');
   const priceSubEl = document.getElementById('modal-p-price-sub');
+  const buyLinkEl = document.getElementById('modal-buy-link');
   const detailLinkEl = document.getElementById('modal-detail-link');
   const actionLinkEl = document.getElementById('modal-action-link');
 
-  const PRODUCTS_DATA = {
-    'lucky-mini': {
-      id: 'lucky-mini',
-      title: 'Lucky Mini 3.7 英寸',
-      series: '旗舰小机系列 · 01',
-      subtitle: '拥有它，就拥有幸运。',
-      desc: '掌心黄金尺寸的完整安卓智能小机。专属 Lucky 物理微动按键，0.2 秒一键唤醒端侧大模型。航空级 CNC 钛金精工中框，配件随手可买，单手操作从容自如。',
-      defaultImg: 'images/showcase_lucky_mini.jpg',
-      specs: [
-        { label: '屏幕尺寸', val: '3.7" 视网膜单手小屏' },
-        { label: '专属硬件', val: '0.2s 物理微动 Lucky 键' },
-        { label: '工艺中框', val: 'CNC 钛金精工一体化' },
-        { label: '生态兼容', val: '通用标准化壳膜生态' }
-      ],
-      price: '$299',
-      priceSub: '约 ¥1999 / 首发前1000名优惠',
-      detailUrl: 'lucky-mini.html',
-      actionText: '立即预约首发'
-    },
-    'lucky-tab-8': {
-      id: 'lucky-tab-8',
-      title: 'LUCKY Tab 8.68 英寸',
-      series: '随身平板系列 · 02',
-      subtitle: '轻便随身，大模型伴读与轻量办公利器。',
-      desc: '8.68 英寸黄金黄金阅读比例随身智能平板，配备专属实体 Lucky 键。单手舒适托持，深度适配端侧 AI 助手，阅读、批注、即时问答流畅无缝。',
-      defaultImg: 'images/showcase_lucky_tab.jpg',
-      specs: [
-        { label: '便携屏幕', val: '8.68" 黄金阅读比例' },
-        { label: 'AI 系统', val: 'Lucky OS 多端流转协同' },
-        { label: '机身工艺', val: '全铝 CNC 一体成型' },
-        { label: '交互按键', val: '专属物理 Lucky 键' }
-      ],
-      price: '敬请期待',
-      priceSub: '首批产品筹备推进中',
-      detailUrl: 'contact.html?type=consult#leave-message',
-      actionText: '获取发布通知'
-    },
-    'lucky-tab-10': {
-      id: 'lucky-tab-10',
-      title: 'LUCKY Tab 10.1 英寸',
-      series: '随身平板系列 · 02',
-      subtitle: '高清大屏，全家人身边的 AI 智慧中心。',
-      desc: '10.1 英寸全视高清大屏平板，学习辅导、远程办公、家庭娱乐全场景覆盖。融入硬件级防蓝光护眼屏，全家人共享 AI 智慧生活。',
-      defaultImg: 'images/showcase_lucky_tab.jpg',
-      specs: [
-        { label: '视网膜屏', val: '10.1" 全贴合视网膜屏' },
-        { label: '健康护眼', val: '硬件级防蓝光认证' },
-        { label: '全场景生态', val: '家庭伴读与远程协同' },
-        { label: '续航能力', val: '超长待机大容量电池' }
-      ],
-      price: '敬请期待',
-      priceSub: '新品即将亮相',
-      detailUrl: 'contact.html?type=consult#leave-message',
-      actionText: '获取发布通知'
-    },
-    'lucky-paracord': {
-      id: 'lucky-paracord',
-      title: 'Lucky Paracord 机能工装挂绳',
-      series: '精工配件系列 · 03',
-      subtitle: '50KG 承重伞绳，钛金快拆卡扣。',
-      desc: '先锋街头机能工业美学，标配 50KG 承重抗拉高分子工装伞绳与钛合金快拆扣，让数码硬件化身随身潮流挂饰，户外街头随性出街。',
-      defaultImg: 'images/showcase_accessories.jpg',
-      specs: [
-        { label: '极限承重', val: '50KG 户外抗拉伞绳' },
-        { label: '卡扣材质', val: '钛合金秒级快拆扣' },
-        { label: '风格设计', val: '机能工装街头美学' },
-        { label: '色彩系列', val: '多色个性编织可选' }
-      ],
-      price: '¥129 起',
-      priceSub: '多色现货发售',
-      detailUrl: 'contact.html?type=purchase',
-      actionText: '了解购买渠道'
-    },
-    'lucky-charge': {
-      id: 'lucky-charge',
-      title: 'Lucky Charge 45W 氮化镓闪充',
-      series: '精工配件系列 · 03',
-      subtitle: '双口快充，差旅极简能量方块。',
-      desc: '围绕桌面与出行充电场景量身打造，支持主流 PD/QC 快充协议。采用氮化镓高能效功率芯片，智能控温散热，小巧便携折叠插脚。',
-      defaultImg: 'images/banner_lucky_charge.jpg',
-      specs: [
-        { label: '输出功率', val: '45W GaN 双口快充' },
-        { label: '快充协议', val: 'PD 3.0 / QC 4+ 全兼容' },
-        { label: '结构设计', val: '90° 折叠插脚极简方块' },
-        { label: '安全防护', val: '智能温控低温涓流' }
-      ],
-      price: '敬请期待',
-      priceSub: '首发随主机同购特惠',
-      detailUrl: 'contact.html?type=consult',
-      actionText: '预约新品通知'
-    },
-    'lucky-mag': {
-      id: 'lucky-mag',
-      title: 'Lucky Mag 磁吸壳膜生态',
-      series: '精工配件系列 · 03',
-      subtitle: '主流标准开模，配件随手可买。',
-      desc: '彻底打破小众硬件壳膜难买痛点。Lucky 系列尺寸严格对标主流旗舰通用模具，高铝硅防爆钢化膜、亲肤微磨砂磁吸保护套处处买得到。',
-      defaultImg: 'images/hero_banner_accessories.jpg',
-      specs: [
-        { label: '模具标准', val: '主流旗舰通用标准化' },
-        { label: '材质工艺', val: '微磨砂亲肤防滑手感' },
-        { label: '磁吸生态', val: '强磁吸阵列无缝吸附' },
-        { label: '屏幕保护', val: '9H 高铝硅防爆钢化膜' }
-      ],
-      price: '¥69 起',
-      priceSub: '标准化即买即用',
-      detailUrl: 'contact.html?type=purchase',
-      actionText: '探索生态配件'
+  // 获取合并后的全站数据 (含后台 CMS 编辑并保存的产品列表)
+  function getLiveProductsMap() {
+    let items = [];
+    try {
+      const savedDataStr = localStorage.getItem('LUCK_SITE_CONTENT_DATA');
+      if (savedDataStr) {
+        const saved = JSON.parse(savedDataStr);
+        if (saved.content && saved.content.products && Array.isArray(saved.content.products.items)) {
+          items = saved.content.products.items;
+        }
+      }
+    } catch (e) {
+      console.warn('读取本地产品数据失败', e);
     }
-  };
+
+    if (items.length === 0 && window.LUCK_SITE_DEFAULT_DATA &&
+        window.LUCK_SITE_DEFAULT_DATA.content &&
+        window.LUCK_SITE_DEFAULT_DATA.content.products &&
+        Array.isArray(window.LUCK_SITE_DEFAULT_DATA.content.products.items)) {
+      items = window.LUCK_SITE_DEFAULT_DATA.content.products.items;
+    }
+
+    const map = {};
+    items.forEach(it => {
+      map[it.id] = it;
+    });
+
+    // 默认垫底数据保证
+    const fallbackIds = ['lucky-mini', 'lucky-tab-8', 'lucky-tab-10', 'lucky-paracord', 'lucky-charge', 'lucky-mag'];
+    fallbackIds.forEach(id => {
+      if (!map[id]) {
+        map[id] = {
+          id: id,
+          title: id,
+          series: 'accessories',
+          subtitle: '',
+          desc: '',
+          price: '敬请期待',
+          detailImages: ['images/showcase_lucky_mini.jpg'],
+          specs: []
+        };
+      }
+    });
+
+    return map;
+  }
 
   let currentProductId = null;
 
-  // 检查并在页面中同步用户之前上传的自定义图片
-  Object.keys(PRODUCTS_DATA).forEach(pid => {
-    const customImg = localStorage.getItem('luck_custom_img_' + pid);
-    if (customImg) {
-      applyImageToCard(pid, customImg);
-    }
-  });
+  function renderDetailImages(p) {
+    if (!detailImgsContainer) return;
+    let images = [];
 
-  function applyImageToCard(pid, imgUrl) {
-    const cardEl = document.querySelector(`[data-product-id="${pid}"]`);
-    if (cardEl) {
-      const img = cardEl.querySelector('img');
-      if (img) img.src = imgUrl;
+    // 1. 优先读取单独上传的自定义详情图集
+    try {
+      const customDetailJson = localStorage.getItem('luck_custom_detail_images_' + p.id);
+      if (customDetailJson) {
+        images = JSON.parse(customDetailJson);
+      }
+    } catch (e) {}
+
+    // 2. 若无单独上传，读取产品数据中的 detailImages
+    if ((!images || images.length === 0) && p.detailImages && Array.isArray(p.detailImages) && p.detailImages.length > 0) {
+      images = p.detailImages;
+    }
+
+    // 3. 兜底为产品主图
+    if (!images || images.length === 0) {
+      images = [p.image || p.defaultImg || 'images/showcase_lucky_mini.jpg'];
+    }
+
+    detailImgsContainer.innerHTML = images.map((imgSrc, idx) => `
+      <div class="modal-detail-img-card">
+        <img src="${imgSrc}" alt="${p.title} 商品详情图 第 ${idx + 1} 屏" loading="lazy">
+      </div>
+    `).join('');
+
+    // 控制恢复默认按钮状态
+    const hasCustom = localStorage.getItem('luck_custom_detail_images_' + p.id) !== null;
+    if (resetBtn) {
+      resetBtn.style.display = hasCustom ? 'inline-flex' : 'none';
     }
   }
 
   function openModal(productId) {
-    const p = PRODUCTS_DATA[productId] || PRODUCTS_DATA['lucky-mini'];
+    const productsMap = getLiveProductsMap();
+    const p = productsMap[productId] || productsMap['lucky-mini'];
     currentProductId = p.id;
 
-    tagEl.textContent = p.series;
-    titleEl.textContent = p.title;
-    subEl.textContent = p.subtitle;
-    descEl.textContent = p.desc;
-    priceEl.textContent = p.price;
-    priceSubEl.textContent = p.priceSub;
-    detailLinkEl.href = p.detailUrl;
-    actionLinkEl.textContent = p.actionText;
+    if (tagEl) tagEl.textContent = p.seriesLabel || (p.series === 'phone' ? '旗舰小机系列 · 01' : (p.series === 'tablet' ? '随身平板系列 · 02' : '精工配件系列 · 03'));
+    if (titleEl) titleEl.textContent = p.title || '';
+    if (subEl) subEl.textContent = p.subtitle || '';
+    if (descEl) descEl.textContent = p.desc || '';
+    if (priceEl) priceEl.textContent = p.price || '';
+    if (priceSubEl) priceSubEl.textContent = p.priceSub || '';
 
-    specsEl.innerHTML = p.specs.map(s => `
-      <li class="modal-specs-item">
-        <strong>${s.label}</strong>
-        <span>${s.val}</span>
-      </li>
-    `).join('');
-
-    // 加载图片 (优先读取本地用户上传图)
-    const customImg = localStorage.getItem('luck_custom_img_' + p.id);
-    if (customImg) {
-      previewImg.src = customImg;
-      resetBtn.style.display = 'inline-flex';
-    } else {
-      previewImg.src = p.defaultImg;
-      resetBtn.style.display = 'none';
+    // 详情补充文字
+    if (extraDescWrap && extraDescEl) {
+      if (p.detailDesc && p.detailDesc.trim() !== '') {
+        extraDescEl.textContent = p.detailDesc;
+        extraDescWrap.style.display = 'block';
+      } else {
+        extraDescWrap.style.display = 'none';
+      }
     }
+
+    // 购买跳转链接
+    if (buyLinkEl) {
+      if (p.buyUrl && p.buyUrl.trim() !== '') {
+        buyLinkEl.href = p.buyUrl;
+        buyLinkEl.textContent = `${p.buyText || '立即购买'} ↗`;
+        buyLinkEl.style.display = 'inline-flex';
+      } else {
+        buyLinkEl.style.display = 'none';
+      }
+    }
+
+    // 详细了解外链
+    if (detailLinkEl) {
+      if (p.id === 'lucky-mini') {
+        detailLinkEl.href = 'lucky-mini.html';
+        detailLinkEl.style.display = 'inline-flex';
+      } else {
+        detailLinkEl.style.display = 'none';
+      }
+    }
+
+    // 规格参数渲染
+    if (specsEl) {
+      const specs = p.specs || [];
+      if (specs.length > 0) {
+        specsEl.innerHTML = specs.map(s => `
+          <li class="modal-specs-item">
+            <strong>${s.label}</strong>
+            <span>${s.val}</span>
+          </li>
+        `).join('');
+      } else {
+        specsEl.innerHTML = `
+          <li class="modal-specs-item"><strong>官方品质</strong><span>工业级自研制造</span></li>
+          <li class="modal-specs-item"><strong>售后保障</strong><span>正品联保全国覆盖</span></li>
+        `;
+      }
+    }
+
+    // 渲染商品详情长图卷轴
+    renderDetailImages(p);
 
     modal.classList.add('active');
     modal.setAttribute('aria-hidden', 'false');
@@ -652,69 +643,62 @@ function initProductDetailModal() {
     }
   });
 
-  // 上传图片处理
+  // 上传商品详情长图处理 (支持多选与单选)
   if (fileInput) {
     fileInput.addEventListener('change', (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
-      handleImageFile(file);
-    });
-  }
+      const files = Array.from(e.target.files || []);
+      if (files.length === 0 || !currentProductId) return;
 
-  // 拖拽上传支持
-  if (dropzone) {
-    ['dragenter', 'dragover'].forEach(name => {
-      dropzone.addEventListener(name, (e) => {
-        e.preventDefault();
-        dropzone.classList.add('dragover');
-      });
-    });
-
-    ['dragleave', 'drop'].forEach(name => {
-      dropzone.addEventListener(name, (e) => {
-        e.preventDefault();
-        dropzone.classList.remove('dragover');
-      });
-    });
-
-    dropzone.addEventListener('drop', (e) => {
-      const dt = e.dataTransfer;
-      const file = dt.files[0];
-      if (file && file.type.startsWith('image/')) {
-        handleImageFile(file);
-      }
-    });
-  }
-
-  function handleImageFile(file) {
-    if (!currentProductId) return;
-    const reader = new FileReader();
-    reader.onload = (evt) => {
-      const dataUrl = evt.target.result;
-      previewImg.src = dataUrl;
-      resetBtn.style.display = 'inline-flex';
-
+      let currentImages = [];
       try {
-        localStorage.setItem('luck_custom_img_' + currentProductId, dataUrl);
-      } catch (err) {
-        console.warn('LocalStorage 空间不足，已在当前会话中显示', err);
-      }
+        const saved = localStorage.getItem('luck_custom_detail_images_' + currentProductId);
+        if (saved) currentImages = JSON.parse(saved);
+      } catch (err) {}
 
-      // 同步更新页面卡片上的图片
-      applyImageToCard(currentProductId, dataUrl);
-    };
-    reader.readAsDataURL(file);
+      let loaded = 0;
+      files.forEach(file => {
+        const reader = new FileReader();
+        reader.onload = (evt) => {
+          currentImages.push(evt.target.result);
+          loaded++;
+          if (loaded === files.length) {
+            localStorage.setItem('luck_custom_detail_images_' + currentProductId, JSON.stringify(currentImages));
+
+            // 同步保存到全站 CMS 数据
+            try {
+              const siteDataStr = localStorage.getItem('LUCK_SITE_CONTENT_DATA');
+              if (siteDataStr) {
+                const siteData = JSON.parse(siteDataStr);
+                if (siteData.content && siteData.content.products && Array.isArray(siteData.content.products.items)) {
+                  const targetItem = siteData.content.products.items.find(x => x.id === currentProductId);
+                  if (targetItem) {
+                    targetItem.detailImages = currentImages;
+                    localStorage.setItem('LUCK_SITE_CONTENT_DATA', JSON.stringify(siteData));
+                  }
+                }
+              }
+            } catch (err) {}
+
+            const productsMap = getLiveProductsMap();
+            renderDetailImages(productsMap[currentProductId] || { id: currentProductId });
+            alert(`成功上传 ${loaded} 张商品详情长图！已实时更新展示。`);
+            fileInput.value = '';
+          }
+        };
+        reader.readAsDataURL(file);
+      });
+    });
   }
 
-  // 恢复官方原图
+  // 恢复官方默认详情图
   if (resetBtn) {
     resetBtn.addEventListener('click', () => {
       if (!currentProductId) return;
-      const p = PRODUCTS_DATA[currentProductId];
-      localStorage.removeItem('luck_custom_img_' + currentProductId);
-      previewImg.src = p.defaultImg;
-      resetBtn.style.display = 'none';
-      applyImageToCard(currentProductId, p.defaultImg);
+      localStorage.removeItem('luck_custom_detail_images_' + currentProductId);
+      const productsMap = getLiveProductsMap();
+      renderDetailImages(productsMap[currentProductId] || { id: currentProductId });
+      if (resetBtn) resetBtn.style.display = 'none';
+      alert('已恢复为官方默认商品详情长图！');
     });
   }
 
@@ -727,10 +711,10 @@ function initProductDetailModal() {
     });
   });
 
-  // 支持 URL 参数自动打开详情 (例如 products.html?detail=lucky-mini)
+  // 支持 URL 参数自动打开详情 (例如 products.html?product=lucky-tab-8)
   const urlParams = new URLSearchParams(window.location.search);
   const detailParam = urlParams.get('detail') || urlParams.get('product');
-  if (detailParam && PRODUCTS_DATA[detailParam]) {
+  if (detailParam) {
     setTimeout(() => openModal(detailParam), 60);
   }
 }

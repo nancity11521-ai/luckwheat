@@ -250,7 +250,172 @@ window.LUCK_SITE_DEFAULT_DATA = {
       acc_charge_title: "Lucky Charge 45W 氮化镓双口闪充",
       acc_charge_price: "敬请期待",
       acc_mag_title: "Lucky Mag 磁吸壳膜生态",
-      acc_mag_price: "¥69 起"
+      acc_mag_price: "¥69 起",
+
+      // 结构化产品中心列表 (支持后台小列表管理、商品详情页多图上传、产品购买跳转链接)
+      items: [
+        {
+          id: "lucky-mini",
+          series: "phone",
+          seriesLabel: "旗舰小机系列 · 01",
+          badge: "核心旗舰 · AI",
+          badgeType: "live",
+          title: "Lucky Mini 3.7 英寸",
+          subtitle: "拥有它，就拥有幸运。",
+          desc: "掌心黄金尺寸的完整安卓智能小机。专属 Lucky 物理微动按键，0.2 秒一键唤醒端侧大模型。航空级 CNC 钛金精工中框，配件随手可买，单手操作从容自如。",
+          image: "images/showcase_lucky_mini.jpg",
+          specs: [
+            { label: "屏幕尺寸", val: "3.7\" 视网膜单手小屏" },
+            { label: "专属硬件", val: "0.2s 物理微动 Lucky 键" },
+            { label: "工艺中框", val: "CNC 钛金精工一体化" },
+            { label: "生态兼容", val: "通用标准化壳膜生态" }
+          ],
+          price: "$299",
+          priceSub: "约 ¥1999 / 首发前1000名优惠",
+          detailUrl: "lucky-mini.html",
+          buyUrl: "channels.html?product=lucky-mini",
+          buyText: "立即购买",
+          detailImages: [
+            "images/showcase_lucky_mini.jpg",
+            "images/hero_banner_lucky_mini.jpg",
+            "images/banner_subpage_lucky_mini.jpg"
+          ],
+          detailDesc: "Lucky Mini 3.7 英寸核心旗舰小机：掌心黄金尺寸的完整安卓智能小机，配备专属 0.2s 物理微动 Lucky 键，一键唤醒端侧 AI 大模型。采用航空级 CNC 钛金精工中框与标准通用配件生态。"
+        },
+        {
+          id: "lucky-tab-8",
+          series: "tablet",
+          seriesLabel: "随身平板系列 · 02",
+          badge: "即将上市",
+          badgeType: "pending",
+          title: "LUCKY Tab 8.68 英寸",
+          subtitle: "轻便随身，大模型伴读与轻量办公利器。",
+          desc: "8.68 英寸随身智能平板，单手黄金阅读比例与广阔视野兼得。全铝 CNC 一体成型，轻量办公与灵感利器。",
+          image: "images/showcase_lucky_tab.jpg",
+          specs: [
+            { label: "便携屏幕", val: "8.68\" 黄金阅读比例" },
+            { label: "AI 系统", val: "Lucky OS 多端流转协同" },
+            { label: "机身工艺", val: "全铝 CNC 一体成型" },
+            { label: "交互按键", val: "专属物理 Lucky 键" }
+          ],
+          price: "敬请期待",
+          priceSub: "筹备推进中",
+          detailUrl: "contact.html?type=consult#leave-message",
+          buyUrl: "channels.html?product=lucky-tab-8",
+          buyText: "立即购买",
+          detailImages: [
+            "images/showcase_lucky_tab.jpg",
+            "images/hero_banner_lucky_tab.jpg"
+          ],
+          detailDesc: "8.68 英寸黄金阅读比例随身智能平板，全铝 CNC 一体成型，单手从容舒适托持，深度适配端侧 AI 助手，阅读、批注、即时问答流畅无缝。"
+        },
+        {
+          id: "lucky-tab-10",
+          series: "tablet",
+          seriesLabel: "随身平板系列 · 02",
+          badge: "即将上市",
+          badgeType: "pending",
+          title: "LUCKY Tab 10.1 英寸",
+          subtitle: "高清大屏，全家人身边的 AI 智慧中心。",
+          desc: "10.1 英寸全视高清大屏平板，学习辅导、远程办公、家庭娱乐全场景覆盖，融入 AI 互动伴学新体验。",
+          image: "images/hero_banner_lucky_tab.jpg",
+          specs: [
+            { label: "视网膜屏", val: "10.1\" 全贴合视网膜屏" },
+            { label: "健康护眼", val: "硬件级防蓝光认证" },
+            { label: "全场景生态", val: "家庭伴读与远程协同" },
+            { label: "续航能力", val: "超长待机大容量电池" }
+          ],
+          price: "敬请期待",
+          priceSub: "即将亮相",
+          detailUrl: "contact.html?type=consult#leave-message",
+          buyUrl: "channels.html?product=lucky-tab-10",
+          buyText: "立即购买",
+          detailImages: [
+            "images/hero_banner_lucky_tab.jpg",
+            "images/showcase_lucky_tab.jpg"
+          ],
+          detailDesc: "10.1 英寸全视高清大屏平板，专为家庭、远程学习与生产力打造，硬件级防蓝光护眼认证，全场景生态智能协同。"
+        },
+        {
+          id: "lucky-paracord",
+          series: "accessories",
+          seriesLabel: "精工配件系列 · 03",
+          badge: "精工生态",
+          badgeType: "live",
+          title: "Lucky Paracord 机能工装挂绳",
+          subtitle: "50KG 承重伞绳，钛金快拆卡扣。",
+          desc: "标配 50KG 抗拉高分子工装伞绳与钛合金快拆扣，让硬件成为随身佩戴饰物，街头与机能随行。",
+          image: "images/showcase_accessories.jpg",
+          specs: [
+            { label: "极限承重", val: "50KG 户外抗拉伞绳" },
+            { label: "卡扣材质", val: "钛合金秒级快拆扣" },
+            { label: "风格设计", val: "机能工装街头美学" },
+            { label: "色彩系列", val: "多色个性编织可选" }
+          ],
+          price: "¥129 起",
+          priceSub: "多色个性编织",
+          detailUrl: "contact.html?type=purchase",
+          buyUrl: "channels.html?product=lucky-paracord",
+          buyText: "立即购买",
+          detailImages: [
+            "images/showcase_accessories.jpg",
+            "images/banner_accessories.png"
+          ],
+          detailDesc: "Lucky Paracord 先锋机能工装伞绳，标配 50KG 承重抗拉高分子伞绳与钛合金快拆扣，户外机能风格，让科技成为佩戴饰物。"
+        },
+        {
+          id: "lucky-charge",
+          series: "accessories",
+          seriesLabel: "精工配件系列 · 03",
+          badge: "即将上市",
+          badgeType: "pending",
+          title: "Lucky Charge 45W 氮化镓双口闪充",
+          subtitle: "双口快充，差旅极简能量方块。",
+          desc: "围绕桌面与出行充电场景设计，兼容多协议极速快充，以精致小巧的工业设计与 Lucky 设备无缝联动。",
+          image: "images/hero_banner_accessories.jpg",
+          specs: [
+            { label: "输出功率", val: "45W GaN 双口快充" },
+            { label: "快充协议", val: "PD 3.0 / QC 4+ 全兼容" },
+            { label: "结构设计", val: "90° 折叠插脚极简方块" },
+            { label: "安全防护", val: "智能温控低温涓流" }
+          ],
+          price: "敬请期待",
+          priceSub: "生态硬件",
+          detailUrl: "contact.html?type=consult",
+          buyUrl: "channels.html?product=lucky-charge",
+          buyText: "立即购买",
+          detailImages: [
+            "images/hero_stitch_light.png"
+          ],
+          detailDesc: "Lucky Charge 45W 氮化镓双口闪充：高效温控芯片，折叠插脚便携方块，全面兼容 PD/QC 多协议设备极速快充。"
+        },
+        {
+          id: "lucky-mag",
+          series: "accessories",
+          seriesLabel: "精工配件系列 · 03",
+          badge: "标准通用",
+          badgeType: "live",
+          title: "Lucky Mag 磁吸壳膜生态",
+          subtitle: "主流标准开模，配件随手可买。",
+          desc: "采用行业通用标准模具尺寸设计，告别小众保护壳难买痛点，全面兼容主流磁吸车载与桌面配件。",
+          image: "images/hero_banner_accessories.jpg",
+          specs: [
+            { label: "模具标准", val: "主流旗舰通用标准化" },
+            { label: "材质工艺", val: "微磨砂亲肤防滑手感" },
+            { label: "磁吸生态", val: "强磁吸阵列无缝吸附" },
+            { label: "屏幕保护", val: "9H 高铝硅防爆钢化膜" }
+          ],
+          price: "¥69 起",
+          priceSub: "标准化即买即用",
+          detailUrl: "contact.html?type=purchase",
+          buyUrl: "channels.html?product=lucky-mag",
+          buyText: "立即购买",
+          detailImages: [
+            "images/hero_banner_accessories.jpg"
+          ],
+          detailDesc: "Lucky Mag 磁吸生态壳膜：标准通用开模尺寸，强力磁吸阵列，微磨砂亲肤防滑，9H 高铝硅防爆钢化，主流配件随手可买。"
+        }
+      ]
     },
 
     // 3. Lucky Mini 旗舰页 (lucky-mini.html)
