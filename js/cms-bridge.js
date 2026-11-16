@@ -330,6 +330,21 @@
           if (pageContent.cta_btn2_text) btns[1].textContent = pageContent.cta_btn2_text;
         }
       }
+
+      // 品牌动态列表渲染 (支持微信公众号推文链接直达)
+      const newsContainer = document.getElementById('brand-news-list');
+      if (newsContainer && pageContent.brand_news && Array.isArray(pageContent.brand_news)) {
+        newsContainer.innerHTML = pageContent.brand_news.map(item => `
+          <a href="${item.link || 'https://mp.weixin.qq.com'}" target="_blank" rel="noopener noreferrer" class="card brand-news-card" style="padding: 22px 28px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <div style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--brand-primary);">${item.date || ''}</div>
+              <span class="news-link-badge">${(item.link && item.link.includes('weixin.qq.com')) ? '微信推文 ↗' : '阅读全文 ↗'}</span>
+            </div>
+            <h3 style="font-size: 1.1rem; margin-bottom: 6px; color: var(--text-primary);">${item.title || ''}</h3>
+            <p style="font-size: 0.9rem; color: var(--text-secondary); margin: 0;">${item.desc || ''}</p>
+          </a>
+        `).join('');
+      }
     }
 
     // 6.4 产品中心 (products.html)

@@ -185,7 +185,35 @@ window.LUCK_SITE_DEFAULT_DATA = {
       cta_title: "下一个幸运，也许由你带来",
       cta_desc: "我们正在寻找电商分销、线下渠道、售后服务与内容创作的合作伙伴。让我们携手，为用户带来有温度的科技生活。",
       cta_btn1_text: "查看合作方式",
-      cta_btn2_text: "直接联系我们"
+      cta_btn2_text: "直接联系我们",
+
+      // 品牌动态 (支持微信公众号推文直达)
+      brand_news: [
+        {
+          date: "2026-10",
+          title: "Lucky Mini 3.7 英寸旗舰小手机设计定稿",
+          desc: "原创外观设计完成、专属 Lucky 键硬件级确认、主流旗舰配件通用比例敲定。",
+          link: "https://mp.weixin.qq.com"
+        },
+        {
+          date: "2026-09",
+          title: "AI 能力进入系统实测阶段",
+          desc: "Lucky 键一键唤醒 AI 对话交互完成联调，国内外按地区接入主流优质大模型能力。",
+          link: "https://mp.weixin.qq.com"
+        },
+        {
+          date: "2026-08",
+          title: "「幸运之选」品牌标签正式发布",
+          desc: "品牌定位、核心价值观与软硬件产品线对外全面统一步调。",
+          link: "https://mp.weixin.qq.com"
+        },
+        {
+          date: "2026-07",
+          title: "全球化服务网络启动筹备",
+          desc: "以「LUCK WHEAT 幸运无限」品牌为核心，全球化分销网络与多区域服务中心全面启动。",
+          link: "https://mp.weixin.qq.com"
+        }
+      ]
     },
 
     // 2. 产品中心 (products.html)

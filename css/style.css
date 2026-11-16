@@ -1997,6 +1997,45 @@ button.series-nav-btn.active,
 }
 
 /* ==========================================================================
+   品牌动态卡片 (可点击直达微信公众号/资讯链接)
+   ========================================================================== */
+.brand-news-card {
+  text-decoration: none !important;
+  display: block;
+  color: inherit;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
+  cursor: pointer;
+}
+
+.brand-news-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+  border-color: rgba(27, 109, 240, 0.4);
+}
+
+.brand-news-card:hover h3 {
+  color: var(--apple-blue) !important;
+}
+
+.news-link-badge {
+  font-size: 0.75rem;
+  padding: 3px 9px;
+  border-radius: var(--radius-pill);
+  background: #f0f4ff;
+  color: var(--apple-blue);
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  transition: all var(--transition-fast);
+}
+
+.brand-news-card:hover .news-link-badge {
+  background: var(--apple-blue);
+  color: #ffffff;
+}
+
+/* ==========================================================================
    CTA 横幅 (Apple Style Call to Action)
    ========================================================================== */
 .cta-banner {
