@@ -242,8 +242,8 @@
     const bannerCard = document.querySelector('.subpage-banner-card');
     if (bannerCard) {
       const bannerKey = `images/banner_subpage_${pageKey.replace('-', '_')}.jpg`;
-      if (allData.images && allData.images[bannerKey]) {
-        bannerCard.style.backgroundImage = `url("${allData.images[bannerKey]}")`;
+      if (data.images && data.images[bannerKey]) {
+        bannerCard.style.backgroundImage = `url("${data.images[bannerKey]}")`;
       }
     }
 
@@ -350,7 +350,7 @@
     // 6.4 产品中心 (products.html)
     else if (pageKey === 'products') {
       safeSetText('#products-title', pageContent.page_title);
-      safeSetText('.products-header-desc', pageContent.page_desc);
+      safeSetText('.subpage-banner-desc', pageContent.page_desc);
       safeSetText('#heading-phone-series', pageContent.phone_series_title);
       safeSetText('#desc-phone-series', pageContent.phone_series_desc);
       safeSetText('#heading-tablet-series', pageContent.tablet_series_title);
@@ -358,19 +358,80 @@
       safeSetText('#heading-acc-series', pageContent.acc_series_title);
       safeSetText('#desc-acc-series', pageContent.acc_series_desc);
 
-      // 结构化产品中心单品卡片同步更新
+      // 结构化产品中心单品卡片同步更新与动态新增
       if (pageContent.items && Array.isArray(pageContent.items)) {
+        const itemIds = new Set(pageContent.items.map(it => it.id));
+        document.querySelectorAll('[data-product-id]').forEach(el => {
+          const pid = el.getAttribute('data-product-id');
+          if (!itemIds.has(pid)) el.style.display = 'none';
+        });
+
         pageContent.items.forEach(it => {
-          const card = document.querySelector(`[data-product-id="${it.id}"]`);
-          if (card) {
+          let card = document.querySelector(`[data-product-id="${it.id}"]`);
+          if (!card) {
+            const targetGrid = it.series === 'phone'
+              ? document.getElementById('series-phone')
+              : (it.series === 'tablet'
+                ? document.querySelector('#series-tablet .grid-2')
+                : document.querySelector('#series-accessories .grid-3'));
+            if (targetGrid) {
+              card = document.createElement('article');
+              card.className = 'product-card';
+              card.setAttribute('data-product-id', it.id);
+              if (it.series === 'phone') card.style.marginTop = '24px';
+              const badgeClass = it.badgeType === 'pending' ? 'badge-pending' : 'badge-live';
+              const buyHref = it.buyUrl || 'channels.html';
+              const isExt = /^https?:\/\//i.test(buyHref);
+              card.innerHTML = `
+                <div class="product-thumb" style="cursor: pointer;" data-open-detail="${it.id}" title="点击查看详情与上传实拍图">
+                  <img src="${it.image || 'images/showcase_lucky_mini.jpg'}" alt="${it.title || ''}" class="product-thumb-img" loading="lazy">
+                </div>
+                <div class="product-info">
+                  <div class="product-meta">
+                    <span class="badge ${badgeClass}">${it.badge || '新品'}</span>
+                    <span class="badge badge-subtle">${it.series === 'phone' ? '手机系列' : (it.series === 'tablet' ? '平板系列' : '配件系列')}</span>
+                  </div>
+                  <h3 class="product-name" style="font-size: 1.35rem; cursor: pointer;" data-open-detail="${it.id}">${it.title || ''}</h3>
+                  <p class="product-description">${it.desc || ''}</p>
+                  <div class="product-footer">
+                    <div class="product-price">
+                      <span class="price-main">${it.price || ''}</span>
+                      <span class="price-sub">${it.priceSub || ''}</span>
+                    </div>
+                    <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                      <button type="button" class="btn btn-secondary btn-sm" data-open-detail="${it.id}">查看详情</button>
+                      <a href="${buyHref}" ${isExt ? 'target="_blank" rel="noopener noreferrer"' : ''} class="btn btn-primary btn-sm" data-buy-link>${it.buyText || '立即购买'} ↗</a>
+                    </div>
+                  </div>
+                </div>
+              `;
+              targetGrid.appendChild(card);
+            }
+          } else {
             const img = card.querySelector('img');
             if (img && it.image) img.src = it.image;
             const nameEl = card.querySelector('.product-name, .hero-phone-title');
             if (nameEl && it.title) nameEl.textContent = it.title;
+            const subEl = card.querySelector('.hero-phone-subtitle');
+            if (subEl && it.subtitle) subEl.textContent = it.subtitle;
+            const descEl = card.querySelector('.product-description, .hero-phone-desc');
+            if (descEl && it.desc) descEl.textContent = it.desc;
             const priceEl = card.querySelector('.price-main');
             if (priceEl && it.price) priceEl.textContent = it.price;
             const priceSubEl = card.querySelector('.price-sub');
             if (priceSubEl && it.priceSub) priceSubEl.textContent = it.priceSub;
+            const buyBtn = card.querySelector('[data-buy-link]');
+            if (buyBtn && it.buyUrl) {
+              buyBtn.href = it.buyUrl;
+              if (/^https?:\/\//i.test(it.buyUrl)) {
+                buyBtn.setAttribute('target', '_blank');
+                buyBtn.setAttribute('rel', 'noopener noreferrer');
+              } else {
+                buyBtn.removeAttribute('target');
+                buyBtn.removeAttribute('rel');
+              }
+              if (it.buyText) buyBtn.textContent = it.buyText + ' ↗';
+            }
           }
         });
       }
@@ -487,8 +548,10 @@
   }
 
   // 8. 页面加载就绪执行
+  window.LUCK_GET_MERGED_DATA = getMergedData;
   document.addEventListener('DOMContentLoaded', () => {
     const data = getMergedData();
+    window.LUCK_CMS_DATA = data;
     const pageKey = detectCurrentPage();
     applySEO(data, pageKey);
     applyImageOverrides(data);

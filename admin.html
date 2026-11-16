@@ -581,6 +581,174 @@
       font-size: 13px;
     }
 
+    /* 产品中心小列表与两列式管理布局 (Master-Detail) */
+    .product-mgmt-container {
+      display: grid;
+      grid-template-columns: 350px 1fr;
+      gap: 20px;
+      align-items: start;
+      margin-top: 14px;
+    }
+    @media (max-width: 1120px) {
+      .product-mgmt-container {
+        grid-template-columns: 1fr;
+      }
+      .product-mini-list-card {
+        position: static !important;
+        max-height: 440px !important;
+      }
+    }
+    .product-mini-list-card {
+      position: sticky;
+      top: 80px;
+      background: #fafafc;
+      border: 1px solid var(--admin-border);
+      border-radius: 14px;
+      padding: 16px;
+      max-height: calc(100vh - 105px);
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    }
+    .product-series-filter-pills {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 12px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+    .pill-filter {
+      padding: 5px 12px;
+      border-radius: 980px;
+      font-size: 12px;
+      font-weight: 500;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      background: #ffffff;
+      color: var(--admin-text-muted);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.18s ease;
+    }
+    .pill-filter:hover {
+      background: #f0f0f4;
+      color: #1d1d1f;
+    }
+    .pill-filter.active {
+      background: #1d1d1f;
+      color: #ffffff;
+      border-color: #1d1d1f;
+    }
+    .admin-products-mini-list {
+      overflow-y: auto;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding-right: 4px;
+    }
+    .product-mini-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 12px;
+      background: #ffffff;
+      border: 1.5px solid rgba(0, 0, 0, 0.07);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      text-align: left;
+    }
+    .product-mini-item:hover {
+      border-color: rgba(0, 113, 227, 0.45);
+      transform: translateX(3px);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+    }
+    .product-mini-item.active {
+      background: #f0f7ff;
+      border-color: var(--admin-blue);
+      box-shadow: 0 4px 16px rgba(0, 113, 227, 0.14);
+    }
+    .product-mini-item.active::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 10px;
+      bottom: 10px;
+      width: 4px;
+      border-radius: 0 4px 4px 0;
+      background: var(--admin-blue);
+    }
+    .mini-item-thumb {
+      width: 46px;
+      height: 46px;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #f0f0f4;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(0, 0, 0, 0.06);
+    }
+    .mini-item-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .mini-item-body {
+      flex: 1;
+      min-width: 0;
+    }
+    .mini-item-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 2px;
+    }
+    .mini-item-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #1d1d1f;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .mini-item-meta {
+      font-size: 11.5px;
+      color: var(--admin-text-muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 4px;
+    }
+    .mini-item-status-row {
+      display: flex;
+      gap: 5px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .tag-badge {
+      font-size: 10.5px;
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-weight: 500;
+    }
+    .tag-badge.has-imgs {
+      background: #e3f9e5;
+      color: #1d7c38;
+      font-weight: 600;
+    }
+    .tag-badge.no-imgs {
+      background: #fff1e5;
+      color: #b75900;
+    }
+    .tag-badge.buy-linked {
+      background: #e8f3ff;
+      color: var(--admin-blue);
+    }
+
   </style>
 </head>
 <body>
@@ -624,6 +792,10 @@
       <div class="nav-item" data-target="cms">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
         <span>全站图文内容 (CMS)</span>
+      </div>
+      <div class="nav-item" data-target="products">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+        <span>📦 产品中心 (商品管理)</span>
       </div>
       <div class="nav-item" data-target="seo">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
@@ -1003,52 +1175,39 @@
               </div>
             </div>
 
-            <!-- 产品中心小列表 (快速检索、管理、上传详情页与配置购买链接) -->
-            <div class="panel-card" style="background: #fafafc;">
-              <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 14px;">
-                <div>
-                  <h3 style="font-size: 15px; margin-bottom: 4px; display: flex; align-items: center; gap: 8px;">
-                    <span>📋 产品中心小列表</span>
-                    <span id="admin-products-count" style="font-size: 12px; background: #e8f3ff; color: var(--admin-blue); padding: 2px 8px; border-radius: 12px; font-weight: 600;">0 款</span>
-                  </h3>
-                  <p style="font-size: 12px; color: var(--admin-text-muted); margin: 0;">产品数量增多时，可通过下方小列表快速搜索、筛选并定位到任意产品进行编辑、上传商品详情页或配置购买链接。</p>
+            <!-- 产品中心两列式管理布局 (左侧：产品小列表常驻吸顶，右侧：选中产品详情页与信息编辑) -->
+            <div class="product-mgmt-container">
+              <!-- 左侧：产品中心小列表 (快速检索、筛选、定位与切换) -->
+              <div class="product-mini-list-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                  <div style="display: flex; align-items: center; gap: 8px;">
+                    <span style="font-size: 14.5px; font-weight: 700; color: #1d1d1f;">📋 产品小列表</span>
+                    <span id="admin-products-count" style="font-size: 11.5px; background: #e8f3ff; color: var(--admin-blue); padding: 2px 7px; border-radius: 10px; font-weight: 600;">0 款</span>
+                  </div>
+                  <button type="button" class="btn-pill btn-pill-blue" style="padding: 4px 10px; font-size: 12px;" onclick="createNewProductItem()">➕ 新增产品</button>
                 </div>
-                <button type="button" class="btn-pill btn-pill-blue" onclick="createNewProductItem()">➕ 新增产品</button>
+
+                <!-- 搜索过滤栏 -->
+                <div style="margin-bottom: 10px;">
+                  <input type="text" class="form-input" id="admin-product-search" placeholder="🔍 快速搜索产品或ID..." style="font-size: 12.5px; height: 35px;" oninput="renderAdminProductMiniList()">
+                </div>
+
+                <!-- 系列分类快捷胶囊按钮 (全部 / 手机 / 平板 / 配件) -->
+                <div class="product-series-filter-pills">
+                  <button type="button" class="pill-filter active" data-series="all" onclick="filterProductSeries('all')">全部</button>
+                  <button type="button" class="pill-filter" data-series="phone" onclick="filterProductSeries('phone')">📱手机</button>
+                  <button type="button" class="pill-filter" data-series="tablet" onclick="filterProductSeries('tablet')">💻平板</button>
+                  <button type="button" class="pill-filter" data-series="accessories" onclick="filterProductSeries('accessories')">⚡配件</button>
+                </div>
+
+                <!-- 独立滚动的卡片式小列表容器 (随手一滑立刻定位，点击任意单品右侧即刻刷新) -->
+                <div id="admin-products-mini-list" class="admin-products-mini-list">
+                  <!-- 动态渲染各产品小卡片 -->
+                </div>
               </div>
 
-              <!-- 搜索与系列筛选栏 -->
-              <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 14px;">
-                <input type="text" class="form-input" id="admin-product-search" placeholder="🔍 搜索产品名称、副标题或 ID..." style="flex: 1; min-width: 200px;" oninput="renderAdminProductMiniList()">
-                <select class="form-select" id="admin-product-series-filter" style="width: auto; min-width: 150px;" onchange="renderAdminProductMiniList()">
-                  <option value="all">全部系列</option>
-                  <option value="phone">📱 智能手机系列</option>
-                  <option value="tablet">💻 随身平板系列</option>
-                  <option value="accessories">⚡ 精工配件系列</option>
-                </select>
-              </div>
-
-              <!-- 紧凑小列表容器 -->
-              <div style="max-height: 340px; overflow-y: auto; border: 1px solid var(--admin-border); border-radius: 10px; background: #ffffff;">
-                <table class="data-table" style="font-size: 13px;">
-                  <thead style="position: sticky; top: 0; z-index: 2;">
-                    <tr>
-                      <th style="width: 56px;">主图</th>
-                      <th>产品名称 / 系列</th>
-                      <th style="width: 110px;">售价</th>
-                      <th style="width: 135px;">商品详情页</th>
-                      <th style="width: 135px;">购买跳转链接</th>
-                      <th style="width: 170px; text-align: right;">快捷操作</th>
-                    </tr>
-                  </thead>
-                  <tbody id="admin-products-mini-tbody">
-                    <!-- 动态渲染 -->
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-            <!-- 选中产品的编辑器 (含购买链接配置 + 商品详情页多图上传) -->
-            <div class="panel-card" id="admin-product-editor-card" style="background: #ffffff; border: 1.5px solid rgba(0, 113, 227, 0.25);">
+              <!-- 右侧：选中产品的编辑器 (含购买链接配置 + 商品详情页多图上传) -->
+              <div class="panel-card" id="admin-product-editor-card" style="background: #ffffff; border: 1.5px solid rgba(0, 113, 227, 0.25); margin-bottom: 0;">
               <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; padding-bottom: 12px; border-bottom: 1px solid rgba(0,0,0,0.06);">
                 <div>
                   <h3 style="font-size: 15.5px; color: #1d1d1f; margin-bottom: 2px;" id="editor-product-heading">✏️ 编辑产品：Lucky Mini 3.7 英寸</h3>
@@ -1173,6 +1332,7 @@
               </div>
             </div>
           </div>
+        </div>
 
           <!-- 3. Lucky Mini 旗舰页 CMS 编辑容器 -->
           <div class="cms-page-view" id="cms-view-lucky_mini" style="display: none;">
@@ -1819,6 +1979,24 @@
     }
 
     function switchNav(targetId) {
+      if (targetId === 'products') {
+        switchNav('cms');
+        const sel = document.getElementById('cms-page-selector');
+        if (sel) {
+          sel.value = 'products';
+          sel.dispatchEvent(new Event('change'));
+        }
+        document.querySelectorAll('.sidebar-nav .nav-item').forEach(i => i.classList.remove('active'));
+        const activeNav = document.querySelector(`.sidebar-nav .nav-item[data-target="products"]`);
+        if (activeNav) activeNav.classList.add('active');
+        document.getElementById('page-current-title').textContent = '产品中心 · 商品与详情页管理 (Master-Detail)';
+        currentActivePanel = 'products';
+        if (typeof renderAdminProductMiniList === 'function') {
+          renderAdminProductMiniList();
+        }
+        return;
+      }
+
       document.querySelectorAll('.sidebar-nav .nav-item').forEach(i => i.classList.remove('active'));
       const activeNav = document.querySelector(`.sidebar-nav .nav-item[data-target="${targetId}"]`);
       if (activeNav) activeNav.classList.add('active');
@@ -1865,7 +2043,11 @@
         if (view) view.style.display = 'block';
         if (val === 'media_library') renderMediaLibrary();
         if (val === 'quick_replace') renderQuickReplacements();
-        if (val === 'products') renderAdminProductMiniList();
+        if (val === 'products') {
+          renderAdminProductMiniList();
+          const currentIdx = parseInt(document.getElementById('edit-prod-index')?.value || '0', 10);
+          loadProductIntoEditor(isNaN(currentIdx) ? 0 : currentIdx, false);
+        }
       }
       selector.addEventListener('change', updateCmsPageView);
 
@@ -2137,61 +2319,88 @@
       return '⚡ 精工配件';
     }
 
+    let adminProductSeriesFilter = 'all';
+
+    window.filterProductSeries = function(series) {
+      adminProductSeriesFilter = series;
+      document.querySelectorAll('.product-series-filter-pills .pill-filter').forEach(btn => {
+        if (btn.getAttribute('data-series') === series) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+      renderAdminProductMiniList();
+    };
+
     window.renderAdminProductMiniList = function() {
-      const tbody = document.getElementById('admin-products-mini-tbody');
+      const container = document.getElementById('admin-products-mini-list');
       const countEl = document.getElementById('admin-products-count');
-      if (!tbody) return;
+      if (!container) return;
 
       const items = getProductItemsArray();
-      if (countEl) countEl.textContent = items.length + ' 款';
-
       const query = (document.getElementById('admin-product-search')?.value || '').trim().toLowerCase();
-      const seriesFilter = document.getElementById('admin-product-series-filter')?.value || 'all';
       const activeIdx = parseInt(document.getElementById('edit-prod-index')?.value || '0', 10);
 
       const filtered = items.map((item, idx) => ({ item, idx })).filter(({ item }) => {
-        if (seriesFilter !== 'all' && item.series !== seriesFilter) return false;
+        if (adminProductSeriesFilter !== 'all' && item.series !== adminProductSeriesFilter) return false;
         if (query) {
-          const hay = `${item.title || ''} ${item.subtitle || ''} ${item.id || ''}`.toLowerCase();
+          const hay = `${item.title || ''} ${item.subtitle || ''} ${item.id || ''} ${item.price || ''}`.toLowerCase();
           if (!hay.includes(query)) return false;
         }
         return true;
       });
 
+      if (countEl) {
+        if (filtered.length === items.length) {
+          countEl.textContent = `${items.length} 款`;
+        } else {
+          countEl.textContent = `${filtered.length} / ${items.length} 款`;
+        }
+      }
+
       if (filtered.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:24px; color:var(--admin-text-muted);">没有找到匹配的产品，请调整搜索关键词或点击右上角「新增产品」。</td></tr>`;
+        container.innerHTML = `
+          <div style="text-align: center; padding: 28px 14px; background: #ffffff; border-radius: 10px; border: 1px dashed var(--admin-border); color: var(--admin-text-muted); font-size: 12.5px;">
+            未找到匹配的产品<br>
+            <span style="font-size: 11px; color: #86868b; margin-top: 4px; display: inline-block;">可清空搜索或调整分类</span>
+          </div>
+        `;
         return;
       }
 
-      tbody.innerHTML = filtered.map(({ item, idx }) => {
+      container.innerHTML = filtered.map(({ item, idx }) => {
         const detailCount = Array.isArray(item.detailImages) ? item.detailImages.length : 0;
         const hasBuyUrl = !!(item.buyUrl && item.buyUrl.trim());
-        const isSelected = idx === activeIdx;
+        const isSelected = (idx === activeIdx);
+        const seriesName = getSeriesDisplayName(item.series);
+
         return `
-          <tr style="${isSelected ? 'background:#f0f6fc;' : ''}">
-            <td>
-              <img src="${item.image || 'images/showcase_lucky_mini.jpg'}" alt="" style="width:40px; height:40px; object-fit:cover; border-radius:8px; border:1px solid rgba(0,0,0,0.08);">
-            </td>
-            <td>
-              <div style="font-weight:600; color:#1d1d1f;">${escapeHtml(item.title || '未命名产品')}</div>
-              <div style="font-size:11.5px; color:var(--admin-text-muted);">${getSeriesDisplayName(item.series)} · <code>${escapeHtml(item.id)}</code></div>
-            </td>
-            <td style="font-weight:600;">${escapeHtml(item.price || '-')}</td>
-            <td>
-              ${detailCount > 0
-                ? `<span class="status-badge status-confirmed">已传 ${detailCount} 张详情图</span>`
-                : `<span class="status-badge status-pending" style="background:#f2f2f7; color:#86868b;">未上传详情页</span>`}
-            </td>
-            <td>
-              ${hasBuyUrl
-                ? `<a href="${escapeHtml(item.buyUrl)}" target="_blank" rel="noopener noreferrer" style="color:var(--admin-blue); font-weight:500; text-decoration:none;">已配置 ↗</a>`
-                : `<span style="color:#ff3b30; font-size:12px;">未设置</span>`}
-            </td>
-            <td style="text-align:right; white-space:nowrap;">
-              <button type="button" class="btn-pill" style="padding:4px 10px; font-size:12px;" onclick="loadProductIntoEditor(${idx}, true)">✏️ 编辑/详情页</button>
-              <button type="button" class="btn-pill" style="padding:4px 8px; font-size:12px; color:#ff3b30;" onclick="deleteProductItem(${idx})" title="删除">🗑️</button>
-            </td>
-          </tr>
+          <div class="product-mini-item ${isSelected ? 'active' : ''}" onclick="loadProductIntoEditor(${idx}, false)">
+            <div class="mini-item-thumb">
+              <img src="${item.image || 'images/showcase_lucky_mini.jpg'}" alt="${escapeHtml(item.title || '')}">
+            </div>
+            <div class="mini-item-body">
+              <div class="mini-item-title-row">
+                <span class="mini-item-title" title="${escapeHtml(item.title || '')}">${escapeHtml(item.title || '未命名产品')}</span>
+                <span style="font-weight: 700; font-size: 12px; color: var(--admin-blue); white-space: nowrap;">${escapeHtml(item.price || '-')}</span>
+              </div>
+              <div class="mini-item-meta">
+                <span>${seriesName}</span>
+                <span>·</span>
+                <code>${escapeHtml(item.id)}</code>
+              </div>
+              <div class="mini-item-status-row">
+                ${detailCount > 0
+                  ? `<span class="tag-badge has-imgs">✓ ${detailCount} 张详情图</span>`
+                  : `<span class="tag-badge no-imgs">未传详情页</span>`}
+                ${hasBuyUrl
+                  ? `<span class="tag-badge buy-linked">已配购买</span>`
+                  : ``}
+              </div>
+            </div>
+            <button type="button" class="btn-pill" style="padding: 2px 6px; font-size: 11px; color: #ff3b30; border: none; background: transparent; opacity: 0.6;" onclick="event.stopPropagation(); deleteProductItem(${idx});" title="删除该产品">🗑️</button>
+          </div>
         `;
       }).join('');
     };
@@ -2402,6 +2611,11 @@
 
     window.saveCurrentEditedProduct = function() {
       syncCurrentEditedProductToMemory(true);
+      const idx = parseInt(getVal('edit-prod-index'), 10);
+      const items = getProductItemsArray();
+      if (items[idx] && items[idx].id) {
+        localStorage.removeItem('luck_custom_detail_images_' + items[idx].id);
+      }
       try {
         saveAllChanges();
       } catch (err) {
@@ -2681,354 +2895,6 @@
       saveAllChanges();
     };
 
-    // =========================================================================
-    // 产品中心 - 产品小列表、商品详情页多图上传与购买跳转链接管理
-    // =========================================================================
-    function getProductItemsArray() {
-      if (!localSiteData.content) localSiteData.content = {};
-      if (!localSiteData.content.products) localSiteData.content.products = {};
-      if (!Array.isArray(localSiteData.content.products.items)) {
-        const defaultItems = (window.LUCK_SITE_DEFAULT_DATA &&
-                              window.LUCK_SITE_DEFAULT_DATA.content &&
-                              window.LUCK_SITE_DEFAULT_DATA.content.products &&
-                              window.LUCK_SITE_DEFAULT_DATA.content.products.items) || [];
-        localSiteData.content.products.items = JSON.parse(JSON.stringify(defaultItems));
-      }
-      return localSiteData.content.products.items;
-    }
-
-    let currentEditingProductIndex = 0;
-
-    window.renderAdminProductMiniList = function() {
-      const items = getProductItemsArray();
-      const tbody = document.getElementById('admin-products-mini-tbody');
-      const countEl = document.getElementById('admin-products-count');
-      if (!tbody) return;
-
-      if (countEl) countEl.textContent = `${items.length} 款`;
-
-      const searchInput = document.getElementById('admin-product-search');
-      const seriesSelect = document.getElementById('admin-product-series-filter');
-      const q = (searchInput ? searchInput.value.trim().toLowerCase() : '');
-      const seriesFilter = (seriesSelect ? seriesSelect.value : 'all');
-
-      const filtered = items.map((item, originalIndex) => ({ item, originalIndex })).filter(({ item }) => {
-        if (seriesFilter !== 'all' && item.series !== seriesFilter) return false;
-        if (q) {
-          const matchTitle = (item.title || '').toLowerCase().includes(q);
-          const matchSub = (item.subtitle || '').toLowerCase().includes(q);
-          const matchId = (item.id || '').toLowerCase().includes(q);
-          return matchTitle || matchSub || matchId;
-        }
-        return true;
-      });
-
-      if (filtered.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--admin-text-muted); padding: 32px 0;">未找到匹配的产品</td></tr>`;
-        return;
-      }
-
-      tbody.innerHTML = filtered.map(({ item, originalIndex }) => {
-        const detailCount = (item.detailImages && Array.isArray(item.detailImages)) ? item.detailImages.length : 0;
-        const hasBuy = item.buyUrl && item.buyUrl.trim() !== '';
-        const seriesName = item.series === 'phone' ? '📱 手机' : (item.series === 'tablet' ? '💻 平板' : '⚡ 配件');
-
-        return `
-          <tr style="${originalIndex === currentEditingProductIndex ? 'background: #f0f7ff;' : ''}">
-            <td style="text-align: center;">
-              <img src="${item.image || 'images/showcase_lucky_mini.jpg'}" alt="${item.title}" style="width: 42px; height: 42px; object-fit: cover; border-radius: 8px; border: 1px solid rgba(0,0,0,0.08);">
-            </td>
-            <td>
-              <div style="font-weight: 600; color: #1d1d1f; display: flex; align-items: center; gap: 6px;">
-                <span>${item.title || '未命名产品'}</span>
-                <span class="badge ${item.badgeType === 'live' ? 'badge-live' : 'badge-pending'}" style="font-size: 10.5px; padding: 2px 6px;">${item.badge || '新品'}</span>
-              </div>
-              <div style="font-size: 11.5px; color: var(--admin-text-muted); margin-top: 2px;">
-                <span>${seriesName}</span> · <code style="font-size: 11px;">${item.id}</code>
-              </div>
-            </td>
-            <td>
-              <div style="font-weight: 600; color: #1d1d1f;">${item.price || '待定'}</div>
-              <div style="font-size: 11px; color: var(--admin-text-muted);">${item.priceSub || ''}</div>
-            </td>
-            <td>
-              ${detailCount > 0 
-                ? `<span style="display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; background: #e3f9e5; color: #1d7c38; border-radius: 6px; font-size: 11.5px; font-weight: 600;">✓ 已上传 ${detailCount} 张</span>`
-                : `<span style="display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; background: #fff1e5; color: #b75900; border-radius: 6px; font-size: 11.5px;">未上传详情图</span>`
-              }
-            </td>
-            <td>
-              ${hasBuy 
-                ? `<a href="${item.buyUrl}" target="_blank" rel="noopener" style="font-size: 11.5px; color: var(--admin-blue); text-decoration: underline;" title="${item.buyUrl}">已配置跳转 ↗</a>`
-                : `<span style="font-size: 11.5px; color: var(--admin-text-muted);">站内咨询</span>`
-              }
-            </td>
-            <td style="text-align: right; white-space: nowrap;">
-              <button type="button" class="btn-pill btn-pill-blue" style="padding: 4px 10px; font-size: 12px; margin-right: 4px;" onclick="selectProductForEdit(${originalIndex})">✏️ 编辑详情页</button>
-              <a href="products.html?product=${item.id}" target="_blank" class="btn-pill" style="padding: 4px 8px; font-size: 12px; margin-right: 4px;" title="前台预览此产品详情">👁️</a>
-              ${items.length > 1 ? `<button type="button" class="btn-pill" style="padding: 4px 8px; font-size: 12px; color: #ff453a;" onclick="deleteProductItem(${originalIndex})" title="删除产品">🗑️</button>` : ''}
-            </td>
-          </tr>
-        `;
-      }).join('');
-
-      // 默认加载当前正在编辑的产品
-      if (items[currentEditingProductIndex]) {
-        loadProductToEditor(currentEditingProductIndex);
-      }
-    };
-
-    window.selectProductForEdit = function(index) {
-      currentEditingProductIndex = index;
-      loadProductToEditor(index);
-      renderAdminProductMiniList();
-      const editorCard = document.getElementById('admin-product-editor-card');
-      if (editorCard) editorCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    };
-
-    function loadProductToEditor(index) {
-      const items = getProductItemsArray();
-      const item = items[index];
-      if (!item) return;
-
-      document.getElementById('edit-prod-index').value = index;
-      document.getElementById('editor-product-heading').textContent = `✏️ 编辑产品：${item.title || item.id}`;
-      document.getElementById('editor-product-id-label').textContent = `产品 ID: ${item.id} (${item.series})`;
-
-      document.getElementById('edit-prod-title').value = item.title || '';
-      document.getElementById('edit-prod-series').value = item.series || 'phone';
-      document.getElementById('edit-prod-subtitle').value = item.subtitle || '';
-      document.getElementById('edit-prod-badge').value = item.badge || '';
-      document.getElementById('edit-prod-badge-type').value = item.badgeType || 'live';
-      document.getElementById('edit-prod-price').value = item.price || '';
-      document.getElementById('edit-prod-price-sub').value = item.priceSub || '';
-      document.getElementById('edit-prod-desc').value = item.desc || '';
-
-      document.getElementById('edit-prod-buy-url').value = item.buyUrl || '';
-      document.getElementById('edit-prod-buy-text').value = item.buyText || '立即购买';
-      updateBuyLinkTestBtn();
-
-      // 主图
-      document.getElementById('edit-prod-thumb').src = item.image || 'images/showcase_lucky_mini.jpg';
-
-      // 详情页多图列表
-      renderCurrentProductDetailImgsList(item);
-
-      // 详情说明
-      document.getElementById('edit-prod-detail-desc').value = item.detailDesc || '';
-
-      // 预览按钮绑定
-      const previewBtn = document.getElementById('preview-prod-detail-btn');
-      if (previewBtn) {
-        previewBtn.href = `products.html?product=${item.id}`;
-      }
-    }
-
-    function renderCurrentProductDetailImgsList(item) {
-      const container = document.getElementById('edit-prod-detail-imgs-list');
-      if (!container) return;
-
-      const imgs = (item.detailImages && Array.isArray(item.detailImages)) ? item.detailImages : [];
-      if (imgs.length === 0) {
-        container.innerHTML = `
-          <div style="grid-column: 1 / -1; padding: 24px; text-align: center; color: var(--admin-text-muted); background: #ffffff; border-radius: 8px; border: 1px dashed rgba(0,0,0,0.1);">
-            <div style="font-size: 24px; margin-bottom: 6px;">🖼️</div>
-            <div style="font-size: 13px; font-weight: 500;">暂未上传商品详情页图片</div>
-            <div style="font-size: 12px; margin-top: 4px;">点击上方「📤 上传商品详情页图片」即可上传单张长图或多张切片图</div>
-          </div>
-        `;
-        return;
-      }
-
-      container.innerHTML = imgs.map((imgSrc, imgIdx) => `
-        <div style="position: relative; border-radius: 8px; overflow: hidden; background: #ffffff; border: 1px solid rgba(0,0,0,0.1); box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
-          <div style="height: 160px; overflow: hidden; display: flex; align-items: center; justify-content: center; background: #f0f0f4;">
-            <img src="${imgSrc}" alt="详情图 ${imgIdx + 1}" style="width: 100%; height: 100%; object-fit: contain;">
-          </div>
-          <div style="padding: 6px 8px; display: flex; justify-content: space-between; align-items: center; background: #fafafc; border-top: 1px solid rgba(0,0,0,0.06);">
-            <span style="font-size: 11.5px; font-weight: 600; color: #1d1d1f;">第 ${imgIdx + 1} 屏长图</span>
-            <button type="button" class="btn-pill" style="padding: 2px 6px; font-size: 11px; color: #ff453a;" onclick="removeProductDetailImg(${imgIdx})" title="移除此图">🗑️</button>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    window.removeProductDetailImg = function(imgIdx) {
-      const items = getProductItemsArray();
-      const item = items[currentEditingProductIndex];
-      if (!item || !item.detailImages) return;
-      item.detailImages.splice(imgIdx, 1);
-      renderCurrentProductDetailImgsList(item);
-      renderAdminProductMiniList();
-      saveAllChanges();
-      showToast('已移除该详情图');
-    };
-
-    window.clearCurrentProductDetailImgs = function() {
-      const items = getProductItemsArray();
-      const item = items[currentEditingProductIndex];
-      if (!item) return;
-      if (confirm(`确定要清空「${item.title}」的所有商品详情图吗？`)) {
-        item.detailImages = [];
-        renderCurrentProductDetailImgsList(item);
-        renderAdminProductMiniList();
-        saveAllChanges();
-        showToast('已清空商品详情图');
-      }
-    };
-
-    window.restoreCurrentProductDefaultDetailImgs = function() {
-      const items = getProductItemsArray();
-      const item = items[currentEditingProductIndex];
-      if (!item) return;
-      
-      const defaultItems = (window.LUCK_SITE_DEFAULT_DATA &&
-                            window.LUCK_SITE_DEFAULT_DATA.content &&
-                            window.LUCK_SITE_DEFAULT_DATA.content.products &&
-                            window.LUCK_SITE_DEFAULT_DATA.content.products.items) || [];
-      const def = defaultItems.find(x => x.id === item.id);
-      if (def && def.detailImages) {
-        item.detailImages = JSON.parse(JSON.stringify(def.detailImages));
-      } else {
-        item.detailImages = [item.image || 'images/showcase_lucky_mini.jpg'];
-      }
-      renderCurrentProductDetailImgsList(item);
-      renderAdminProductMiniList();
-      saveAllChanges();
-      showToast(`已恢复「${item.title}」官方默认商品详情长图！`);
-    };
-
-    window.handleProductDetailImgsUpload = function(inputEl) {
-      const files = Array.from(inputEl.files || []);
-      if (files.length === 0) return;
-
-      const items = getProductItemsArray();
-      const item = items[currentEditingProductIndex];
-      if (!item) return;
-      if (!Array.isArray(item.detailImages)) item.detailImages = [];
-
-      let loadedCount = 0;
-      files.forEach(file => {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          item.detailImages.push(e.target.result);
-          loadedCount++;
-          if (loadedCount === files.length) {
-            renderCurrentProductDetailImgsList(item);
-            renderAdminProductMiniList();
-            saveAllChanges();
-            showToast(`成功上传 ${loadedCount} 张商品详情页长图！已自动保存生效`);
-            inputEl.value = '';
-          }
-        };
-        reader.readAsDataURL(file);
-      });
-    };
-
-    window.handleProductMainImgUpload = function(inputEl) {
-      const file = inputEl.files[0];
-      if (!file) return;
-      const items = getProductItemsArray();
-      const item = items[currentEditingProductIndex];
-      if (!item) return;
-
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        item.image = e.target.result;
-        document.getElementById('edit-prod-thumb').src = e.target.result;
-        renderAdminProductMiniList();
-        saveAllChanges();
-        showToast('产品展示主图已更换！');
-        inputEl.value = '';
-      };
-      reader.readAsDataURL(file);
-    };
-
-    window.updateBuyLinkTestBtn = function() {
-      const urlInput = document.getElementById('edit-prod-buy-url');
-      const testBtn = document.getElementById('edit-prod-buy-test');
-      if (!urlInput || !testBtn) return;
-      const val = urlInput.value.trim();
-      if (val) {
-        testBtn.href = val;
-        testBtn.style.display = 'inline-flex';
-      } else {
-        testBtn.style.display = 'none';
-      }
-    };
-
-    window.saveCurrentEditedProduct = function() {
-      const items = getProductItemsArray();
-      const item = items[currentEditingProductIndex];
-      if (!item) return;
-
-      item.title = document.getElementById('edit-prod-title').value.trim();
-      item.series = document.getElementById('edit-prod-series').value;
-      item.subtitle = document.getElementById('edit-prod-subtitle').value.trim();
-      item.badge = document.getElementById('edit-prod-badge').value.trim();
-      item.badgeType = document.getElementById('edit-prod-badge-type').value;
-      item.price = document.getElementById('edit-prod-price').value.trim();
-      item.priceSub = document.getElementById('edit-prod-price-sub').value.trim();
-      item.desc = document.getElementById('edit-prod-desc').value.trim();
-      item.buyUrl = document.getElementById('edit-prod-buy-url').value.trim();
-      item.buyText = document.getElementById('edit-prod-buy-text').value.trim() || '立即购买';
-      item.detailDesc = document.getElementById('edit-prod-detail-desc').value.trim();
-
-      saveAllChanges();
-      renderAdminProductMiniList();
-      showToast(`「${item.title}」商品详情页与信息已保存并同步全站！`);
-    };
-
-    window.createNewProductItem = function() {
-      const items = getProductItemsArray();
-      const newId = 'prod-' + Date.now().toString(36);
-      const newItem = {
-        id: newId,
-        series: 'accessories',
-        seriesLabel: '精工配件系列',
-        badge: '新品',
-        badgeType: 'live',
-        title: '新产品',
-        subtitle: '探索更多幸运可能',
-        desc: '产品详细介绍描述...',
-        image: 'images/showcase_accessories.jpg',
-        specs: [
-          { label: '设计工艺', val: '精工一体化' },
-          { label: '配件兼容', val: '通用标准化' }
-        ],
-        price: '¥99 起',
-        priceSub: '新品首发',
-        detailUrl: 'products.html?product=' + newId,
-        buyUrl: '',
-        buyText: '立即购买',
-        detailImages: [],
-        detailDesc: ''
-      };
-
-      items.push(newItem);
-      currentEditingProductIndex = items.length - 1;
-      renderAdminProductMiniList();
-      saveAllChanges();
-      showToast('已新增产品，请在下方编辑详情页与信息');
-      const editorCard = document.getElementById('admin-product-editor-card');
-      if (editorCard) editorCard.scrollIntoView({ behavior: 'smooth' });
-    };
-
-    window.deleteProductItem = function(index) {
-      const items = getProductItemsArray();
-      if (!items[index]) return;
-      if (confirm(`确定要彻底删除产品「${items[index].title}」吗？`)) {
-        items.splice(index, 1);
-        if (currentEditingProductIndex >= items.length) {
-          currentEditingProductIndex = Math.max(0, items.length - 1);
-        }
-        renderAdminProductMiniList();
-        saveAllChanges();
-        showToast('产品已删除');
-      }
-    };
-
-    // 上传图片处理 (支持页面专用字段与全局图片总库同步)
     window.handleCmsImageUpload = function(inputEl, pageKey, imgKey, thumbId, globalImgPath) {
       const file = inputEl.files[0];
       if (!file) return;

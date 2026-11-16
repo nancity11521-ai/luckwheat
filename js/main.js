@@ -586,6 +586,13 @@ function initProductDetailModal() {
       if (p.buyUrl && p.buyUrl.trim() !== '') {
         buyLinkEl.href = p.buyUrl;
         buyLinkEl.textContent = `${p.buyText || '立即购买'} ↗`;
+        if (/^https?:\/\//i.test(p.buyUrl)) {
+          buyLinkEl.setAttribute('target', '_blank');
+          buyLinkEl.setAttribute('rel', 'noopener noreferrer');
+        } else {
+          buyLinkEl.removeAttribute('target');
+          buyLinkEl.removeAttribute('rel');
+        }
         buyLinkEl.style.display = 'inline-flex';
       } else {
         buyLinkEl.style.display = 'none';
@@ -643,9 +650,35 @@ function initProductDetailModal() {
     }
   });
 
-  // 上传商品详情长图处理 (支持多选与单选)
+  function compressDetailImage(file, maxWidth, quality) {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = (evt) => {
+        const img = new Image();
+        img.onload = () => {
+          let w = img.width;
+          let h = img.height;
+          if (w > maxWidth) {
+            h = Math.round((h * maxWidth) / w);
+            w = maxWidth;
+          }
+          const canvas = document.createElement('canvas');
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, w, h);
+          resolve(canvas.toDataURL('image/jpeg', quality));
+        };
+        img.onerror = () => resolve(evt.target.result);
+        img.src = evt.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  // 上传商品详情长图处理 (支持多选与单选，自动压缩)
   if (fileInput) {
-    fileInput.addEventListener('change', (e) => {
+    fileInput.addEventListener('change', async (e) => {
       const files = Array.from(e.target.files || []);
       if (files.length === 0 || !currentProductId) return;
 
@@ -655,38 +688,32 @@ function initProductDetailModal() {
         if (saved) currentImages = JSON.parse(saved);
       } catch (err) {}
 
-      let loaded = 0;
-      files.forEach(file => {
-        const reader = new FileReader();
-        reader.onload = (evt) => {
-          currentImages.push(evt.target.result);
-          loaded++;
-          if (loaded === files.length) {
-            localStorage.setItem('luck_custom_detail_images_' + currentProductId, JSON.stringify(currentImages));
+      for (const file of files) {
+        const compressed = await compressDetailImage(file, 1100, 0.82);
+        currentImages.push(compressed);
+      }
 
-            // 同步保存到全站 CMS 数据
-            try {
-              const siteDataStr = localStorage.getItem('LUCK_SITE_CONTENT_DATA');
-              if (siteDataStr) {
-                const siteData = JSON.parse(siteDataStr);
-                if (siteData.content && siteData.content.products && Array.isArray(siteData.content.products.items)) {
-                  const targetItem = siteData.content.products.items.find(x => x.id === currentProductId);
-                  if (targetItem) {
-                    targetItem.detailImages = currentImages;
-                    localStorage.setItem('LUCK_SITE_CONTENT_DATA', JSON.stringify(siteData));
-                  }
-                }
-              }
-            } catch (err) {}
-
-            const productsMap = getLiveProductsMap();
-            renderDetailImages(productsMap[currentProductId] || { id: currentProductId });
-            alert(`成功上传 ${loaded} 张商品详情长图！已实时更新展示。`);
-            fileInput.value = '';
+      try {
+        localStorage.setItem('luck_custom_detail_images_' + currentProductId, JSON.stringify(currentImages));
+        const siteDataStr = localStorage.getItem('LUCK_SITE_CONTENT_DATA');
+        if (siteDataStr) {
+          const siteData = JSON.parse(siteDataStr);
+          if (siteData.content && siteData.content.products && Array.isArray(siteData.content.products.items)) {
+            const targetItem = siteData.content.products.items.find(x => x.id === currentProductId);
+            if (targetItem) {
+              targetItem.detailImages = currentImages;
+              localStorage.setItem('LUCK_SITE_CONTENT_DATA', JSON.stringify(siteData));
+            }
           }
-        };
-        reader.readAsDataURL(file);
-      });
+        }
+      } catch (err) {
+        alert('本地存储空间不足，建议减少单次上传的图片数量。');
+      }
+
+      const productsMap = getLiveProductsMap();
+      renderDetailImages(productsMap[currentProductId] || { id: currentProductId, detailImages: currentImages });
+      alert(`成功上传 ${files.length} 张商品详情长图！已实时更新展示。`);
+      fileInput.value = '';
     });
   }
 
@@ -702,13 +729,13 @@ function initProductDetailModal() {
     });
   }
 
-  // 绑定产品卡片触发器
-  document.querySelectorAll('[data-open-detail]').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.preventDefault();
-      const pid = btn.getAttribute('data-open-detail') || 'lucky-mini';
-      openModal(pid);
-    });
+  // 使用事件委托绑定产品卡片触发器 (兼容动态新增的产品卡片)
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-open-detail]');
+    if (!btn) return;
+    e.preventDefault();
+    const pid = btn.getAttribute('data-open-detail') || 'lucky-mini';
+    openModal(pid);
   });
 
   // 支持 URL 参数自动打开详情 (例如 products.html?product=lucky-tab-8)
