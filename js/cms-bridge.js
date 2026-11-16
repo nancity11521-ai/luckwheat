@@ -238,6 +238,15 @@
     safeSetText('.copyright-text', globalContent.copyright);
     safeSetText('.icp-text', globalContent.icpNumber);
 
+    // 6.2.1 通用子页面顶部全景 Banner 动态加载与素材响应
+    const bannerCard = document.querySelector('.subpage-banner-card');
+    if (bannerCard) {
+      const bannerKey = `images/banner_subpage_${pageKey.replace('-', '_')}.jpg`;
+      if (allData.images && allData.images[bannerKey]) {
+        bannerCard.style.backgroundImage = `url("${allData.images[bannerKey]}")`;
+      }
+    }
+
     // 6.3 官方首页 (index.html)
     if (pageKey === 'index') {
       // 幻灯片 1

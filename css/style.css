@@ -817,6 +817,166 @@ a {
 }
 
 /* ==========================================================================
+   子页面顶部全景 Banner (Apple Style Subpage Hero Banner)
+   ========================================================================== */
+.subpage-banner-section {
+  padding: 24px 0 28px;
+  background: transparent;
+}
+
+.subpage-banner-wrap {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.subpage-banner-card {
+  position: relative;
+  width: 100%;
+  height: 380px;
+  min-height: 340px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background-color: #f5f5f7;
+  background-size: cover;
+  background-position: center right;
+  background-repeat: no-repeat;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.04);
+  border: 1px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  transition: transform var(--transition-normal);
+}
+
+.subpage-banner-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(255, 255, 255, 0.86) 42%,
+    rgba(255, 255, 255, 0.5) 65%,
+    rgba(255, 255, 255, 0) 88%
+  );
+  z-index: 1;
+  pointer-events: none;
+}
+
+.subpage-banner-overlay {
+  position: relative;
+  z-index: 2;
+  max-width: 680px;
+  padding: 40px 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.subpage-banner-overlay .breadcrumbs {
+  margin-bottom: 12px;
+  padding: 0;
+  background: transparent;
+}
+
+.subpage-banner-overlay .breadcrumbs a {
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.subpage-banner-overlay .breadcrumbs a:hover {
+  color: var(--apple-blue);
+}
+
+.subpage-banner-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--lucky-action);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+.subpage-banner-title {
+  font-size: clamp(2.2rem, 3.8vw, 3.2rem);
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  line-height: 1.15;
+  margin: 0 0 12px;
+  background: linear-gradient(90deg, #1b6df0 0%, #385bf5 15%, #6a4bf7 30%, #a43cf8 48%, #c63dae 65%, #dc4273 80%, #ef6126 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  display: inline-block;
+}
+
+.subpage-banner-desc {
+  font-size: clamp(1.02rem, 1.25vw, 1.15rem);
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin: 0;
+  max-width: 620px;
+}
+
+@media (max-width: 900px) {
+  .subpage-banner-card {
+    height: 320px;
+    min-height: 300px;
+    background-position: 70% center;
+  }
+  .subpage-banner-card::before {
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.96) 0%,
+      rgba(255, 255, 255, 0.88) 55%,
+      rgba(255, 255, 255, 0.4) 100%
+    );
+  }
+  .subpage-banner-overlay {
+    padding: 30px 28px;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 640px) {
+  .subpage-banner-section {
+    padding: 12px 0 18px;
+  }
+  .subpage-banner-wrap {
+    padding: 0 12px;
+  }
+  .subpage-banner-card {
+    height: auto;
+    min-height: 260px;
+    border-radius: var(--radius-md);
+    background-position: right center;
+  }
+  .subpage-banner-card::before {
+    background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.95) 0%,
+      rgba(255, 255, 255, 0.92) 65%,
+      rgba(255, 255, 255, 0.75) 100%
+    );
+  }
+  .subpage-banner-overlay {
+    padding: 24px 20px;
+  }
+  .subpage-banner-title {
+    font-size: 1.85rem;
+    margin-bottom: 8px;
+  }
+  .subpage-banner-desc {
+    font-size: 0.92rem;
+  }
+}
+
+/* ==========================================================================
    Apple 风格 Hero 首屏
    ========================================================================== */
 .hero-section {
