@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /**
- * 移动端菜单与无障碍焦点管理
+ * 移动端菜单与无障碍焦点管理 (使用事件委托以兼容动态重绘导航)
  */
 function initMobileNav() {
   const toggleBtn = document.querySelector('.menu-toggle');
@@ -41,14 +41,10 @@ function initMobileNav() {
 
   toggleBtn.addEventListener('click', () => {
     const isExpanded = toggleBtn.getAttribute('aria-expanded') === 'true';
-    if (isExpanded) {
-      closeMenu();
-    } else {
-      openMenu();
-    }
+    if (isExpanded) closeMenu();
+    else openMenu();
   });
 
-  // 按 ESC 键关闭菜单
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && navMenu.classList.contains('open')) {
       closeMenu();
@@ -56,19 +52,16 @@ function initMobileNav() {
     }
   });
 
-  // 点击菜单项或行动按钮后关闭
-  navMenu.querySelectorAll('.nav-link, .mobile-menu-cta a').forEach(link => {
-    link.addEventListener('click', () => {
-      if (window.innerWidth <= 768) {
-        closeMenu();
-      }
-    });
+  navMenu.addEventListener('click', (e) => {
+    const target = e.target.closest('.nav-link, .mobile-menu-cta a');
+    if (target && window.innerWidth <= 768) {
+      closeMenu();
+    }
   });
 }
 
 /**
  * Apple 风格 Hero 首页大型可切换轮播 Banner
- * 支持：左右按钮、底部胶囊指示条、自动播放/暂停、键盘左右键、移动端触控滑动
  */
 function initHeroCarousel() {
   const carousel = document.getElementById('hero-carousel');
@@ -88,17 +81,14 @@ function initHeroCarousel() {
   const INTERVAL = 5500;
 
   function showSlide(index) {
-    // 移除旧的状态
     slides[currentIndex].classList.remove('active');
     if (indicators[currentIndex]) {
       indicators[currentIndex].classList.remove('active');
       indicators[currentIndex].setAttribute('aria-selected', 'false');
     }
 
-    // 计算新的索引
     currentIndex = (index + slides.length) % slides.length;
 
-    // 激活新的幻灯片
     slides[currentIndex].classList.add('active');
     if (indicators[currentIndex]) {
       indicators[currentIndex].classList.add('active');
@@ -106,18 +96,11 @@ function initHeroCarousel() {
     }
   }
 
-  function next() {
-    showSlide(currentIndex + 1);
-  }
-
-  function prev() {
-    showSlide(currentIndex - 1);
-  }
+  function next() { showSlide(currentIndex + 1); }
+  function prev() { showSlide(currentIndex - 1); }
 
   function startAuto() {
-    if (!autoTimer) {
-      autoTimer = setInterval(next, INTERVAL);
-    }
+    if (!autoTimer) autoTimer = setInterval(next, INTERVAL);
     isPlaying = true;
     if (playToggle) {
       const playIcon = playToggle.querySelector('.play-icon');
@@ -174,15 +157,11 @@ function initHeroCarousel() {
 
   if (playToggle) {
     playToggle.addEventListener('click', () => {
-      if (isPlaying) {
-        stopAuto();
-      } else {
-        startAuto();
-      }
+      if (isPlaying) stopAuto();
+      else startAuto();
     });
   }
 
-  // 鼠标悬停时暂停播放
   carousel.addEventListener('mouseenter', () => {
     if (isPlaying && autoTimer) {
       clearInterval(autoTimer);
@@ -196,7 +175,6 @@ function initHeroCarousel() {
     }
   });
 
-  // 键盘左右箭头支持
   document.addEventListener('keydown', (e) => {
     if (document.activeElement && ['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
     if (e.key === 'ArrowRight') {
@@ -208,7 +186,6 @@ function initHeroCarousel() {
     }
   });
 
-  // 移动端左右手势触控滑动 (Swipe)
   let touchStartX = 0;
   let touchEndX = 0;
 
@@ -220,21 +197,17 @@ function initHeroCarousel() {
     touchEndX = e.changedTouches[0].screenX;
     const diff = touchEndX - touchStartX;
     if (Math.abs(diff) > 45) {
-      if (diff < 0) {
-        next(); // 向左滑 -> 下一张
-      } else {
-        prev(); // 向右滑 -> 上一张
-      }
+      if (diff < 0) next();
+      else prev();
       userInteract();
     }
   }, { passive: true });
 
-  // 启动自动播放
   startAuto();
 }
 
 /**
- * Lucky 键互动仿真器 (Apple 风格交互展台)
+ * Lucky 键互动仿真器
  */
 function initLuckyKeySimulator() {
   const physicalKey = document.querySelector('.physical-lucky-key');
@@ -246,26 +219,10 @@ function initLuckyKeySimulator() {
   if (!physicalKey || !screenTitle) return;
 
   const modes = [
-    {
-      title: "Lucky 实体键已按下",
-      prompt: "硬件直达 · 免去解锁翻找应用",
-      color: "#0071e3"
-    },
-    {
-      title: "AI 智能对话已唤醒",
-      prompt: "正在倾听您的提问与灵感...",
-      color: "#34c759"
-    },
-    {
-      title: "AI 拍照 · 拍学 · 忘物提醒",
-      prompt: "双击抓拍识别：随身物品已确认无误",
-      color: "#ff9500"
-    },
-    {
-      title: "分享幸运瞬间",
-      prompt: "生成的趣味卡片已同步至 Lucky OS",
-      color: "#0071e3"
-    }
+    { title: "Lucky 实体键已按下", prompt: "硬件直达 · 免去解锁翻找应用", color: "#0071e3" },
+    { title: "AI 智能对话已唤醒", prompt: "正在倾听您的提问与灵感...", color: "#34c759" },
+    { title: "AI 拍照 · 拍学 · 忘物提醒", prompt: "双击抓拍识别：随身物品已确认无误", color: "#ff9500" },
+    { title: "分享幸运瞬间", prompt: "生成的趣味卡片已同步至 Lucky OS", color: "#0071e3" }
   ];
 
   let currentStep = 0;
@@ -284,24 +241,18 @@ function initLuckyKeySimulator() {
       pulseOrb.style.boxShadow = `0 0 30px ${data.color}`;
     }
 
-    // 硬件物理按键反馈
     physicalKey.classList.add('pressed');
     setTimeout(() => {
       physicalKey.classList.remove('pressed');
     }, 180);
   }
 
-  // 点击硬件按键轮播
   physicalKey.addEventListener('click', () => {
-    const nextIndex = (currentStep + 1) % modes.length;
-    updateSimulator(nextIndex);
+    updateSimulator((currentStep + 1) % modes.length);
   });
 
-  // 点击步骤直接切换
   guideSteps.forEach((step, idx) => {
-    step.addEventListener('click', () => {
-      updateSimulator(idx);
-    });
+    step.addEventListener('click', () => updateSimulator(idx));
   });
 }
 
@@ -310,20 +261,13 @@ function initLuckyKeySimulator() {
  */
 function initAccessorySearch() {
   const searchInput = document.getElementById('accessory-search');
-  const tableRows = document.querySelectorAll('.accessory-table-row');
-
-  if (!searchInput || tableRows.length === 0) return;
+  if (!searchInput) return;
 
   searchInput.addEventListener('input', (e) => {
     const query = e.target.value.trim().toLowerCase();
-
-    tableRows.forEach(row => {
+    document.querySelectorAll('.accessory-table-row').forEach(row => {
       const text = row.textContent.toLowerCase();
-      if (text.includes(query)) {
-        row.style.display = '';
-      } else {
-        row.style.display = 'none';
-      }
+      row.style.display = text.includes(query) ? '' : 'none';
     });
   });
 }
@@ -364,46 +308,39 @@ function initFormInteractions() {
  * 企业资质预览模态框（原生 dialog）
  */
 function initCertModal() {
-  const certTriggers = document.querySelectorAll('[data-cert-target]');
   const dialog = document.getElementById('cert-dialog');
   const dialogImg = document.getElementById('dialog-cert-img');
   const dialogTitle = document.getElementById('dialog-cert-title');
   const closeBtn = document.querySelector('.dialog-close');
 
-  if (!dialog || certTriggers.length === 0) return;
+  if (!dialog) return;
 
-  certTriggers.forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.preventDefault();
-      const imgSrc = btn.getAttribute('data-cert-src');
-      const title = btn.getAttribute('data-cert-title');
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-cert-target]');
+    if (!btn) return;
+    e.preventDefault();
+    const imgSrc = btn.getAttribute('data-cert-src');
+    const title = btn.getAttribute('data-cert-title');
 
-      if (dialogImg && imgSrc) dialogImg.src = imgSrc;
-      if (dialogTitle && title) dialogTitle.textContent = title;
+    if (dialogImg && imgSrc) dialogImg.src = imgSrc;
+    if (dialogTitle && title) dialogTitle.textContent = title;
 
-      if (typeof dialog.showModal === 'function') {
-        dialog.showModal();
-      } else {
-        dialog.setAttribute('open', '');
-      }
-    });
+    if (typeof dialog.showModal === 'function') {
+      dialog.showModal();
+    } else {
+      dialog.setAttribute('open', '');
+    }
   });
 
   if (closeBtn) {
     closeBtn.addEventListener('click', () => {
-      if (typeof dialog.close === 'function') {
-        dialog.close();
-      } else {
-        dialog.removeAttribute('open');
-      }
+      if (typeof dialog.close === 'function') dialog.close();
+      else dialog.removeAttribute('open');
     });
   }
 
-  // 点击背景遮罩关闭
   dialog.addEventListener('click', (e) => {
-    if (e.target === dialog) {
-      dialog.close();
-    }
+    if (e.target === dialog) dialog.close();
   });
 }
 
@@ -425,19 +362,15 @@ function initSeriesNav() {
 
       if (filter === 'all') {
         sections.forEach(sec => {
-          sec.style.display = 'block';
+          const hasCards = sec.querySelectorAll('[data-product-id]').length > 0;
+          sec.style.display = hasCards ? 'block' : 'none';
         });
       } else {
         sections.forEach(sec => {
-          if (sec.getAttribute('data-series') === filter) {
-            sec.style.display = 'block';
-          } else {
-            sec.style.display = 'none';
-          }
+          sec.style.display = sec.getAttribute('data-series') === filter ? 'block' : 'none';
         });
       }
 
-      // 平滑滚动定位到当前选中的系列
       const activeSection = filter === 'all' ? sections[0] : document.querySelector(`.series-section[data-series="${filter}"]`);
       if (activeSection) {
         const topOffset = activeSection.getBoundingClientRect().top + window.pageYOffset - 90;
@@ -450,7 +383,7 @@ function initSeriesNav() {
 /**
  * 产品中心 - 产品详情视窗 (Product Detail Modal)
  * 移动端全屏 (100vw x 100vh)，PC端严格显示 2/3 的屏 (66.666vw)
- * 支持上传商品详情长图/切片图、即时本地渲染与全站持久化保存
+ * 数据统一从服务端/全站融合中心 LUCK_GET_MERGED_DATA 获取
  */
 function initProductDetailModal() {
   const modal = document.getElementById('product-detail-modal');
@@ -460,6 +393,7 @@ function initProductDetailModal() {
   const closeBtn = document.getElementById('modal-close-btn');
   const detailImgsContainer = document.getElementById('modal-detail-images-container');
   const fileInput = document.getElementById('product-img-upload-input');
+  const uploadTriggerLabel = document.querySelector('label[for="product-img-upload-input"]');
   const resetBtn = document.getElementById('btn-reset-image');
 
   const tagEl = document.getElementById('modal-p-tag');
@@ -473,27 +407,33 @@ function initProductDetailModal() {
   const priceSubEl = document.getElementById('modal-p-price-sub');
   const buyLinkEl = document.getElementById('modal-buy-link');
   const detailLinkEl = document.getElementById('modal-detail-link');
-  const actionLinkEl = document.getElementById('modal-action-link');
 
-  // 获取合并后的全站数据 (含后台 CMS 编辑并保存的产品列表)
+  // 仅当本机管理员已认证登录后台时，才在前台弹窗展示便捷“上传商品详情图”控件，避免公网普通访客误看
+  const isAdminSession = sessionStorage.getItem('LUCK_ADMIN_AUTH') === 'true' ||
+                         Boolean(sessionStorage.getItem('LUCK_ADMIN_TOKEN'));
+  if (uploadTriggerLabel && !isAdminSession) {
+    uploadTriggerLabel.style.display = 'none';
+  }
+
+  function escHtml(s) {
+    return String(s || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  // 获取合并后的全站实时产品数据 (服务端 > 快照 > 本地 > 默认)
   function getLiveProductsMap() {
     let items = [];
-    try {
-      const savedDataStr = localStorage.getItem('LUCK_SITE_CONTENT_DATA');
-      if (savedDataStr) {
-        const saved = JSON.parse(savedDataStr);
-        if (saved.content && saved.content.products && Array.isArray(saved.content.products.items)) {
-          items = saved.content.products.items;
-        }
+    if (typeof window.LUCK_GET_MERGED_DATA === 'function') {
+      const merged = window.LUCK_GET_MERGED_DATA();
+      if (merged && merged.content && merged.content.products && Array.isArray(merged.content.products.items)) {
+        items = merged.content.products.items;
       }
-    } catch (e) {
-      console.warn('读取本地产品数据失败', e);
-    }
-
-    if (items.length === 0 && window.LUCK_SITE_DEFAULT_DATA &&
-        window.LUCK_SITE_DEFAULT_DATA.content &&
-        window.LUCK_SITE_DEFAULT_DATA.content.products &&
-        Array.isArray(window.LUCK_SITE_DEFAULT_DATA.content.products.items)) {
+    } else if (window.LUCK_CMS_DATA?.content?.products?.items) {
+      items = window.LUCK_CMS_DATA.content.products.items;
+    } else if (window.LUCK_SITE_DEFAULT_DATA?.content?.products?.items) {
       items = window.LUCK_SITE_DEFAULT_DATA.content.products.items;
     }
 
@@ -501,24 +441,6 @@ function initProductDetailModal() {
     items.forEach(it => {
       map[it.id] = it;
     });
-
-    // 默认垫底数据保证
-    const fallbackIds = ['lucky-mini', 'lucky-tab-8', 'lucky-tab-10', 'lucky-paracord', 'lucky-charge', 'lucky-mag'];
-    fallbackIds.forEach(id => {
-      if (!map[id]) {
-        map[id] = {
-          id: id,
-          title: id,
-          series: 'accessories',
-          subtitle: '',
-          desc: '',
-          price: '敬请期待',
-          detailImages: ['images/showcase_lucky_mini.jpg'],
-          specs: []
-        };
-      }
-    });
-
     return map;
   }
 
@@ -528,32 +450,28 @@ function initProductDetailModal() {
     if (!detailImgsContainer) return;
     let images = [];
 
-    // 1. 优先读取单独上传的自定义详情图集
-    try {
-      const customDetailJson = localStorage.getItem('luck_custom_detail_images_' + p.id);
-      if (customDetailJson) {
-        images = JSON.parse(customDetailJson);
-      }
-    } catch (e) {}
+    if (isAdminSession) {
+      try {
+        const customDetailJson = localStorage.getItem('luck_custom_detail_images_' + p.id);
+        if (customDetailJson) images = JSON.parse(customDetailJson);
+      } catch (e) {}
+    }
 
-    // 2. 若无单独上传，读取产品数据中的 detailImages
     if ((!images || images.length === 0) && p.detailImages && Array.isArray(p.detailImages) && p.detailImages.length > 0) {
       images = p.detailImages;
     }
 
-    // 3. 兜底为产品主图
     if (!images || images.length === 0) {
       images = [p.image || p.defaultImg || 'images/showcase_lucky_mini.jpg'];
     }
 
     detailImgsContainer.innerHTML = images.map((imgSrc, idx) => `
       <div class="modal-detail-img-card">
-        <img src="${imgSrc}" alt="${p.title} 商品详情图 第 ${idx + 1} 屏" loading="lazy">
+        <img src="${escHtml(imgSrc)}" alt="${escHtml(p.title)} 商品详情图 第 ${idx + 1} 屏" loading="lazy">
       </div>
     `).join('');
 
-    // 控制恢复默认按钮状态
-    const hasCustom = localStorage.getItem('luck_custom_detail_images_' + p.id) !== null;
+    const hasCustom = isAdminSession && localStorage.getItem('luck_custom_detail_images_' + p.id) !== null;
     if (resetBtn) {
       resetBtn.style.display = hasCustom ? 'inline-flex' : 'none';
     }
@@ -561,7 +479,8 @@ function initProductDetailModal() {
 
   function openModal(productId) {
     const productsMap = getLiveProductsMap();
-    const p = productsMap[productId] || productsMap['lucky-mini'];
+    const p = productsMap[productId] || Object.values(productsMap)[0];
+    if (!p) return;
     currentProductId = p.id;
 
     if (tagEl) tagEl.textContent = p.seriesLabel || (p.series === 'phone' ? '旗舰小机系列 · 01' : (p.series === 'tablet' ? '随身平板系列 · 02' : '精工配件系列 · 03'));
@@ -571,7 +490,6 @@ function initProductDetailModal() {
     if (priceEl) priceEl.textContent = p.price || '';
     if (priceSubEl) priceSubEl.textContent = p.priceSub || '';
 
-    // 详情补充文字
     if (extraDescWrap && extraDescEl) {
       if (p.detailDesc && p.detailDesc.trim() !== '') {
         extraDescEl.textContent = p.detailDesc;
@@ -581,7 +499,6 @@ function initProductDetailModal() {
       }
     }
 
-    // 购买跳转链接 (保证每个产品必定拥有可用跳转购买链接)
     if (buyLinkEl) {
       const buyUrl = (p.buyUrl && p.buyUrl.trim()) ? p.buyUrl : `channels.html?product=${encodeURIComponent(p.id)}`;
       buyLinkEl.href = buyUrl;
@@ -596,7 +513,6 @@ function initProductDetailModal() {
       buyLinkEl.style.display = 'inline-flex';
     }
 
-    // 详细了解外链
     if (detailLinkEl) {
       if (p.id === 'lucky-mini') {
         detailLinkEl.href = 'lucky-mini.html';
@@ -606,14 +522,13 @@ function initProductDetailModal() {
       }
     }
 
-    // 规格参数渲染
     if (specsEl) {
       const specs = p.specs || [];
       if (specs.length > 0) {
         specsEl.innerHTML = specs.map(s => `
           <li class="modal-specs-item">
-            <strong>${s.label}</strong>
-            <span>${s.val}</span>
+            <strong>${escHtml(s.label)}</strong>
+            <span>${escHtml(s.val)}</span>
           </li>
         `).join('');
       } else {
@@ -624,7 +539,6 @@ function initProductDetailModal() {
       }
     }
 
-    // 渲染商品详情长图卷轴
     renderDetailImages(p);
 
     modal.classList.add('active');
@@ -638,12 +552,16 @@ function initProductDetailModal() {
     document.body.style.overflow = '';
   }
 
-  // 关闭事件
   if (closeBtn) closeBtn.addEventListener('click', closeModal);
   if (modalBackdrop) modalBackdrop.addEventListener('click', closeModal);
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && modal.classList.contains('active')) {
-      closeModal();
+    if (e.key === 'Escape' && modal.classList.contains('active')) closeModal();
+  });
+
+  // 如果服务端数据异步拉取完毕时弹窗已打开，则刷新弹窗数据
+  window.addEventListener('luck:cms-updated', () => {
+    if (modal.classList.contains('active') && currentProductId) {
+      openModal(currentProductId);
     }
   });
 
@@ -673,7 +591,6 @@ function initProductDetailModal() {
     });
   }
 
-  // 上传商品详情长图处理 (支持多选与单选，自动压缩)
   if (fileInput) {
     fileInput.addEventListener('change', async (e) => {
       const files = Array.from(e.target.files || []);
@@ -692,29 +609,15 @@ function initProductDetailModal() {
 
       try {
         localStorage.setItem('luck_custom_detail_images_' + currentProductId, JSON.stringify(currentImages));
-        const siteDataStr = localStorage.getItem('LUCK_SITE_CONTENT_DATA');
-        if (siteDataStr) {
-          const siteData = JSON.parse(siteDataStr);
-          if (siteData.content && siteData.content.products && Array.isArray(siteData.content.products.items)) {
-            const targetItem = siteData.content.products.items.find(x => x.id === currentProductId);
-            if (targetItem) {
-              targetItem.detailImages = currentImages;
-              localStorage.setItem('LUCK_SITE_CONTENT_DATA', JSON.stringify(siteData));
-            }
-          }
-        }
-      } catch (err) {
-        alert('本地存储空间不足，建议减少单次上传的图片数量。');
-      }
+      } catch (err) {}
 
       const productsMap = getLiveProductsMap();
       renderDetailImages(productsMap[currentProductId] || { id: currentProductId, detailImages: currentImages });
-      alert(`成功上传 ${files.length} 张商品详情长图！已实时更新展示。`);
+      alert(`成功添加 ${files.length} 张详情长图，如需全网所有访客可见请在管理后台中上传保存！`);
       fileInput.value = '';
     });
   }
 
-  // 恢复官方默认详情图
   if (resetBtn) {
     resetBtn.addEventListener('click', () => {
       if (!currentProductId) return;
@@ -722,11 +625,10 @@ function initProductDetailModal() {
       const productsMap = getLiveProductsMap();
       renderDetailImages(productsMap[currentProductId] || { id: currentProductId });
       if (resetBtn) resetBtn.style.display = 'none';
-      alert('已恢复为官方默认商品详情长图！');
+      alert('已恢复为服务器正式版详情长图！');
     });
   }
 
-  // 使用事件委托绑定产品卡片触发器 (兼容动态新增的产品卡片)
   document.addEventListener('click', (e) => {
     const btn = e.target.closest('[data-open-detail]');
     if (!btn) return;
@@ -735,7 +637,6 @@ function initProductDetailModal() {
     openModal(pid);
   });
 
-  // 支持 URL 参数自动打开详情 (例如 products.html?product=lucky-tab-8)
   const urlParams = new URLSearchParams(window.location.search);
   const detailParam = urlParams.get('detail') || urlParams.get('product');
   if (detailParam) {

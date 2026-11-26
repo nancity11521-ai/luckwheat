@@ -22,7 +22,73 @@
       --admin-green: #34c759;
       --admin-orange: #ff9500;
       --admin-radius: 14px;
+      --radius-md: 10px;
+      --apple-blue: #0071e3;
       --admin-font: -apple-system, BlinkMacSystemFont, "Inter", "SF Pro Text", "PingFang SC", sans-serif;
+    }
+
+    .btn-primary {
+      background: var(--admin-blue);
+      color: #fff;
+      border: 1px solid var(--admin-blue);
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: background 0.15s ease;
+    }
+    .btn-primary:hover { background: var(--admin-blue-hover); }
+    .btn-secondary {
+      background: #f0f0f2;
+      color: var(--admin-text-main);
+      border: 1px solid var(--admin-border);
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: background 0.15s ease;
+    }
+    .btn-secondary:hover { background: #e5e5ea; }
+
+    /* 动态全模块编辑器样式 */
+    .dyn-section-card {
+      background: #fafafc;
+      border: 1px solid var(--admin-border);
+      border-radius: var(--admin-radius);
+      padding: 20px 24px;
+      margin-top: 20px;
+    }
+    .dyn-section-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #1d1d1f;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .dyn-list-item {
+      background: #ffffff;
+      border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 10px;
+      padding: 14px;
+      margin-bottom: 10px;
+    }
+    .dyn-list-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--admin-text-muted);
+    }
+    .dyn-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    @media (max-width: 768px) {
+      .dyn-grid-2 { grid-template-columns: 1fr; }
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -764,10 +830,10 @@
         官方品牌全站图文内容与 SEO 优化管理系统
       </p>
       <input type="text" id="login-user" class="login-input" placeholder="管理员账号 (默认: admin)" value="admin">
-      <input type="password" id="login-pwd" class="login-input" placeholder="管理密码 (默认: luck2026)" value="luck2026">
+      <input type="password" id="login-pwd" class="login-input" placeholder="请输入管理密码 (初始默认: luck2026)">
       <button type="button" class="btn-login" id="btn-login-submit">登 录 系 统</button>
       <div style="font-size: 11.5px; color: var(--admin-text-muted); margin-top: 14px;">
-        仅限已授权管理人员操作 · 采用安全本地隔离技术
+        仅限已授权管理人员操作 · 服务器校验已保护
       </div>
     </div>
   </div>
@@ -826,6 +892,7 @@
     <header class="admin-topbar">
       <div class="topbar-title" id="page-current-title">运营仪表盘</div>
       <div class="topbar-actions">
+        <span id="server-sync-badge" class="btn-pill" style="font-size: 12px; cursor: default;">⏳ 检测服务器同步状态...</span>
         <a href="index.html" target="_blank" class="btn-pill">
           <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
           查看前台官网
@@ -843,20 +910,20 @@
       <section class="admin-panel active" id="panel-dashboard">
         <div class="metrics-grid">
           <div class="metric-card">
-            <span class="metric-lbl">Lucky Mini 累计预约量</span>
-            <div class="metric-num" style="color: var(--admin-blue);">1,286 <span style="font-size: 14px; font-weight: normal; color: var(--admin-green);">+12% 今日</span></div>
+            <span class="metric-lbl">预约与客户线索总量</span>
+            <div class="metric-num" style="color: var(--admin-blue);"><span id="dash-metric-leads">0</span> <span id="dash-metric-leads-sub" style="font-size: 14px; font-weight: normal; color: var(--admin-green);">0 待跟进</span></div>
           </div>
           <div class="metric-card">
-            <span class="metric-lbl">待跟进商业代理申请</span>
-            <div class="metric-num" style="color: var(--admin-orange);">18 <span style="font-size: 14px; font-weight: normal; color: var(--admin-text-muted);">单</span></div>
+            <span class="metric-lbl">商业代理合作申请</span>
+            <div class="metric-num" style="color: var(--admin-orange);"><span id="dash-metric-partners">0</span> <span id="dash-metric-partners-sub" style="font-size: 14px; font-weight: normal; color: var(--admin-text-muted);">单</span></div>
           </div>
           <div class="metric-card">
-            <span class="metric-lbl">全站上架硬件系列</span>
-            <div class="metric-num">3 <span style="font-size: 14px; font-weight: normal; color: var(--admin-text-muted);">大系列 / 6款单品</span></div>
+            <span class="metric-lbl">全站上架硬件产品</span>
+            <div class="metric-num"><span id="dash-metric-products">0</span> <span id="dash-metric-products-sub" style="font-size: 14px; font-weight: normal; color: var(--admin-text-muted);">款单品</span></div>
           </div>
           <div class="metric-card">
             <span class="metric-lbl">SEO 页面健康度得分</span>
-            <div class="metric-num" style="color: var(--admin-green);">98 <span style="font-size: 14px; font-weight: normal; color: var(--admin-text-muted);">/ 100</span></div>
+            <div class="metric-num" style="color: var(--admin-green);"><span id="dash-metric-seo">100</span> <span style="font-size: 14px; font-weight: normal; color: var(--admin-text-muted);">/ 100</span></div>
           </div>
         </div>
 
@@ -900,7 +967,7 @@
               <option value="partners">合作代理 (partners.html)</option>
               <option value="about">关于我们 (about.html)</option>
               <option value="contact">联系我们 (contact.html)</option>
-              <option value="global">全站通用公用区 (页眉/页脚/品牌/资质)</option>
+              <option value="global">全站通用公用区 (顶部导航栏 / Logo / 页脚 / 品牌)</option>
               <option value="media_library">🖼️ 全站所有图片素材总库 (集中上传替换)</option>
               <option value="quick_replace">🔍 全站任意文字快速查找与批量替换</option>
             </select>
@@ -956,7 +1023,7 @@
                     <label for="upload-index-hero" class="btn-pill" style="align-self: flex-start; cursor: pointer;">
                       📷 上传 / 更换大图
                     </label>
-                    <input type="file" id="upload-index-hero" accept="image/*" style="display:none;" onchange="handleCmsImageUpload(this, 'index', 'hero_image_mini', 'thumb-index-hero')">
+                    <input type="file" id="upload-index-hero" accept="image/*" style="display:none;" onchange="handleCmsImageUpload(this, 'index', 'hero_image_mini', 'thumb-index-hero', 'images/hero_banner_lucky_mini.jpg')">
                     <span style="font-size: 11.5px; color: var(--admin-text-muted);">建议尺寸 1920×1080，支持 JPG、PNG、WEBP</span>
                   </div>
                 </div>
@@ -988,7 +1055,7 @@
                     <label for="upload-index-hero2" class="btn-pill" style="align-self: flex-start; cursor: pointer;">
                       📷 上传 / 更换大图
                     </label>
-                    <input type="file" id="upload-index-hero2" accept="image/*" style="display:none;" onchange="handleCmsImageUpload(this, 'index', 'hero_image_tab', 'thumb-index-hero2')">
+                    <input type="file" id="upload-index-hero2" accept="image/*" style="display:none;" onchange="handleCmsImageUpload(this, 'index', 'hero_image_tab', 'thumb-index-hero2', 'images/hero_banner_lucky_tab.jpg')">
                   </div>
                 </div>
               </div>
@@ -1015,7 +1082,7 @@
                     <label for="upload-index-hero3" class="btn-pill" style="align-self: flex-start; cursor: pointer;">
                       📷 上传 / 更换大图
                     </label>
-                    <input type="file" id="upload-index-hero3" accept="image/*" style="display:none;" onchange="handleCmsImageUpload(this, 'index', 'hero_image_acc', 'thumb-index-hero3')">
+                    <input type="file" id="upload-index-hero3" accept="image/*" style="display:none;" onchange="handleCmsImageUpload(this, 'index', 'hero_image_acc', 'thumb-index-hero3', 'images/hero_banner_accessories.jpg')">
                   </div>
                 </div>
               </div>
@@ -1159,6 +1226,8 @@
                 <!-- 动态列表项渲染 -->
               </div>
             </div>
+
+            <div id="dyn-modules-index"></div>
           </div>
 
           <!-- 2. 产品中心 CMS 编辑容器 -->
@@ -1221,11 +1290,11 @@
               <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
                 <div class="form-group">
                   <label class="form-label">产品名称</label>
-                  <input type="text" class="form-input" id="edit-prod-title" placeholder="例如：Lucky Mini 3.7 英寸">
+                  <input type="text" class="form-input" id="edit-prod-title" placeholder="例如：Lucky Mini 3.7 英寸" oninput="syncCurrentEditedProductToMemory(true)">
                 </div>
                 <div class="form-group">
                   <label class="form-label">所属产品系列</label>
-                  <select class="form-select" id="edit-prod-series">
+                  <select class="form-select" id="edit-prod-series" onchange="syncCurrentEditedProductToMemory(true)">
                     <option value="phone">📱 智能手机系列</option>
                     <option value="tablet">💻 随身平板系列</option>
                     <option value="accessories">⚡ 精工配件系列</option>
@@ -1253,7 +1322,7 @@
               <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
                 <div class="form-group">
                   <label class="form-label">官方售价</label>
-                  <input type="text" class="form-input" id="edit-prod-price" placeholder="例如：$299 或 ¥129 起">
+                  <input type="text" class="form-input" id="edit-prod-price" placeholder="例如：$299 或 ¥129 起" oninput="syncCurrentEditedProductToMemory(true)">
                 </div>
                 <div class="form-group">
                   <label class="form-label">价格 / 优惠说明</label>
@@ -1292,6 +1361,15 @@
                   <button type="button" class="btn-pill" style="padding: 2px 8px; font-size: 11px;" onclick="applyQuickBuyUrlTemplate('jd')">🏬 京东官方自营</button>
                   <button type="button" class="btn-pill" style="padding: 2px 8px; font-size: 11px;" onclick="applyQuickBuyUrlTemplate('tmall')">🛍️ 天猫品牌旗舰</button>
                 </div>
+              </div>
+
+              <!-- 核心规格标签编辑 -->
+              <div style="background: #fafafc; border: 1px solid var(--admin-border); border-radius: 12px; padding: 16px; margin-bottom: 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                  <h4 style="font-size: 13.5px; font-weight: 700; color: #1d1d1f; margin: 0;">⚙️ 核心规格参数标签 (前台卡片与详情弹窗同步)</h4>
+                  <button type="button" class="btn-pill btn-pill-blue" style="padding: 3px 10px; font-size: 12px;" onclick="addProductSpecRow()">➕ 添加规格</button>
+                </div>
+                <div id="edit-prod-specs-list" style="display: flex; flex-direction: column; gap: 8px;"></div>
               </div>
 
               <!-- 产品主图上传 -->
@@ -1344,6 +1422,7 @@
               </div>
             </div>
           </div>
+          <div id="dyn-modules-products"></div>
         </div>
 
           <!-- 3. Lucky Mini 旗舰页 CMS 编辑容器 -->
@@ -1386,6 +1465,7 @@
                 <input type="text" class="form-input" id="cms-mini-feat-desc">
               </div>
             </div>
+            <div id="dyn-modules-lucky_mini"></div>
           </div>
 
           <!-- 4. 服务支持 CMS 编辑容器 -->
@@ -1423,6 +1503,7 @@
                 </div>
               </div>
             </div>
+            <div id="dyn-modules-support"></div>
           </div>
 
           <!-- 5. 购买渠道 CMS 编辑容器 -->
@@ -1446,6 +1527,7 @@
                 <input type="text" class="form-input" id="cms-channels-form">
               </div>
             </div>
+            <div id="dyn-modules-channels"></div>
           </div>
 
           <!-- 6. 合作代理 CMS 编辑容器 -->
@@ -1473,6 +1555,7 @@
                 <input type="text" class="form-input" id="cms-partners-apply">
               </div>
             </div>
+            <div id="dyn-modules-partners"></div>
           </div>
 
           <!-- 7. 关于我们 CMS 编辑容器 -->
@@ -1545,6 +1628,7 @@
                 </div>
               </div>
             </div>
+            <div id="dyn-modules-about"></div>
           </div>
 
           <!-- 8. 联系我们 CMS 编辑容器 -->
@@ -1572,6 +1656,7 @@
                 <input type="text" class="form-input" id="cms-contact-dept-title">
               </div>
             </div>
+            <div id="dyn-modules-contact"></div>
           </div>
 
           <!-- 9. 全局通用公用区 CMS 编辑容器 -->
@@ -1589,12 +1674,52 @@
                 </div>
               </div>
               <div class="form-group">
+                <label class="form-label">品牌 Logo 图标 <span>(显示在全站顶部导航栏与页脚左侧，不传则使用默认图标)</span></label>
+                <div class="image-field-wrap">
+                  <div class="image-thumb-box" style="width: 64px; height: 64px; background: #1d1d1f;">
+                    <img id="thumb-global-logo" src="" alt="默认SVG图标" style="display: none; width: 100%; height: 100%; object-fit: cover;">
+                    <span id="thumb-global-logo-fallback" style="color: #fff; font-size: 22px;">✳</span>
+                  </div>
+                  <div class="image-actions">
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                      <label for="upload-global-logo" class="btn-pill" style="cursor: pointer;">📷 上传 / 更换 Logo</label>
+                      <input type="file" id="upload-global-logo" accept="image/*" style="display:none;" onchange="handleGlobalLogoUpload(this)">
+                      <button type="button" class="btn-pill" onclick="restoreDefaultLogo()">↺ 恢复默认图标</button>
+                    </div>
+                    <span style="font-size: 11.5px; color: var(--admin-text-muted);">建议正方形 PNG/SVG/JPG 图标</span>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
                 <label class="form-label">品牌口号 (Slogan)</label>
                 <input type="text" class="form-input" id="cms-global-slogan">
               </div>
-              <div class="form-group">
-                <label class="form-label">顶部导航 CTA 预约按钮文案</label>
-                <input type="text" class="form-input" id="cms-global-cta-btn">
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+                <div class="form-group">
+                  <label class="form-label">顶部导航右侧 CTA 按钮文案</label>
+                  <input type="text" class="form-input" id="cms-global-cta-btn">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">顶部导航右侧 CTA 按钮跳转链接</label>
+                  <input type="text" class="form-input" id="cms-global-cta-link" placeholder="lucky-mini.html">
+                </div>
+              </div>
+
+              <!-- 顶部导航栏菜单管理 -->
+              <div style="background: #ffffff; border: 1px solid var(--admin-border); border-radius: 12px; padding: 16px; margin-bottom: 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 12px;">
+                  <div>
+                    <h4 style="font-size: 14px; font-weight: 600; color: #1d1d1f; margin-bottom: 2px;">🧭 顶部导航栏菜单管理</h4>
+                    <p style="font-size: 12px; color: var(--admin-text-muted); margin: 0;">支持修改全站顶部导航菜单的名称、跳转链接、排序及增删，保存后全站 8 个页面同步更新。</p>
+                  </div>
+                  <div style="display: flex; gap: 8px;">
+                    <button type="button" class="btn-pill btn-pill-blue" onclick="addGlobalNavItem()">➕ 新增菜单项</button>
+                    <button type="button" class="btn-pill" onclick="restoreDefaultNavItems()">↺ 恢复默认菜单</button>
+                  </div>
+                </div>
+                <div id="admin-nav-items-list" style="display: flex; flex-direction: column; gap: 8px;">
+                  <!-- 动态渲染导航项 -->
+                </div>
               </div>
               <div class="form-group">
                 <label class="form-label">页脚简短品牌阐述</label>
@@ -1629,6 +1754,7 @@
                 </div>
               </div>
             </div>
+            <div id="dyn-modules-global"></div>
           </div>
 
           <!-- 10. 全站所有图片素材总库 (集中上传替换) -->
@@ -1762,7 +1888,31 @@
 
           <!-- Sitemap 与站长验证辅助 -->
           <div class="panel-card" style="margin-top: 24px; background: #fafafc;">
-            <div class="panel-card-title" style="margin-bottom: 12px;">网站地图与站长平台验证</div>
+            <div class="panel-card-title" style="margin-bottom: 14px;">全局 SEO 配置、网站地图与站长平台验证</div>
+            <div class="dyn-grid-2" style="margin-bottom: 14px;">
+              <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label">全站站点名称 (og:site_name)</label>
+                <input type="text" class="form-input" id="seo-global-sitename" placeholder="LUCK WHEAT 幸运无限">
+              </div>
+              <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label">规范域名 (Canonical Base URL)</label>
+                <input type="text" class="form-input" id="seo-global-canonical" placeholder="https://lucky-infinite.com">
+              </div>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 16px;">
+              <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label">百度站长验证码</label>
+                <input type="text" class="form-input" id="seo-global-baidu" placeholder="baidu-site-verification">
+              </div>
+              <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label">Google 站长验证码</label>
+                <input type="text" class="form-input" id="seo-global-google" placeholder="google-site-verification">
+              </div>
+              <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label">Bing 站长验证码</label>
+                <input type="text" class="form-input" id="seo-global-bing" placeholder="msvalidate.01">
+              </div>
+            </div>
             <div style="display: flex; gap: 12px; flex-wrap: wrap;">
               <button type="button" class="btn-pill btn-pill-blue" onclick="generateAndDownloadSitemap()">
                 <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
@@ -1778,28 +1928,34 @@
         <div class="panel-card">
           <div class="panel-card-header">
             <div class="panel-card-title">Lucky Mini 首发预约与上市通知名单</div>
-            <button type="button" class="btn-pill btn-pill-primary" onclick="exportLeadsToCSV()">
-              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-              导出 Excel (CSV)
-            </button>
+            <div style="display: flex; gap: 8px;">
+              <button type="button" class="btn-pill btn-pill-blue" onclick="addManualLead()">➕ 新增线索</button>
+              <button type="button" class="btn-pill btn-pill-primary" onclick="exportLeadsToCSV()">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                导出 Excel (CSV)
+              </button>
+            </div>
           </div>
-          <table class="data-table" id="all-leads-table">
-            <thead>
-              <tr>
-                <th>线索单号</th>
-                <th>客户姓名</th>
-                <th>手机号码</th>
-                <th>电子邮箱</th>
-                <th>意向硬件</th>
-                <th>提交时间</th>
-                <th>跟进状态</th>
-                <th>备注诉求</th>
-              </tr>
-            </thead>
-            <tbody>
-              <!-- 动态插入 -->
-            </tbody>
-          </table>
+          <div style="overflow-x: auto;">
+            <table class="data-table" id="all-leads-table">
+              <thead>
+                <tr>
+                  <th>线索单号</th>
+                  <th>客户姓名</th>
+                  <th>手机号码</th>
+                  <th>电子邮箱</th>
+                  <th>意向硬件</th>
+                  <th>提交时间</th>
+                  <th>跟进状态</th>
+                  <th>备注诉求</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- 动态插入 -->
+              </tbody>
+            </table>
+          </div>
         </div>
       </section>
 
@@ -1808,25 +1964,31 @@
         <div class="panel-card">
           <div class="panel-card-header">
             <div class="panel-card-title">渠道加盟、跨境电商分销与采购意向</div>
-            <button type="button" class="btn-pill" onclick="exportPartnershipsToCSV()">导出合作表单</button>
+            <div style="display: flex; gap: 8px;">
+              <button type="button" class="btn-pill btn-pill-blue" onclick="addManualPartner()">➕ 新增合作意向</button>
+              <button type="button" class="btn-pill" onclick="exportPartnershipsToCSV()">导出合作表单</button>
+            </div>
           </div>
-          <table class="data-table" id="partnerships-table">
-            <thead>
-              <tr>
-                <th>意向单号</th>
-                <th>企业/组织全称</th>
-                <th>联系人</th>
-                <th>联系方式</th>
-                <th>合作渠道类型</th>
-                <th>目标市场区域</th>
-                <th>预期规模</th>
-                <th>当前状态</th>
-              </tr>
-            </thead>
-            <tbody>
-              <!-- 动态插入 -->
-            </tbody>
-          </table>
+          <div style="overflow-x: auto;">
+            <table class="data-table" id="partnerships-table">
+              <thead>
+                <tr>
+                  <th>意向单号</th>
+                  <th>企业/组织全称</th>
+                  <th>联系人</th>
+                  <th>联系方式</th>
+                  <th>合作渠道类型</th>
+                  <th>目标市场区域</th>
+                  <th>预期规模</th>
+                  <th>当前状态</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- 动态插入 -->
+              </tbody>
+            </table>
+          </div>
         </div>
       </section>
 
@@ -1834,12 +1996,37 @@
       <section class="admin-panel" id="panel-settings">
         <div class="panel-card">
           <div class="panel-card-header">
+            <div class="panel-card-title">管理员登录密码修改</div>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-bottom: 16px;">
+            <div class="form-group" style="margin-bottom: 0;">
+              <label class="form-label">当前密码</label>
+              <input type="password" class="form-input" id="setting-old-pwd" placeholder="输入当前密码 (默认 luck2026)">
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+              <label class="form-label">新密码</label>
+              <input type="password" class="form-input" id="setting-new-pwd" placeholder="至少 6 位字符">
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+              <label class="form-label">确认新密码</label>
+              <input type="password" class="form-input" id="setting-confirm-pwd" placeholder="再次输入新密码">
+            </div>
+          </div>
+          <button type="button" class="btn-pill btn-pill-primary" onclick="updateAdminPassword()">🔒 更新管理员密码</button>
+        </div>
+
+        <div class="panel-card">
+          <div class="panel-card-header">
             <div class="panel-card-title">全站数据安全备份与一键恢复</div>
           </div>
-          <p style="font-size: 13.5px; color: var(--admin-text-muted); margin-bottom: 18px;">
-            系统支持将全站所有修改的文字、图片元数据、SEO 配置及客户线索一键导出为单个独立 JSON 备份文件，方便随时在多台电脑间同步转移！
+          <p style="font-size: 13.5px; color: var(--admin-text-muted); margin-bottom: 18px; line-height: 1.6;">
+            1. 如果您的服务器运行了配套服务端引擎（<code>python3 server.py 5500</code> 或经 Nginx 反代），您点击任意「保存」均会自动<strong>实时同步写入服务器</strong>并立即对全网所有访客生效。<br>
+            2. 如果您是将网站上传至<strong>不支持 Python 的纯静态空间 / OSS</strong>，可在改完后点击下方蓝色按钮导出 <code>site_live_data.js</code> 并上传覆盖服务器的 <code>data/</code> 目录，同样全网生效！
           </p>
           <div style="display: flex; gap: 14px; flex-wrap: wrap;">
+            <button type="button" class="btn-pill btn-pill-primary" onclick="exportStaticPublishScript()">
+              🚀 导出纯静态发布包 (site_live_data.js)
+            </button>
             <button type="button" class="btn-pill btn-pill-blue" onclick="exportFullSiteBackup()">
               💾 下载全站数据备份包 (.json)
             </button>
@@ -1859,1439 +2046,14 @@
 
   <div class="toast-msg" id="toast-msg">已成功保存并同步！</div>
 
-  <!-- 引入全站默认数据字典 -->
-  <script src="data/site_default_data.js"></script>
-  <script>
-    // 管理后台交互与数据逻辑
-    let currentActivePanel = 'dashboard';
-    let localSiteData = null;
-
-    document.addEventListener('DOMContentLoaded', () => {
-      checkLoginStatus();
-      loadDataCenter();
-      initNavInteractions();
-      renderDashboard();
-      initCmsForm();
-      initSeoForm();
-      renderLeadsTable();
-      renderPartnersTable();
-
-      const urlParams = new URLSearchParams(window.location.search);
-      const tabParam = urlParams.get('tab');
-      if (tabParam) switchNav(tabParam);
-    });
-
-    // 1. 登录校验
-    function checkLoginStatus() {
-      const urlParams = new URLSearchParams(window.location.search);
-      const isAuthParam = urlParams.get('auth') === '1';
-      if (isAuthParam) {
-        sessionStorage.setItem('LUCK_ADMIN_AUTH', 'true');
-        localStorage.setItem('LUCK_ADMIN_AUTH', 'true');
-      }
-
-      const isAuth = sessionStorage.getItem('LUCK_ADMIN_AUTH') === 'true' || localStorage.getItem('LUCK_ADMIN_AUTH') === 'true' || isAuthParam;
-      const overlay = document.getElementById('login-overlay');
-      if (overlay) {
-        if (isAuth) {
-          overlay.classList.add('hidden');
-          overlay.style.display = 'none';
-        } else {
-          overlay.classList.remove('hidden');
-          overlay.style.display = 'flex';
-        }
-      }
-
-      document.getElementById('btn-login-submit').addEventListener('click', () => {
-        const u = document.getElementById('login-user').value.trim();
-        const p = document.getElementById('login-pwd').value.trim();
-        if (u === 'admin' && p === 'luck2026') {
-          sessionStorage.setItem('LUCK_ADMIN_AUTH', 'true');
-          overlay.classList.add('hidden');
-          showToast('欢迎登录 LUCK WHEAT 管理后台！');
-        } else {
-          alert('账号或密码错误！(默认账号: admin，默认密码: luck2026)');
-        }
-      });
-
-      document.getElementById('btn-logout').addEventListener('click', () => {
-        sessionStorage.removeItem('LUCK_ADMIN_AUTH');
-        location.reload();
-      });
-    }
-
-    // 2. 数据中心载入
-    function deepMerge(target, source) {
-      const output = Object.assign({}, target);
-      if (isObject(target) && isObject(source)) {
-        Object.keys(source).forEach(key => {
-          if (isObject(source[key])) {
-            if (!(key in target)) Object.assign(output, { [key]: source[key] });
-            else output[key] = deepMerge(target[key], source[key]);
-          } else {
-            Object.assign(output, { [key]: source[key] });
-          }
-        });
-      }
-      return output;
-    }
-
-    function isObject(item) {
-      return (item && typeof item === 'object' && !Array.isArray(item));
-    }
-
-    function loadDataCenter() {
-      const defaultData = window.LUCK_SITE_DEFAULT_DATA || {};
-      const saved = localStorage.getItem('LUCK_SITE_CONTENT_DATA');
-      if (saved) {
-        try {
-          const parsed = JSON.parse(saved);
-          localSiteData = deepMerge(defaultData, parsed);
-        } catch(e) {
-          localSiteData = JSON.parse(JSON.stringify(defaultData));
-        }
-      } else {
-        localSiteData = JSON.parse(JSON.stringify(defaultData));
-      }
-    }
-
-    function saveAllChanges() {
-      // 收集 CMS 字段
-      syncCmsInputsToData();
-      // 收集 SEO 字段
-      syncSeoInputsToData();
-
-      localStorage.setItem('LUCK_SITE_CONTENT_DATA', JSON.stringify(localSiteData));
-      showToast('全站文字、图片与 SEO 变更已全部保存生效！');
-    }
-    document.getElementById('btn-save-all').addEventListener('click', saveAllChanges);
-
-    // 3. 导航切换
-    function initNavInteractions() {
-      document.querySelectorAll('.sidebar-nav .nav-item').forEach(item => {
-        item.addEventListener('click', () => {
-          const target = item.getAttribute('data-target');
-          switchNav(target);
-        });
-      });
-
-      const urlParams = new URLSearchParams(window.location.search);
-      const tabParam = urlParams.get('tab');
-      if (tabParam) {
-        switchNav(tabParam);
-      }
-      const cmsParam = urlParams.get('cms_page');
-      if (cmsParam) {
-        const sel = document.getElementById('cms-page-selector');
-        if (sel) {
-          sel.value = cmsParam;
-          sel.dispatchEvent(new Event('change'));
-        }
-      }
-    }
-
-    function switchNav(targetId) {
-      if (targetId === 'products') {
-        switchNav('cms');
-        const sel = document.getElementById('cms-page-selector');
-        if (sel) {
-          sel.value = 'products';
-          sel.dispatchEvent(new Event('change'));
-        }
-        document.querySelectorAll('.sidebar-nav .nav-item').forEach(i => i.classList.remove('active'));
-        const activeNav = document.querySelector(`.sidebar-nav .nav-item[data-target="products"]`);
-        if (activeNav) activeNav.classList.add('active');
-        document.getElementById('page-current-title').textContent = '产品中心 · 商品与详情页管理 (Master-Detail)';
-        currentActivePanel = 'products';
-        if (typeof renderAdminProductMiniList === 'function') {
-          renderAdminProductMiniList();
-        }
-        return;
-      }
-
-      document.querySelectorAll('.sidebar-nav .nav-item').forEach(i => i.classList.remove('active'));
-      const activeNav = document.querySelector(`.sidebar-nav .nav-item[data-target="${targetId}"]`);
-      if (activeNav) activeNav.classList.add('active');
-
-      document.querySelectorAll('.admin-panel').forEach(p => p.classList.remove('active'));
-      const panel = document.getElementById(`panel-${targetId}`);
-      if (panel) panel.classList.add('active');
-
-      const titles = {
-        dashboard: '运营仪表盘',
-        cms: '全站图文内容可视化编辑 (CMS)',
-        seo: 'SEO 优化中心与搜索结果模拟',
-        leads: '预约与客户线索管理',
-        partnerships: '商业代理合作意向',
-        settings: '全站系统设置与数据备份'
-      };
-      document.getElementById('page-current-title').textContent = titles[targetId] || '管理后台';
-      currentActivePanel = targetId;
-    }
-
-    // 4. 仪表盘渲染
-    function renderDashboard() {
-      const leads = getLeadsData();
-      const tbody = document.querySelector('#dashboard-leads-table tbody');
-      if (!tbody) return;
-      tbody.innerHTML = leads.slice(0, 5).map(l => `
-        <tr>
-          <td><strong>${l.name}</strong></td>
-          <td>${l.phone}</td>
-          <td>${l.product}</td>
-          <td>${l.date}</td>
-          <td><span class="status-badge ${l.status === '已确认' ? 'status-confirmed' : 'status-pending'}">${l.status}</span></td>
-        </tr>
-      `).join('');
-    }
-
-        // 5. CMS 图文编辑全套逻辑
-    function initCmsForm() {
-      const selector = document.getElementById('cms-page-selector');
-      function updateCmsPageView() {
-        const val = selector.value;
-        document.querySelectorAll('.cms-page-view').forEach(v => v.style.display = 'none');
-        const view = document.getElementById(`cms-view-${val}`);
-        if (view) view.style.display = 'block';
-        if (val === 'media_library') renderMediaLibrary();
-        if (val === 'quick_replace') renderQuickReplacements();
-        if (val === 'products') {
-          renderAdminProductMiniList();
-          const currentIdx = parseInt(document.getElementById('edit-prod-index')?.value || '0', 10);
-          loadProductIntoEditor(isNaN(currentIdx) ? 0 : currentIdx, false);
-        }
-      }
-      selector.addEventListener('change', updateCmsPageView);
-
-      const urlParams = new URLSearchParams(window.location.search);
-      const cmsPageParam = urlParams.get('cms_page');
-      if (cmsPageParam && selector.querySelector(`option[value="${cmsPageParam}"]`)) {
-        selector.value = cmsPageParam;
-      }
-      updateCmsPageView();
-
-      // 填充表单数据
-      const c = localSiteData.content || {};
-      const idx = c.index || {};
-      const pro = c.products || {};
-      const mini = c.lucky_mini || {};
-      const supp = c.support || {};
-      const chan = c.channels || {};
-      const part = c.partners || {};
-      const abt = c.about || {};
-      const cont = c.contact || {};
-      const glob = c.global || {};
-
-      // 1. 首页
-      safeSetVal('cms-index-hero-badge', idx.hero_badge);
-      safeSetVal('cms-index-hero-title', idx.hero_title);
-      safeSetVal('cms-index-hero-sub', idx.hero_subtitle);
-      safeSetVal('cms-index-hero-btn1', idx.hero_btn_primary);
-      safeSetVal('cms-index-hero-btn2', idx.hero_btn_secondary);
-      safeSetVal('cms-index-hero-b-left', idx.hero_badge_left);
-      safeSetVal('cms-index-hero-b-right', idx.hero_badge_right);
-
-      safeSetVal('cms-index-hero2-badge', idx.hero_slide2_badge);
-      safeSetVal('cms-index-hero2-title', idx.hero_slide2_title);
-      safeSetVal('cms-index-hero2-sub', idx.hero_slide2_sub);
-
-      safeSetVal('cms-index-hero3-title', idx.hero_slide3_title);
-      safeSetVal('cms-index-hero3-sub', idx.hero_slide3_sub);
-
-      safeSetVal('cms-index-stat1-val', idx.stat_1_val);
-      safeSetVal('cms-index-stat1-lbl', idx.stat_1_lbl);
-      safeSetVal('cms-index-stat2-val', idx.stat_2_val);
-      safeSetVal('cms-index-stat2-lbl', idx.stat_2_lbl);
-      safeSetVal('cms-index-stat3-val', idx.stat_3_val);
-      safeSetVal('cms-index-stat3-lbl', idx.stat_3_lbl);
-      safeSetVal('cms-index-stat4-val', idx.stat_4_val);
-      safeSetVal('cms-index-stat4-lbl', idx.stat_4_lbl);
-
-      safeSetVal('cms-index-concept-title', idx.concept_title);
-      safeSetVal('cms-index-concept-desc', idx.concept_desc);
-      safeSetVal('cms-index-card1-title', idx.concept_card1_title);
-      safeSetVal('cms-index-card1-desc', idx.concept_card1_desc);
-      safeSetVal('cms-index-card2-title', idx.concept_card2_title);
-      safeSetVal('cms-index-card2-desc', idx.concept_card2_desc);
-      safeSetVal('cms-index-card3-title', idx.concept_card3_title);
-      safeSetVal('cms-index-card3-desc', idx.concept_card3_desc);
-
-      safeSetVal('cms-index-cta-title', idx.cta_title);
-      safeSetVal('cms-index-cta-desc', idx.cta_desc);
-      safeSetVal('cms-index-cta-btn1', idx.cta_btn1_text);
-      safeSetVal('cms-index-cta-btn2', idx.cta_btn2_text);
-
-      // 2. 产品中心
-      safeSetVal('cms-products-title', pro.page_title);
-      safeSetVal('cms-products-desc', pro.page_desc);
-      renderAdminProductMiniList();
-      loadProductIntoEditor(0);
-
-      // 3. Lucky Mini
-      safeSetVal('cms-mini-badge', mini.badge);
-      safeSetVal('cms-mini-title', mini.title);
-      safeSetVal('cms-mini-sub', mini.sub);
-      safeSetVal('cms-mini-desc', mini.desc);
-      safeSetVal('cms-mini-price', mini.price);
-      safeSetVal('cms-mini-price-sub', mini.price_sub);
-      safeSetVal('cms-mini-promo', mini.promo_tip);
-      safeSetVal('cms-mini-feat-title', mini.features_title);
-      safeSetVal('cms-mini-feat-desc', mini.features_desc);
-
-      // 4. 服务支持
-      safeSetVal('cms-support-title', supp.page_title);
-      safeSetVal('cms-support-desc', supp.page_desc);
-      safeSetVal('cms-support-os', supp.os_heading);
-      safeSetVal('cms-support-warranty', supp.warranty_heading);
-      safeSetVal('cms-support-faq', supp.faq_heading);
-      safeSetVal('cms-support-hotline', supp.service_hotline);
-      safeSetVal('cms-support-email', supp.service_email);
-
-      // 5. 购买渠道
-      safeSetVal('cms-channels-title', chan.page_title);
-      safeSetVal('cms-channels-desc', chan.page_desc);
-      safeSetVal('cms-channels-policy', chan.policy_heading);
-      safeSetVal('cms-channels-form', chan.form_heading);
-
-      // 6. 合作代理
-      safeSetVal('cms-partners-title', part.page_title);
-      safeSetVal('cms-partners-desc', part.page_desc);
-      safeSetVal('cms-partners-support', part.support_offerings);
-      safeSetVal('cms-partners-steps', part.steps_title);
-      safeSetVal('cms-partners-apply', part.apply_heading);
-
-      // 7. 关于我们
-      safeSetVal('cms-about-title', abt.page_title);
-      safeSetVal('cms-about-desc', abt.page_desc);
-      safeSetVal('cms-about-timeline', abt.timeline_title);
-      safeSetVal('cms-about-strengths', abt.strengths_title);
-      safeSetVal('cms-about-culture', abt.culture_title);
-
-      // 8. 联系我们
-      safeSetVal('cms-contact-title', cont.page_title);
-      safeSetVal('cms-contact-desc', cont.page_desc);
-      safeSetVal('cms-contact-hq-title', cont.hq_title);
-      safeSetVal('cms-contact-address', cont.hq_address);
-      safeSetVal('cms-contact-dept-title', cont.dept_table_heading);
-
-      // 9. 全局通用
-      safeSetVal('cms-global-cn', glob.brandCn);
-      safeSetVal('cms-global-en', glob.brandEn);
-      safeSetVal('cms-global-slogan', glob.slogan);
-      safeSetVal('cms-global-cta-btn', glob.headerCtaText);
-      safeSetVal('cms-global-footer-desc', glob.footerDesc);
-      safeSetVal('cms-global-hours', glob.serviceHours);
-      safeSetVal('cms-global-email-supp', glob.contactEmail);
-      safeSetVal('cms-global-email-b2b', glob.b2bEmail);
-      safeSetVal('cms-global-copyright', glob.copyright);
-      safeSetVal('cms-global-icp', glob.icpNumber);
-      safeSetVal('cms-global-icp-link', glob.icpLink);
-
-      // 缩略图渲染
-      if (idx.hero_image_mini) document.getElementById('thumb-index-hero').src = idx.hero_image_mini;
-      if (idx.hero_image_tab) document.getElementById('thumb-index-hero2').src = idx.hero_image_tab;
-      if (idx.hero_image_acc) document.getElementById('thumb-index-hero3').src = idx.hero_image_acc;
-      if (abt.cert_license_img) document.getElementById('thumb-about-license').src = abt.cert_license_img;
-      if (abt.cert_cn_img) document.getElementById('thumb-about-cn').src = abt.cert_cn_img;
-      if (abt.cert_us_img) document.getElementById('thumb-about-us').src = abt.cert_us_img;
-      if (abt.cert_trans_img) document.getElementById('thumb-about-trans').src = abt.cert_trans_img;
-      renderAdminBrandNewsList();
-      renderAdminProductMiniList();
-    }
-
-    function syncCmsInputsToData() {
-      if (!localSiteData.content) localSiteData.content = {};
-      const c = localSiteData.content;
-      if (!c.index) c.index = {};
-      if (!c.products) c.products = {};
-      if (!c.lucky_mini) c.lucky_mini = {};
-      if (!c.support) c.support = {};
-      if (!c.channels) c.channels = {};
-      if (!c.partners) c.partners = {};
-      if (!c.about) c.about = {};
-      if (!c.contact) c.contact = {};
-      if (!c.global) c.global = {};
-
-      // 1. 首页
-      c.index.hero_badge = getVal('cms-index-hero-badge');
-      c.index.hero_title = getVal('cms-index-hero-title');
-      c.index.hero_subtitle = getVal('cms-index-hero-sub');
-      c.index.hero_btn_primary = getVal('cms-index-hero-btn1');
-      c.index.hero_btn_secondary = getVal('cms-index-hero-btn2');
-      c.index.hero_badge_left = getVal('cms-index-hero-b-left');
-      c.index.hero_badge_right = getVal('cms-index-hero-b-right');
-      c.index.hero_slide2_badge = getVal('cms-index-hero2-badge');
-      c.index.hero_slide2_title = getVal('cms-index-hero2-title');
-      c.index.hero_slide2_sub = getVal('cms-index-hero2-sub');
-      c.index.hero_slide3_title = getVal('cms-index-hero3-title');
-      c.index.hero_slide3_sub = getVal('cms-index-hero3-sub');
-      c.index.stat_1_val = getVal('cms-index-stat1-val');
-      c.index.stat_1_lbl = getVal('cms-index-stat1-lbl');
-      c.index.stat_2_val = getVal('cms-index-stat2-val');
-      c.index.stat_2_lbl = getVal('cms-index-stat2-lbl');
-      c.index.stat_3_val = getVal('cms-index-stat3-val');
-      c.index.stat_3_lbl = getVal('cms-index-stat3-lbl');
-      c.index.stat_4_val = getVal('cms-index-stat4-val');
-      c.index.stat_4_lbl = getVal('cms-index-stat4-lbl');
-      c.index.concept_title = getVal('cms-index-concept-title');
-      c.index.concept_desc = getVal('cms-index-concept-desc');
-      c.index.concept_card1_title = getVal('cms-index-card1-title');
-      c.index.concept_card1_desc = getVal('cms-index-card1-desc');
-      c.index.concept_card2_title = getVal('cms-index-card2-title');
-      c.index.concept_card2_desc = getVal('cms-index-card2-desc');
-      c.index.concept_card3_title = getVal('cms-index-card3-title');
-      c.index.concept_card3_desc = getVal('cms-index-card3-desc');
-      c.index.cta_title = getVal('cms-index-cta-title');
-      c.index.cta_desc = getVal('cms-index-cta-desc');
-      c.index.cta_btn1_text = getVal('cms-index-cta-btn1');
-      c.index.cta_btn2_text = getVal('cms-index-cta-btn2');
-
-      // 2. 产品中心
-      c.products.page_title = getVal('cms-products-title');
-      c.products.page_desc = getVal('cms-products-desc');
-      syncCurrentEditedProductToMemory(false);
-
-      // 3. Lucky Mini
-      c.lucky_mini.badge = getVal('cms-mini-badge');
-      c.lucky_mini.title = getVal('cms-mini-title');
-      c.lucky_mini.sub = getVal('cms-mini-sub');
-      c.lucky_mini.desc = getVal('cms-mini-desc');
-      c.lucky_mini.price = getVal('cms-mini-price');
-      c.lucky_mini.price_sub = getVal('cms-mini-price-sub');
-      c.lucky_mini.promo_tip = getVal('cms-mini-promo');
-      c.lucky_mini.features_title = getVal('cms-mini-feat-title');
-      c.lucky_mini.features_desc = getVal('cms-mini-feat-desc');
-
-      // 4. 服务支持
-      c.support.page_title = getVal('cms-support-title');
-      c.support.page_desc = getVal('cms-support-desc');
-      c.support.os_heading = getVal('cms-support-os');
-      c.support.warranty_heading = getVal('cms-support-warranty');
-      c.support.faq_heading = getVal('cms-support-faq');
-      c.support.service_hotline = getVal('cms-support-hotline');
-      c.support.service_email = getVal('cms-support-email');
-
-      // 5. 购买渠道
-      c.channels.page_title = getVal('cms-channels-title');
-      c.channels.page_desc = getVal('cms-channels-desc');
-      c.channels.policy_heading = getVal('cms-channels-policy');
-      c.channels.form_heading = getVal('cms-channels-form');
-
-      // 6. 合作代理
-      c.partners.page_title = getVal('cms-partners-title');
-      c.partners.page_desc = getVal('cms-partners-desc');
-      c.partners.support_offerings = getVal('cms-partners-support');
-      c.partners.steps_title = getVal('cms-partners-steps');
-      c.partners.apply_heading = getVal('cms-partners-apply');
-
-      // 7. 关于我们
-      c.about.page_title = getVal('cms-about-title');
-      c.about.page_desc = getVal('cms-about-desc');
-      c.about.timeline_title = getVal('cms-about-timeline');
-      c.about.strengths_title = getVal('cms-about-strengths');
-      c.about.culture_title = getVal('cms-about-culture');
-
-      // 8. 联系我们
-      c.contact.page_title = getVal('cms-contact-title');
-      c.contact.page_desc = getVal('cms-contact-desc');
-      c.contact.hq_title = getVal('cms-contact-hq-title');
-      c.contact.hq_address = getVal('cms-contact-address');
-      c.contact.dept_table_heading = getVal('cms-contact-dept-title');
-
-      // 9. 全局通用
-      c.global.brandCn = getVal('cms-global-cn');
-      c.global.brandEn = getVal('cms-global-en');
-      c.global.slogan = getVal('cms-global-slogan');
-      c.global.headerCtaText = getVal('cms-global-cta-btn');
-      c.global.footerDesc = getVal('cms-global-footer-desc');
-      c.global.serviceHours = getVal('cms-global-hours');
-      c.global.contactEmail = getVal('cms-global-email-supp');
-      c.global.b2bEmail = getVal('cms-global-email-b2b');
-      c.global.copyright = getVal('cms-global-copyright');
-      c.global.icpNumber = getVal('cms-global-icp');
-      c.global.icpLink = getVal('cms-global-icp-link');
-    }
-
-    // =========================================================================
-    // 产品中心 · 小列表管理、购买跳转链接与商品详情页多图上传
-    // =========================================================================
-    function getProductItemsArray() {
-      if (!localSiteData.content) localSiteData.content = {};
-      if (!localSiteData.content.products) localSiteData.content.products = {};
-      if (!Array.isArray(localSiteData.content.products.items) || localSiteData.content.products.items.length === 0) {
-        const defaultItems = (window.LUCK_SITE_DEFAULT_DATA && window.LUCK_SITE_DEFAULT_DATA.content && window.LUCK_SITE_DEFAULT_DATA.content.products && window.LUCK_SITE_DEFAULT_DATA.content.products.items) || [];
-        localSiteData.content.products.items = JSON.parse(JSON.stringify(defaultItems));
-      }
-      return localSiteData.content.products.items;
-    }
-
-    function getSeriesDisplayName(series) {
-      if (series === 'phone') return '📱 智能手机';
-      if (series === 'tablet') return '💻 随身平板';
-      return '⚡ 精工配件';
-    }
-
-    let adminProductSeriesFilter = 'all';
-
-    window.filterProductSeries = function(series) {
-      adminProductSeriesFilter = series;
-      document.querySelectorAll('.product-series-filter-pills .pill-filter').forEach(btn => {
-        if (btn.getAttribute('data-series') === series) {
-          btn.classList.add('active');
-        } else {
-          btn.classList.remove('active');
-        }
-      });
-      renderAdminProductMiniList();
-    };
-
-    window.renderAdminProductMiniList = function() {
-      const container = document.getElementById('admin-products-mini-list');
-      const countEl = document.getElementById('admin-products-count');
-      if (!container) return;
-
-      const items = getProductItemsArray();
-      const query = (document.getElementById('admin-product-search')?.value || '').trim().toLowerCase();
-      const activeIdx = parseInt(document.getElementById('edit-prod-index')?.value || '0', 10);
-
-      const filtered = items.map((item, idx) => ({ item, idx })).filter(({ item }) => {
-        if (adminProductSeriesFilter !== 'all' && item.series !== adminProductSeriesFilter) return false;
-        if (query) {
-          const hay = `${item.title || ''} ${item.subtitle || ''} ${item.id || ''} ${item.price || ''}`.toLowerCase();
-          if (!hay.includes(query)) return false;
-        }
-        return true;
-      });
-
-      if (countEl) {
-        if (filtered.length === items.length) {
-          countEl.textContent = `${items.length} 款`;
-        } else {
-          countEl.textContent = `${filtered.length} / ${items.length} 款`;
-        }
-      }
-
-      if (filtered.length === 0) {
-        container.innerHTML = `
-          <div style="text-align: center; padding: 28px 14px; background: #ffffff; border-radius: 10px; border: 1px dashed var(--admin-border); color: var(--admin-text-muted); font-size: 12.5px;">
-            未找到匹配的产品<br>
-            <span style="font-size: 11px; color: #86868b; margin-top: 4px; display: inline-block;">可清空搜索或调整分类</span>
-          </div>
-        `;
-        return;
-      }
-
-      container.innerHTML = filtered.map(({ item, idx }) => {
-        const detailCount = Array.isArray(item.detailImages) ? item.detailImages.length : 0;
-        const hasBuyUrl = !!(item.buyUrl && item.buyUrl.trim());
-        const isSelected = (idx === activeIdx);
-        const seriesName = getSeriesDisplayName(item.series);
-
-        return `
-          <div class="product-mini-item ${isSelected ? 'active' : ''}" onclick="loadProductIntoEditor(${idx}, false)">
-            <div class="mini-item-thumb">
-              <img src="${item.image || 'images/showcase_lucky_mini.jpg'}" alt="${escapeHtml(item.title || '')}">
-            </div>
-            <div class="mini-item-body">
-              <div class="mini-item-title-row">
-                <span class="mini-item-title" title="${escapeHtml(item.title || '')}">${escapeHtml(item.title || '未命名产品')}</span>
-                <span style="font-weight: 700; font-size: 12px; color: var(--admin-blue); white-space: nowrap;">${escapeHtml(item.price || '-')}</span>
-              </div>
-              <div class="mini-item-meta">
-                <span>${seriesName}</span>
-                <span>·</span>
-                <code>${escapeHtml(item.id)}</code>
-              </div>
-              <div class="mini-item-status-row">
-                ${detailCount > 0
-                  ? `<span class="tag-badge has-imgs">✓ ${detailCount} 张详情图</span>`
-                  : `<span class="tag-badge no-imgs">未传详情页</span>`}
-                ${hasBuyUrl
-                  ? `<span class="tag-badge buy-linked">已配购买</span>`
-                  : ``}
-              </div>
-            </div>
-            <button type="button" class="btn-pill" style="padding: 2px 6px; font-size: 11px; color: #ff3b30; border: none; background: transparent; opacity: 0.6;" onclick="event.stopPropagation(); deleteProductItem(${idx});" title="删除该产品">🗑️</button>
-          </div>
-        `;
-      }).join('');
-    };
-
-    window.loadProductIntoEditor = function(idx, scrollToEditor) {
-      const items = getProductItemsArray();
-      if (!items.length) return;
-      if (idx < 0 || idx >= items.length) idx = 0;
-      const item = items[idx];
-
-      safeSetVal('edit-prod-index', idx);
-      safeSetVal('edit-prod-title', item.title || '');
-      safeSetVal('edit-prod-series', item.series || 'phone');
-      safeSetVal('edit-prod-subtitle', item.subtitle || '');
-      safeSetVal('edit-prod-badge', item.badge || '');
-      safeSetVal('edit-prod-badge-type', item.badgeType || 'live');
-      safeSetVal('edit-prod-price', item.price || '');
-      safeSetVal('edit-prod-price-sub', item.priceSub || '');
-      safeSetVal('edit-prod-desc', item.desc || '');
-      safeSetVal('edit-prod-buy-url', item.buyUrl || '');
-      safeSetVal('edit-prod-buy-text', item.buyText || '立即购买');
-      safeSetVal('edit-prod-detail-desc', item.detailDesc || '');
-
-      const thumb = document.getElementById('edit-prod-thumb');
-      if (thumb) thumb.src = item.image || 'images/showcase_lucky_mini.jpg';
-
-      const heading = document.getElementById('editor-product-heading');
-      if (heading) heading.textContent = '✏️ 编辑产品：' + (item.title || '未命名产品');
-      const idLabel = document.getElementById('editor-product-id-label');
-      if (idLabel) idLabel.textContent = '产品 ID: ' + (item.id || '');
-
-      const previewBtn = document.getElementById('preview-prod-detail-btn');
-      if (previewBtn) previewBtn.href = `products.html?detail=${encodeURIComponent(item.id)}`;
-
-      updateBuyLinkTestBtn();
-      renderEditorDetailImages(item);
-      renderAdminProductMiniList();
-
-      if (scrollToEditor) {
-        const card = document.getElementById('admin-product-editor-card');
-        if (card) card.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    };
-
-    window.updateBuyLinkTestBtn = function() {
-      const url = getVal('edit-prod-buy-url');
-      const testBtn = document.getElementById('edit-prod-buy-test');
-      if (!testBtn) return;
-      if (url) {
-        testBtn.href = url;
-        testBtn.style.opacity = '1';
-        testBtn.style.pointerEvents = 'auto';
-      } else {
-        testBtn.href = '#';
-        testBtn.style.opacity = '0.45';
-        testBtn.style.pointerEvents = 'none';
-      }
-    };
-
-    window.applyQuickBuyUrlTemplate = function(type) {
-      const idx = parseInt(getVal('edit-prod-index'), 10);
-      const items = getProductItemsArray();
-      const currentId = items[idx]?.id || 'lucky-mini';
-
-      const urlInput = document.getElementById('edit-prod-buy-url');
-      const textInput = document.getElementById('edit-prod-buy-text');
-      if (!urlInput) return;
-
-      if (type === 'channels') {
-        urlInput.value = `channels.html?product=${currentId}`;
-        if (textInput) textInput.value = '立即购买';
-      } else if (type === 'shop') {
-        urlInput.value = `https://shop.luckwheat.com/products/${currentId}`;
-        if (textInput) textInput.value = '官网直购';
-      } else if (type === 'jd') {
-        urlInput.value = `https://item.jd.com/luckwheat-${currentId}.html`;
-        if (textInput) textInput.value = '京东自营';
-      } else if (type === 'tmall') {
-        urlInput.value = `https://detail.tmall.com/item.htm?id=luckwheat-${currentId}`;
-        if (textInput) textInput.value = '天猫旗舰店';
-      }
-      updateBuyLinkTestBtn();
-      showToast('已填入购买链接模板，可根据需要调整并点击保存！');
-    };
-
-    function renderEditorDetailImages(item) {
-      const container = document.getElementById('edit-prod-detail-imgs-list');
-      if (!container) return;
-      const imgs = Array.isArray(item.detailImages) ? item.detailImages : [];
-      if (imgs.length === 0) {
-        container.innerHTML = `<div style="grid-column: 1 / -1; text-align:center; padding:20px; background:#fff; border-radius:8px; color:var(--admin-text-muted); font-size:12.5px;">暂未上传商品详情页图片。点击右上角「上传商品详情页图片」可一次选择多张详情长图。</div>`;
-        return;
-      }
-      container.innerHTML = imgs.map((src, i) => `
-        <div style="background:#fff; border:1px solid var(--admin-border); border-radius:10px; padding:8px; display:flex; flex-direction:column; gap:6px;">
-          <div style="height:120px; border-radius:6px; overflow:hidden; background:#f5f5f7; display:flex; align-items:center; justify-content:center;">
-            <img src="${src}" alt="详情图 ${i + 1}" style="max-width:100%; max-height:100%; object-fit:contain;">
-          </div>
-          <div style="display:flex; justify-content:space-between; align-items:center; font-size:11.5px; color:var(--admin-text-muted);">
-            <span>第 ${i + 1} 张</span>
-            <div style="display:flex; gap:4px;">
-              <button type="button" class="btn-pill" style="padding:2px 6px; font-size:11px;" onclick="moveProductDetailImg(${i}, -1)" ${i === 0 ? 'disabled' : ''}>⬆️</button>
-              <button type="button" class="btn-pill" style="padding:2px 6px; font-size:11px;" onclick="moveProductDetailImg(${i}, 1)" ${i === imgs.length - 1 ? 'disabled' : ''}>⬇️</button>
-              <button type="button" class="btn-pill" style="padding:2px 6px; font-size:11px; color:#ff3b30;" onclick="removeProductDetailImg(${i})">✕</button>
-            </div>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function compressImageFile(file, maxWidth, quality) {
-      return new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          const img = new Image();
-          img.onload = () => {
-            let w = img.width;
-            let h = img.height;
-            if (w > maxWidth) {
-              h = Math.round((h * maxWidth) / w);
-              w = maxWidth;
-            }
-            const canvas = document.createElement('canvas');
-            canvas.width = w;
-            canvas.height = h;
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(img, 0, 0, w, h);
-            resolve(canvas.toDataURL('image/jpeg', quality));
-          };
-          img.onerror = () => resolve(e.target.result);
-          img.src = e.target.result;
-        };
-        reader.readAsDataURL(file);
-      });
-    }
-
-    window.handleProductMainImgUpload = async function(inputEl) {
-      const file = inputEl.files[0];
-      if (!file) return;
-      const idx = parseInt(getVal('edit-prod-index'), 10);
-      const items = getProductItemsArray();
-      if (!items[idx]) return;
-      const dataUrl = await compressImageFile(file, 1200, 0.85);
-      items[idx].image = dataUrl;
-      const thumb = document.getElementById('edit-prod-thumb');
-      if (thumb) thumb.src = dataUrl;
-      renderAdminProductMiniList();
-      showToast('产品主图已更新！请点击保存同步');
-    };
-
-    window.handleProductDetailImgsUpload = async function(inputEl) {
-      const files = Array.from(inputEl.files || []);
-      if (!files.length) return;
-      const idx = parseInt(getVal('edit-prod-index'), 10);
-      const items = getProductItemsArray();
-      if (!items[idx]) return;
-      if (!Array.isArray(items[idx].detailImages)) items[idx].detailImages = [];
-
-      for (const file of files) {
-        const dataUrl = await compressImageFile(file, 1100, 0.8);
-        items[idx].detailImages.push(dataUrl);
-      }
-      inputEl.value = '';
-      renderEditorDetailImages(items[idx]);
-      renderAdminProductMiniList();
-      showToast(`已添加 ${files.length} 张商品详情页图片！请点击保存同步`);
-    };
-
-    window.moveProductDetailImg = function(imgIdx, dir) {
-      const idx = parseInt(getVal('edit-prod-index'), 10);
-      const items = getProductItemsArray();
-      const imgs = items[idx]?.detailImages;
-      if (!Array.isArray(imgs)) return;
-      const target = imgIdx + dir;
-      if (target < 0 || target >= imgs.length) return;
-      [imgs[imgIdx], imgs[target]] = [imgs[target], imgs[imgIdx]];
-      renderEditorDetailImages(items[idx]);
-    };
-
-    window.removeProductDetailImg = function(imgIdx) {
-      const idx = parseInt(getVal('edit-prod-index'), 10);
-      const items = getProductItemsArray();
-      const imgs = items[idx]?.detailImages;
-      if (!Array.isArray(imgs)) return;
-      imgs.splice(imgIdx, 1);
-      renderEditorDetailImages(items[idx]);
-      renderAdminProductMiniList();
-    };
-
-    window.clearCurrentProductDetailImgs = function() {
-      const idx = parseInt(getVal('edit-prod-index'), 10);
-      const items = getProductItemsArray();
-      if (!items[idx]) return;
-      if (confirm('确定清空当前产品的全部商品详情页图片吗？')) {
-        items[idx].detailImages = [];
-        renderEditorDetailImages(items[idx]);
-        renderAdminProductMiniList();
-      }
-    };
-
-    window.restoreCurrentProductDefaultDetailImgs = function() {
-      const idx = parseInt(getVal('edit-prod-index'), 10);
-      const items = getProductItemsArray();
-      if (!items[idx]) return;
-      const defaultItems = (window.LUCK_SITE_DEFAULT_DATA && window.LUCK_SITE_DEFAULT_DATA.content && window.LUCK_SITE_DEFAULT_DATA.content.products && window.LUCK_SITE_DEFAULT_DATA.content.products.items) || [];
-      const found = defaultItems.find(d => d.id === items[idx].id);
-      items[idx].detailImages = found && Array.isArray(found.detailImages) ? [...found.detailImages] : [items[idx].image];
-      renderEditorDetailImages(items[idx]);
-      renderAdminProductMiniList();
-      showToast('已恢复官方默认详情页图片！');
-    };
-
-    function syncCurrentEditedProductToMemory(showMsg) {
-      const idx = parseInt(getVal('edit-prod-index'), 10);
-      const items = getProductItemsArray();
-      if (!items[idx]) return;
-      const item = items[idx];
-      item.title = getVal('edit-prod-title') || item.title;
-      item.series = getVal('edit-prod-series') || 'phone';
-      item.seriesLabel = item.series === 'phone' ? '旗舰小机系列 · 01' : (item.series === 'tablet' ? '随身平板系列 · 02' : '精工配件系列 · 03');
-      item.subtitle = getVal('edit-prod-subtitle');
-      item.badge = getVal('edit-prod-badge');
-      item.badgeType = getVal('edit-prod-badge-type') || 'live';
-      item.price = getVal('edit-prod-price');
-      item.priceSub = getVal('edit-prod-price-sub');
-      item.desc = getVal('edit-prod-desc');
-      item.buyUrl = getVal('edit-prod-buy-url');
-      item.buyText = getVal('edit-prod-buy-text') || '立即购买';
-      item.detailDesc = getVal('edit-prod-detail-desc');
-      if (showMsg) {
-        renderAdminProductMiniList();
-      }
-    }
-
-    window.saveCurrentEditedProduct = function() {
-      syncCurrentEditedProductToMemory(true);
-      const idx = parseInt(getVal('edit-prod-index'), 10);
-      const items = getProductItemsArray();
-      if (items[idx] && items[idx].id) {
-        localStorage.removeItem('luck_custom_detail_images_' + items[idx].id);
-      }
-      try {
-        saveAllChanges();
-      } catch (err) {
-        alert('保存失败：图片总大小可能超出浏览器本地存储上限（约5MB），建议适当精简或压缩图片数量。');
-      }
-    };
-
-    window.createNewProductItem = function() {
-      const items = getProductItemsArray();
-      const newId = 'product-' + Date.now().toString().slice(-5);
-      const newItem = {
-        id: newId,
-        series: 'phone',
-        seriesLabel: '旗舰小机系列 · 01',
-        badge: '新品上架',
-        badgeType: 'live',
-        title: '新产品 ' + (items.length + 1),
-        subtitle: '拥有它，就拥有幸运。',
-        desc: '请填写新产品的核心卖点与介绍描述。',
-        image: 'images/showcase_lucky_mini.jpg',
-        specs: [
-          { label: '产品系列', val: 'LUCK WHEAT 智能硬件' },
-          { label: '售后保障', val: '官方正品联保' }
-        ],
-        price: '¥999',
-        priceSub: '官方直营',
-        detailUrl: 'contact.html?type=consult',
-        buyUrl: 'channels.html',
-        buyText: '立即购买',
-        detailImages: [],
-        detailDesc: ''
-      };
-      items.push(newItem);
-      loadProductIntoEditor(items.length - 1, true);
-      showToast('已创建新产品草稿，请完善信息后保存！');
-    };
-
-    window.deleteProductItem = function(idx) {
-      const items = getProductItemsArray();
-      if (!items[idx]) return;
-      if (items.length <= 1) {
-        alert('至少需要保留 1 款产品！');
-        return;
-      }
-      if (confirm(`确定要从产品中心删除「${items[idx].title}」吗？`)) {
-        items.splice(idx, 1);
-        loadProductIntoEditor(0, false);
-        saveAllChanges();
-      }
-    };
-
-    // =========================================================================
-    // 品牌动态 (微信公众号推文一键智能抓取与维护)
-    // =========================================================================
-    function getBrandNewsArray() {
-      if (!localSiteData.content) localSiteData.content = {};
-      if (!localSiteData.content.index) localSiteData.content.index = {};
-      if (!Array.isArray(localSiteData.content.index.brand_news)) {
-        const defaultNews = (window.LUCK_SITE_DEFAULT_DATA && window.LUCK_SITE_DEFAULT_DATA.content && window.LUCK_SITE_DEFAULT_DATA.content.index && window.LUCK_SITE_DEFAULT_DATA.content.index.brand_news) || [];
-        localSiteData.content.index.brand_news = JSON.parse(JSON.stringify(defaultNews));
-      }
-      return localSiteData.content.index.brand_news;
-    }
-
-    window.renderAdminBrandNewsList = function() {
-      const container = document.getElementById('admin-news-list-container');
-      const countEl = document.getElementById('news-count');
-      if (!container) return;
-
-      const list = getBrandNewsArray();
-      if (countEl) countEl.textContent = list.length;
-
-      if (list.length === 0) {
-        container.innerHTML = `
-          <div style="padding: 24px; text-align: center; color: var(--admin-text-muted); background: #ffffff; border: 1px dashed var(--admin-border); border-radius: var(--radius-md);">
-            暂无动态。请在上方输入微信公众号推文链接，点击「⚡ 一键智能解析」添加！
-          </div>
-        `;
-        return;
-      }
-
-      container.innerHTML = list.map((item, idx) => `
-        <div style="background: #ffffff; border: 1px solid var(--admin-border); border-radius: var(--radius-md); padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; gap: 16px;">
-          <div style="flex: 1; min-width: 0;">
-            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
-              <span style="font-family: monospace; font-size: 12px; background: #e8f3ff; color: var(--apple-blue); padding: 2px 6px; border-radius: 4px; font-weight: 600;">${item.date || '未设日期'}</span>
-              <strong style="font-size: 14px; color: #1d1d1f; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${item.title || '无标题'}</strong>
-            </div>
-            <p style="font-size: 12px; color: #6e6e73; margin: 0 0 6px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${item.desc || '无描述'}</p>
-            <div style="font-size: 11px; color: #86868b; display: flex; align-items: center; gap: 6px;">
-              <span style="color: #07c160; font-weight: 600;">微信链接:</span>
-              <a href="${item.link || '#'}" target="_blank" rel="noopener noreferrer" style="color: var(--apple-blue); text-decoration: none; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 450px;">${item.link || '未设置链接'} ↗</a>
-            </div>
-          </div>
-          <div style="display: flex; align-items: center; gap: 6px; flex-shrink: 0;">
-            <button type="button" class="btn-pill" onclick="editBrandNewsItem(${idx})" title="编辑此条">✏️ 编辑</button>
-            <button type="button" class="btn-pill" onclick="moveBrandNewsItem(${idx}, -1)" ${idx === 0 ? 'disabled style="opacity:0.4; cursor:not-allowed;"' : ''} title="上移">⬆️</button>
-            <button type="button" class="btn-pill" onclick="moveBrandNewsItem(${idx}, 1)" ${idx === list.length - 1 ? 'disabled style="opacity:0.4; cursor:not-allowed;"' : ''} title="下移">⬇️</button>
-            <button type="button" class="btn-pill" style="color: #ff3b30; border-color: rgba(255,59,48,0.3);" onclick="deleteBrandNewsItem(${idx})" title="删除">🗑️</button>
-          </div>
-        </div>
-      `).join('');
-    };
-
-    window.autoFetchArticleMetadata = async function() {
-      const urlInput = document.getElementById('news-input-url');
-      const url = urlInput ? urlInput.value.trim() : '';
-      const spinner = document.getElementById('fetch-spinner');
-      const statusMsg = document.getElementById('fetch-status-msg');
-
-      if (!url) {
-        showToast('请先输入或粘贴微信公众号推文链接 URL！');
-        if (urlInput) urlInput.focus();
-        return;
-      }
-
-      if (!url.startsWith('http://') && !url.startsWith('https://')) {
-        showToast('链接格式不正确，需以 http:// 或 https:// 开头');
-        return;
-      }
-
-      if (spinner) spinner.style.display = 'inline';
-      if (statusMsg) {
-        statusMsg.style.display = 'block';
-        statusMsg.style.background = '#e8f3ff';
-        statusMsg.style.color = 'var(--apple-blue)';
-        statusMsg.textContent = '⏳ 正在智能请求与解析微信文章元数据，请稍候...';
-      }
-
-      try {
-        let data = null;
-        // 1. 优先请求本地 Python 抓取 API
-        try {
-          const resp = await fetch(`/api/fetch-article?url=${encodeURIComponent(url)}`, { signal: AbortSignal.timeout(8000) });
-          if (resp.ok) {
-            data = await resp.json();
-          }
-        } catch (localErr) {
-          console.warn('[CMS] 本地解析服务异常，尝试备用解析', localErr);
-        }
-
-        // 2. 备用通用代理抓取
-        if (!data || !data.success) {
-          try {
-            const proxyResp = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(url)}`, { signal: AbortSignal.timeout(8000) });
-            if (proxyResp.ok) {
-              const proxyData = await proxyResp.json();
-              const htmlStr = proxyData.contents;
-              const parser = new DOMParser();
-              const doc = parser.parseFromString(htmlStr, 'text/html');
-              const title = doc.querySelector('meta[property="og:title"]')?.content || doc.querySelector('#activity-name')?.textContent || doc.title || '';
-              const desc = doc.querySelector('meta[property="og:description"]')?.content || '';
-              const dateMatch = htmlStr.match(/publish_time\s*=\s*['"](\d{4}-\d{2})/);
-              const date = dateMatch ? dateMatch[1] : (new Date().toISOString().slice(0, 7));
-              if (title) {
-                data = { success: true, title: title.trim(), desc: desc.trim(), date: date, url: url };
-              }
-            }
-          } catch (proxyErr) {
-            console.warn('[CMS] 备用代理抓取失败', proxyErr);
-          }
-        }
-
-        if (data && data.success) {
-          if (data.title) document.getElementById('news-input-title').value = data.title;
-          if (data.desc) document.getElementById('news-input-desc').value = data.desc;
-          if (data.date) document.getElementById('news-input-date').value = data.date;
-
-          if (statusMsg) {
-            statusMsg.style.background = '#e8f8f0';
-            statusMsg.style.color = '#00875a';
-            statusMsg.textContent = '✅ 解析成功！已自动填充标题、摘要及发布日期。可检查微调后点击「添加到列表」。';
-          }
-          showToast('微信推文解析成功！');
-        } else {
-          throw new Error((data && data.error) || '未提取到文章标题');
-        }
-      } catch (err) {
-        console.error('抓取文章异常', err);
-        if (statusMsg) {
-          statusMsg.style.background = '#fff8e6';
-          statusMsg.style.color = '#b76e00';
-          statusMsg.textContent = '⚠️ 自动解析受限（微信防爬或网络超时）。您可直接在下方手动输入标题和摘要，前台链接依然有效！';
-        }
-        showToast('未能自动获取，可直接手动填入标题与内容');
-      } finally {
-        if (spinner) spinner.style.display = 'none';
-      }
-    };
-
-    window.submitBrandNewsItem = function() {
-      const url = document.getElementById('news-input-url').value.trim();
-      const title = document.getElementById('news-input-title').value.trim();
-      const desc = document.getElementById('news-input-desc').value.trim();
-      let date = document.getElementById('news-input-date').value.trim();
-      const editIdx = parseInt(document.getElementById('news-edit-index').value, 10);
-
-      if (!title) {
-        showToast('请填写动态标题！');
-        document.getElementById('news-input-title').focus();
-        return;
-      }
-
-      if (!date) {
-        date = new Date().toISOString().slice(0, 7);
-      }
-
-      const list = getBrandNewsArray();
-      const newItem = {
-        date: date,
-        title: title,
-        desc: desc || '',
-        link: url || 'https://mp.weixin.qq.com'
-      };
-
-      if (editIdx >= 0 && editIdx < list.length) {
-        list[editIdx] = newItem;
-        showToast('品牌动态已更新！');
-      } else {
-        list.unshift(newItem);
-        showToast('已新增品牌动态！');
-      }
-
-      clearNewsInputForm();
-      renderAdminBrandNewsList();
-      saveAllChanges();
-    };
-
-    window.editBrandNewsItem = function(idx) {
-      const list = getBrandNewsArray();
-      if (!list[idx]) return;
-      const item = list[idx];
-
-      document.getElementById('news-input-url').value = item.link || '';
-      document.getElementById('news-input-title').value = item.title || '';
-      document.getElementById('news-input-desc').value = item.desc || '';
-      document.getElementById('news-input-date').value = item.date || '';
-      document.getElementById('news-edit-index').value = idx;
-
-      document.getElementById('news-form-title').textContent = '✏️ 正在编辑动态 #' + (idx + 1);
-      document.getElementById('btn-add-news').textContent = '💾 保存对此条的修改';
-      document.getElementById('cms-news-panel').scrollIntoView({ behavior: 'smooth' });
-    };
-
-    window.clearNewsInputForm = function() {
-      document.getElementById('news-input-url').value = '';
-      document.getElementById('news-input-title').value = '';
-      document.getElementById('news-input-desc').value = '';
-      document.getElementById('news-input-date').value = '';
-      document.getElementById('news-edit-index').value = -1;
-
-      document.getElementById('news-form-title').textContent = '⚡ 智能添加推文动态';
-      document.getElementById('btn-add-news').textContent = '➕ 添加到动态列表';
-      const statusMsg = document.getElementById('fetch-status-msg');
-      if (statusMsg) statusMsg.style.display = 'none';
-    };
-
-    window.deleteBrandNewsItem = function(idx) {
-      const list = getBrandNewsArray();
-      if (!list[idx]) return;
-      if (confirm(`确定要删除动态「${list[idx].title}」吗？`)) {
-        list.splice(idx, 1);
-        renderAdminBrandNewsList();
-        saveAllChanges();
-        showToast('动态已移除');
-      }
-    };
-
-    window.moveBrandNewsItem = function(idx, direction) {
-      const list = getBrandNewsArray();
-      const targetIdx = idx + direction;
-      if (targetIdx < 0 || targetIdx >= list.length) return;
-      const temp = list[idx];
-      list[idx] = list[targetIdx];
-      list[targetIdx] = temp;
-      renderAdminBrandNewsList();
-      saveAllChanges();
-    };
-
-    window.handleCmsImageUpload = function(inputEl, pageKey, imgKey, thumbId, globalImgPath) {
-      const file = inputEl.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const dataUrl = e.target.result;
-        const thumb = document.getElementById(thumbId);
-        if (thumb) thumb.src = dataUrl;
-
-        if (!localSiteData.content) localSiteData.content = {};
-        if (!localSiteData.content[pageKey]) localSiteData.content[pageKey] = {};
-        localSiteData.content[pageKey][imgKey] = dataUrl;
-
-        // 若有关联全局图片路径，同步注册到 images
-        if (globalImgPath) {
-          if (!localSiteData.images) localSiteData.images = {};
-          localSiteData.images[globalImgPath] = dataUrl;
-        }
-
-        showToast('图片上传成功！请点击右上角保存生效');
-      };
-      reader.readAsDataURL(file);
-    };
-
-    // 全站图片素材总库渲染
-    const MEDIA_ITEMS = [
-      { key: "images/hero_banner_lucky_mini.jpg", title: "首页首屏 Hero 轮播大图 1", desc: "Lucky Mini 3.7 英寸旗舰小手机暗黑微光海报" },
-      { key: "images/hero_banner_lucky_tab.jpg", title: "首页首屏 Hero 轮播大图 2", desc: "LUCKY Tab 8.68 英寸全铝一体平板海报" },
-      { key: "images/hero_banner_accessories.jpg", title: "首页首屏 Hero 轮播大图 3", desc: "先锋街头机能挂绳与配件生态海报" },
-      { key: "images/banner_subpage_products.jpg", title: "产品中心 (products.html) 顶部全景 Banner", desc: "产品中心页面顶部硬件矩阵生态横幅图" },
-      { key: "images/banner_subpage_lucky_mini.jpg", title: "Lucky Mini (lucky-mini.html) 顶部全景 Banner", desc: "Lucky Mini 旗舰小手机详情页顶部专属横幅图" },
-      { key: "images/banner_subpage_support.jpg", title: "服务支持 (support.html) 顶部全景 Banner", desc: "服务与售后中心顶部精密硬件工坊横幅图" },
-      { key: "images/banner_subpage_channels.jpg", title: "购买渠道 (channels.html) 顶部全景 Banner", desc: "购买渠道中心顶部旗舰零售展厅横幅图" },
-      { key: "images/banner_subpage_partners.jpg", title: "合作代理 (partners.html) 顶部全景 Banner", desc: "代理招商与生态合作中心顶部商务大厅横幅图" },
-      { key: "images/banner_subpage_about.jpg", title: "关于我们 (about.html) 顶部全景 Banner", desc: "品牌故事与研发工业设计工作室横幅图" },
-      { key: "images/banner_subpage_contact.jpg", title: "联系我们 (contact.html) 顶部全景 Banner", desc: "联系团队与总部接待大厅横幅图" },
-      { key: "images/showcase_lucky_mini.jpg", title: "Lucky Mini 旗舰展台实拍大图", desc: "产品中心双列大展台、详情弹窗与详情页主图" },
-      { key: "images/showcase_lucky_tab.jpg", title: "LUCKY Tab 便携平板展台实拍大图", desc: "产品中心平板系列展示主图" },
-      { key: "images/showcase_accessories.jpg", title: "Lucky 机能工装挂绳展台实拍大图", desc: "产品中心配件系列展示主图" },
-      { key: "images/business-license.png", title: "企业主体资质 · 营业执照扫描件", desc: "营业执照正本官方扫描件" },
-      { key: "images/trademark-cn.jpg", title: "中国国家知识产权局商标注册证", desc: "中华人民共和国商标证书" },
-      { key: "images/trademark-uspto.jpg", title: "美国 USPTO 联邦商标注册证书", desc: "美国专利商标局证书" },
-      { key: "images/trademark-transfer.png", title: "国家知识产权局商标转让核准证明", desc: "商标转让核准公告证明文件" }
-    ];
-
-    function renderMediaLibrary() {
-      const grid = document.getElementById('media-library-grid');
-      if (!grid) return;
-      if (!localSiteData.images) localSiteData.images = {};
-
-      grid.innerHTML = MEDIA_ITEMS.map((item, idx) => {
-        const currentSrc = localSiteData.images[item.key] || item.key;
-        return `
-          <div class="media-card">
-            <div class="media-preview-box">
-              <img id="media-thumb-${idx}" src="${currentSrc}" alt="${item.title}">
-            </div>
-            <div>
-              <div class="media-card-title">${item.title}</div>
-              <div class="media-card-desc">${item.desc}</div>
-              <code style="font-size:11px; color:#86868b; display:block; margin-top:4px;">${item.key}</code>
-            </div>
-            <div class="media-card-actions">
-              <label for="media-file-${idx}" class="btn-media-upload">📷 上传替换</label>
-              <input type="file" id="media-file-${idx}" accept="image/*" style="display:none;" onchange="handleMediaUpload(this, '${item.key}', 'media-thumb-${idx}')">
-              <button type="button" class="btn-media-reset" onclick="restoreMediaDefault('${item.key}', 'media-thumb-${idx}')" title="恢复默认">↺ 恢复</button>
-            </div>
-          </div>
-        `;
-      }).join('');
-    }
-
-    window.handleMediaUpload = function(inputEl, imageKey, thumbId) {
-      const file = inputEl.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const dataUrl = e.target.result;
-        document.getElementById(thumbId).src = dataUrl;
-        if (!localSiteData.images) localSiteData.images = {};
-        localSiteData.images[imageKey] = dataUrl;
-        showToast('图片替换成功！请点击右上角保存生效');
-      };
-      reader.readAsDataURL(file);
-    };
-
-    window.restoreMediaDefault = function(imageKey, thumbId) {
-      if (!localSiteData.images) localSiteData.images = {};
-      delete localSiteData.images[imageKey];
-      document.getElementById(thumbId).src = imageKey;
-      showToast('已恢复为官方默认图片！');
-    };
-
-    // 全局文字快速查找与批量替换
-    function renderQuickReplacements() {
-      const listEl = document.getElementById('active-replace-rules-list');
-      if (!listEl) return;
-      const reps = localSiteData.textReplacements || {};
-      const keys = Object.keys(reps);
-
-      if (keys.length === 0) {
-        listEl.innerHTML = '<div style="font-size:13px; color:var(--admin-text-muted); padding:16px; text-align:center; background:#fff; border-radius:8px;">暂无自定义文本替换规则。在上方输入查找词与替换词即可添加。</div>';
-        return;
-      }
-
-      listEl.innerHTML = keys.map(k => `
-        <div class="replace-rule-row">
-          <div>
-            <span style="color:#d93025; text-decoration:line-through; font-weight:500;">${escapeHtml(k)}</span>
-            <span style="margin: 0 8px; color:var(--admin-text-muted);">➔</span>
-            <span style="color:#188038; font-weight:600;">${escapeHtml(reps[k])}</span>
-          </div>
-          <button type="button" class="btn-pill" style="padding:4px 10px; font-size:12px; color:#d93025;" onclick="removeQuickReplacement('${escapeJs(k)}')">删除</button>
-        </div>
-      `).join('');
-    }
-
-    window.addQuickReplacement = function() {
-      const searchVal = document.getElementById('replace-search-input').value.trim();
-      const targetVal = document.getElementById('replace-target-input').value.trim();
-      if (!searchVal) {
-        alert('请输入要查找的原词');
-        return;
-      }
-      if (!localSiteData.textReplacements) localSiteData.textReplacements = {};
-      localSiteData.textReplacements[searchVal] = targetVal;
-      document.getElementById('replace-search-input').value = '';
-      document.getElementById('replace-target-input').value = '';
-      renderQuickReplacements();
-      showToast('替换规则已添加！请点击右上角保存生效');
-    };
-
-    window.removeQuickReplacement = function(key) {
-      if (localSiteData.textReplacements && localSiteData.textReplacements[key] !== undefined) {
-        delete localSiteData.textReplacements[key];
-        renderQuickReplacements();
-        showToast('替换规则已移除！');
-      }
-    };
-
-    function escapeHtml(str) {
-      return (str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-    }
-    function escapeJs(str) {
-      return (str || '').replace(/'/g, "\\'");
-    }
-
-
-    // 6. SEO 优化中心逻辑
-    let currentSeoPage = 'index';
-    function initSeoForm() {
-      const selector = document.getElementById('seo-page-selector');
-      selector.addEventListener('change', () => {
-        syncSeoInputsToData();
-        currentSeoPage = selector.value;
-        loadSeoForPage(currentSeoPage);
-      });
-      loadSeoForPage(currentSeoPage);
-    }
-
-    function loadSeoForPage(pageKey) {
-      const seo = (localSiteData.seo && localSiteData.seo.pages && localSiteData.seo.pages[pageKey]) || {};
-      safeSetVal('seo-input-title', seo.title || '');
-      safeSetVal('seo-input-desc', seo.description || '');
-      safeSetVal('seo-input-keywords', seo.keywords || '');
-
-      document.getElementById('serp-preview-slug').textContent = pageKey === 'index' ? '' : `> ${pageKey}`;
-      if (seo.ogImage) {
-        document.getElementById('og-preview-img').src = seo.ogImage;
-      }
-      updateSerpPreview();
-    }
-
-    function syncSeoInputsToData() {
-      if (!localSiteData.seo) localSiteData.seo = {};
-      if (!localSiteData.seo.pages) localSiteData.seo.pages = {};
-      if (!localSiteData.seo.pages[currentSeoPage]) localSiteData.seo.pages[currentSeoPage] = {};
-
-      const p = localSiteData.seo.pages[currentSeoPage];
-      p.title = getVal('seo-input-title');
-      p.description = getVal('seo-input-desc');
-      p.keywords = getVal('seo-input-keywords');
-      p.ogTitle = p.title;
-      p.ogDescription = p.description;
-    }
-
-    window.updateSerpPreview = function() {
-      const title = getVal('seo-input-title') || 'LUCK WHEAT 幸运无限官方网站';
-      const desc = getVal('seo-input-desc') || '暂无网页描述内容...';
-
-      document.getElementById('serp-preview-title').textContent = title;
-      document.getElementById('serp-preview-desc').textContent = desc;
-      document.getElementById('og-preview-title').textContent = title;
-      document.getElementById('og-preview-desc').textContent = desc;
-
-      // 字符健康度
-      const tLen = title.length;
-      const countEl = document.getElementById('seo-title-count');
-      if (tLen >= 25 && tLen <= 65) {
-        countEl.innerHTML = `<span style="color:var(--admin-green);">长度健康 (${tLen} 字符)</span>`;
-      } else if (tLen > 65) {
-        countEl.innerHTML = `<span style="color:var(--admin-orange);">略长，搜索结果易被截断 (${tLen} 字符)</span>`;
-      } else {
-        countEl.innerHTML = `<span style="color:var(--admin-blue);">偏短 (${tLen} 字符)</span>`;
-      }
-    };
-
-    window.handleOgImageUpload = function(inputEl) {
-      const file = inputEl.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const dataUrl = e.target.result;
-        document.getElementById('og-preview-img').src = dataUrl;
-        if (!localSiteData.seo.pages[currentSeoPage]) localSiteData.seo.pages[currentSeoPage] = {};
-        localSiteData.seo.pages[currentSeoPage].ogImage = dataUrl;
-        showToast('社交大图已更新！');
-      };
-      reader.readAsDataURL(file);
-    };
-
-    // 7. 一键生成 Sitemap.xml
-    window.generateAndDownloadSitemap = function() {
-      const baseUrl = (localSiteData.seo && localSiteData.seo.global && localSiteData.seo.global.canonicalBase) || 'https://lucky-infinite.com';
-      const pages = ['index.html', 'products.html', 'lucky-mini.html', 'support.html', 'channels.html', 'partners.html', 'about.html', 'contact.html'];
-      const now = new Date().toISOString().split('T')[0];
-
-      let xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
-      pages.forEach(p => {
-        xml += `  <url>\n    <loc>${baseUrl}/${p}</loc>\n    <lastmod>${now}</lastmod>\n    <changefreq>daily</changefreq>\n    <priority>${p === 'index.html' || p === 'lucky-mini.html' ? '1.0' : '0.8'}</priority>\n  </url>\n`;
-      });
-      xml += `</urlset>`;
-
-      downloadFile('sitemap.xml', xml, 'application/xml');
-      showToast('Sitemap.xml 生成成功，已自动开始下载！');
-    };
-
-    // 8. 线索与合作表格渲染及导出 CSV
-    function getLeadsData() {
-      const saved = localStorage.getItem('LUCK_SITE_LEADS_DATA');
-      if (saved) {
-        try { return JSON.parse(saved); } catch(e){}
-      }
-      return (localSiteData.leads || []);
-    }
-
-    function renderLeadsTable() {
-      const leads = getLeadsData();
-      const tbody = document.querySelector('#all-leads-table tbody');
-      if (!tbody) return;
-      tbody.innerHTML = leads.map(l => `
-        <tr>
-          <td><code style="font-size:12px;">${l.id}</code></td>
-          <td><strong>${l.name}</strong></td>
-          <td>${l.phone}</td>
-          <td>${l.email}</td>
-          <td>${l.product}</td>
-          <td>${l.date}</td>
-          <td><span class="status-badge ${l.status === '已确认' ? 'status-confirmed' : 'status-pending'}">${l.status}</span></td>
-          <td style="font-size:12px; color:var(--admin-text-muted);">${l.notes}</td>
-        </tr>
-      `).join('');
-    }
-
-    window.exportLeadsToCSV = function() {
-      const leads = getLeadsData();
-      let csv = '\uFEFF线索单号,客户姓名,联系电话,电子邮箱,意向硬件,提交时间,跟进状态,备注诉求\n';
-      leads.forEach(l => {
-        csv += `"${l.id}","${l.name}","${l.phone}","${l.email}","${l.product}","${l.date}","${l.status}","${l.notes.replace(/"/g, '""')}"\n`;
-      });
-      downloadFile('Lucky_Mini_预约线索表_' + new Date().toISOString().slice(0,10) + '.csv', csv, 'text/csv;charset=utf-8');
-    };
-
-    function renderPartnersTable() {
-      const list = localSiteData.partnerships || [];
-      const tbody = document.querySelector('#partnerships-table tbody');
-      if (!tbody) return;
-      tbody.innerHTML = list.map(p => `
-        <tr>
-          <td><code style="font-size:12px;">${p.id}</code></td>
-          <td><strong>${p.company}</strong></td>
-          <td>${p.contact}</td>
-          <td>${p.phone}</td>
-          <td>${p.channelType}</td>
-          <td>${p.region}</td>
-          <td>${p.expectedVolume}</td>
-          <td><span class="status-badge status-confirmed">${p.status}</span></td>
-        </tr>
-      `).join('');
-    }
-
-    window.exportPartnershipsToCSV = function() {
-      const list = localSiteData.partnerships || [];
-      let csv = '\uFEFF单号,企业全称,联系人,电话,渠道类型,市场区域,预期规模,状态\n';
-      list.forEach(p => {
-        csv += `"${p.id}","${p.company}","${p.contact}","${p.phone}","${p.channelType}","${p.region}","${p.expectedVolume}","${p.status}"\n`;
-      });
-      downloadFile('Lucky_Infinite_商业代理申请表.csv', csv, 'text/csv;charset=utf-8');
-    };
-
-    // 9. 全站数据备份与导入恢复
-    window.exportFullSiteBackup = function() {
-      saveAllChanges();
-      const json = JSON.stringify(localSiteData, null, 2);
-      downloadFile('luck_site_full_backup_' + new Date().toISOString().slice(0,10) + '.json', json, 'application/json');
-      showToast('全站数据备份包导出成功！');
-    };
-
-    window.importFullSiteBackup = function(inputEl) {
-      const file = inputEl.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        try {
-          const parsed = JSON.parse(e.target.result);
-          localSiteData = parsed;
-          localStorage.setItem('LUCK_SITE_CONTENT_DATA', JSON.stringify(parsed));
-          showToast('数据恢复成功，页面将自动刷新！');
-          setTimeout(() => location.reload(), 1200);
-        } catch(err) {
-          alert('备份文件格式不正确！');
-        }
-      };
-      reader.readAsText(file);
-    };
-
-    window.resetToFactoryDefault = function() {
-      if (confirm('确定要恢复出厂初始设置吗？所有自定义修改将还原为出厂状态！')) {
-        localStorage.removeItem('LUCK_SITE_CONTENT_DATA');
-        localStorage.removeItem('LUCK_SITE_LEADS_DATA');
-        showToast('已重置为出厂初始数据！');
-        setTimeout(() => location.reload(), 1000);
-      }
-    };
-
-    // 辅助通用函数
-    function safeSetVal(id, val) {
-      const el = document.getElementById(id);
-      if (el && val !== undefined) el.value = val;
-    }
-    function getVal(id) {
-      const el = document.getElementById(id);
-      return el ? el.value.trim() : '';
-    }
-    function showToast(msg) {
-      const t = document.getElementById('toast-msg');
-      t.textContent = msg;
-      t.classList.add('show');
-      setTimeout(() => t.classList.remove('show'), 2600);
-    }
-    function downloadFile(filename, text, type) {
-      const blob = new Blob([text], { type: type });
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = filename;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-    }
-  </script>
+  <!-- 引入全站默认数据字典与服务器快照 -->
+  <script src="data/site_default_data.js?v=20261125"></script>
+  <script src="data/site_live_data.js?v=20261125"></script>
+  <script src="js/admin-schema.js?v=20261125"></script>
+  <script src="js/admin-core.js?v=20261125"></script>
+  <script src="js/admin-products.js?v=20261125"></script>
+  <script src="js/admin-media.js?v=20261125"></script>
+  <script src="js/admin-seo.js?v=20261125"></script>
+  <script src="js/admin-leads.js?v=20261125"></script>
 </body>
 </html>

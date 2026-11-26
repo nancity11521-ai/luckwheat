@@ -1,3 +1,9 @@
 .DS_Store
 Thumbs.db
 *.log
+data/admin_config.json
+data/live_sessions.json
+data/live_leads.json
+data/live_partnerships.json
+data/live_site_data.json
+images/uploads/

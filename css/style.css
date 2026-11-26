@@ -471,8 +471,7 @@ a {
 }
 
 /* ==========================================================================
-   Apple 风格 Hero 首屏大型全幅可切换轮播 Banner (Carousel)
-   整张大图作为一个整体进行左右切换，文字置于背景大图之上 (Pure Light Studio)
+   Apple 官网经典纯白影棚风格 Hero 轮播 Banner (保留圆角卡片容器，纯白底)
    ========================================================================== */
 .hero-carousel-section {
   padding: 20px 0 36px;
@@ -494,11 +493,11 @@ a {
   width: 100%;
   height: 700px;
   min-height: 620px;
-  border-radius: var(--radius-lg);
+  border-radius: 28px;
   overflow: hidden;
-  background: #fbfbfd;
-  box-shadow: 0 6px 28px rgba(0, 0, 0, 0.05);
-  border: 1px solid var(--border-light);
+  background: #ffffff;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.06), 0 2px 10px rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(0, 0, 0, 0.06);
 }
 
 .hero-slide {
@@ -509,7 +508,7 @@ a {
   opacity: 0;
   visibility: hidden;
   transform: scale(1.015);
-  transition: opacity 0.65s cubic-bezier(0.25, 0.1, 0.25, 1), transform 0.65s cubic-bezier(0.25, 0.1, 0.25, 1);
+  transition: opacity 0.65s cubic-bezier(0.25, 0.1, 0.25, 1), transform 0.75s cubic-bezier(0.25, 0.1, 0.25, 1);
   pointer-events: none;
   z-index: 1;
 }
@@ -522,11 +521,12 @@ a {
   z-index: 2;
 }
 
-/* 整张大图卡片 (整块都是可随时自由更换的大背景图) */
+/* 纯白影棚整张大图卡片，无暗色遮罩 */
 .hero-banner-card {
   position: relative;
   width: 100%;
   height: 100%;
+  background-color: #ffffff;
   background-size: cover;
   background-position: center bottom;
   background-repeat: no-repeat;
@@ -534,10 +534,10 @@ a {
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  padding-top: 32px;
+  padding-top: 48px;
 }
 
-/* 浮动在整张大背景图上方的文字层 */
+/* 浮动在纯白背景图上方的文字层 */
 .hero-banner-overlay {
   position: relative;
   z-index: 5;
@@ -547,6 +547,30 @@ a {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.hero-banner-overlay .eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--lucky-action);
+  background: rgba(230, 106, 0, 0.08);
+  padding: 5px 14px;
+  border-radius: var(--radius-pill);
+  margin-bottom: 12px;
+}
+
+.hero-banner-overlay .eyebrow-blue {
+  color: var(--apple-blue);
+  background: rgba(0, 113, 227, 0.08);
+}
+
+.hero-banner-overlay .eyebrow-green {
+  color: #1f8b4c;
+  background: rgba(52, 199, 89, 0.1);
 }
 
 .eyebrow {
@@ -583,18 +607,18 @@ a {
   background: #34c759;
 }
 
-/* Apple Intelligence 官方标志性炫彩渐变大标题 */
-.hero-title {
-  font-size: clamp(2.4rem, 4.4vw, 3.6rem);
+/* Apple 官网标志性彩虹渐变主标题（全局强制锁定，不受换图/换文案影响） */
+.hero-banner-overlay .hero-title {
+  font-size: clamp(2.6rem, 4.6vw, 4rem);
   font-weight: 700;
-  line-height: 1.12;
-  letter-spacing: -0.03em;
-  margin: 4px 0 6px;
-  background: linear-gradient(90deg, #1b6df0 0%, #7155e8 26%, #c83aa6 52%, #eb3958 76%, #ef6126 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: transparent;
+  line-height: 1.1;
+  letter-spacing: -0.035em;
+  margin: 0 0 10px;
+  background: linear-gradient(90deg, #1b6df0 0%, #385bf5 15%, #6a4bf7 30%, #a43cf8 48%, #c63dae 65%, #dc4273 80%, #ef6126 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
   display: inline-block;
 }
 
@@ -607,11 +631,11 @@ a {
   display: inline-block;
 }
 
-.hero-subtitle {
-  font-size: clamp(1.15rem, 2vw, 1.55rem);
+.hero-banner-overlay .hero-subtitle {
+  font-size: clamp(1.15rem, 1.9vw, 1.48rem);
   font-weight: 400;
-  color: var(--text-primary);
-  margin: 0 0 4px;
+  color: #48484a;
+  margin: 0 0 6px;
   letter-spacing: -0.015em;
 }
 
@@ -619,26 +643,53 @@ a {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 16px;
-  margin-top: 14px;
+  gap: 14px;
+  margin-top: 16px;
   flex-wrap: wrap;
 }
 
+.hero-banner-overlay .btn-primary {
+  background: var(--apple-blue);
+  color: #ffffff;
+  border-color: var(--apple-blue);
+  box-shadow: 0 4px 14px rgba(0, 113, 227, 0.25);
+}
+
+.hero-banner-overlay .btn-primary:hover {
+  background: var(--apple-blue-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(0, 113, 227, 0.35);
+}
+
+.hero-banner-overlay .btn-secondary {
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--apple-blue);
+  border: 1px solid rgba(0, 113, 227, 0.35);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+}
+
+.hero-banner-overlay .btn-secondary:hover {
+  background: var(--apple-blue);
+  border-color: var(--apple-blue);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
 .btn-md {
-  padding: 9px 22px;
-  font-size: 14px;
+  padding: 10px 24px;
+  font-size: 14.5px;
   font-weight: 500;
 }
 
-/* 位于大图底部的浮动规格徽章 */
+/* 位于大图底部的浅色毛玻璃浮动规格徽章 */
 .hero-card-badges {
   position: absolute;
-  bottom: 28px;
+  bottom: 26px;
   left: 0;
   right: 0;
   display: flex;
   justify-content: space-between;
-  padding: 0 40px;
+  padding: 0 36px;
   pointer-events: none;
   z-index: 6;
 }
@@ -652,8 +703,8 @@ a {
   padding: 8px 18px;
   font-size: 13px;
   font-weight: 500;
-  color: var(--text-primary);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  color: #1d1d1f;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
   display: flex;
   align-items: center;
   gap: 8px;
@@ -675,7 +726,7 @@ a {
   100% { box-shadow: 0 0 0 0 rgba(230, 106, 0, 0); }
 }
 
-/* 轮播悬浮微动圆钮 (Apple 极简磨砂圆钮) */
+/* 轮播悬浮微动圆钮 (Apple 极简浅色磨砂圆钮) */
 .carousel-arrow {
   position: absolute;
   top: 50%;
@@ -684,17 +735,17 @@ a {
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.88);
+  background: rgba(245, 245, 247, 0.88);
   backdrop-filter: saturate(180%) blur(16px);
   -webkit-backdrop-filter: saturate(180%) blur(16px);
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  color: var(--text-primary);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  color: #1d1d1f;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.25, 0.1, 0.25, 1);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.07);
 }
 
 .carousel-arrow svg {
@@ -705,7 +756,7 @@ a {
 .carousel-arrow:hover {
   background: #ffffff;
   transform: translateY(-50%) scale(1.08);
-  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.14);
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.12);
   color: var(--apple-blue);
 }
 
@@ -721,7 +772,7 @@ a {
   right: 36px;
 }
 
-/* 轮播底部胶囊指示条 */
+/* 轮播底部 Apple 极简胶囊指示条 */
 .carousel-pagination-bar {
   display: flex;
   align-items: center;
@@ -737,7 +788,7 @@ a {
   align-items: center;
   gap: 8px;
   background: rgba(0, 0, 0, 0.05);
-  padding: 5px 12px;
+  padding: 6px 14px;
   border-radius: var(--radius-pill);
 }
 
@@ -746,7 +797,7 @@ a {
   border-radius: var(--radius-pill);
   border: none;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
   outline: none;
   background: rgba(0, 0, 0, 0.2);
   width: 8px;
@@ -754,8 +805,8 @@ a {
 }
 
 .indicator-pill.active {
-  width: 32px;
-  background: var(--apple-blue);
+  width: 34px;
+  background: #1d1d1f;
 }
 
 .indicator-pill:hover:not(.active) {
@@ -763,23 +814,23 @@ a {
 }
 
 .carousel-play-toggle {
-  width: 28px;
-  height: 28px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.08);
   background: rgba(0, 0, 0, 0.04);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  color: var(--text-secondary);
+  color: var(--text-primary);
   transition: all 0.2s ease;
   padding: 0;
 }
 
 .carousel-play-toggle:hover {
-  background: rgba(0, 0, 0, 0.08);
-  color: var(--text-primary);
+  background: rgba(0, 0, 0, 0.09);
+  color: #000000;
 }
 
 .carousel-play-toggle svg {
@@ -799,17 +850,17 @@ a {
 
 @media (max-width: 768px) {
   .carousel-arrow {
-    display: none; /* 移动端采用触控手势滑动 */
+    display: none;
   }
   .hero-carousel-wrap {
     padding: 0 12px;
   }
   .hero-carousel-container {
     height: 520px;
-    border-radius: var(--radius-md);
+    border-radius: 20px;
   }
   .hero-banner-card {
-    padding-top: 32px;
+    padding-top: 34px;
   }
   .hero-desc {
     font-size: 0.88rem;
@@ -820,33 +871,34 @@ a {
    子页面顶部全景 Banner (Apple Style Subpage Hero Banner)
    ========================================================================== */
 .subpage-banner-section {
-  padding: 24px 0 28px;
+  padding: 0 0 28px;
+  width: 100%;
   background: transparent;
 }
 
 .subpage-banner-wrap {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 0 20px;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0;
 }
 
 .subpage-banner-card {
   position: relative;
   width: 100%;
-  height: 380px;
-  min-height: 340px;
-  border-radius: var(--radius-lg);
+  height: auto;
+  min-height: clamp(380px, 52vh, 580px);
+  border-radius: 0;
   overflow: hidden;
-  background-color: #f5f5f7;
+  background-color: var(--bg-page);
   background-size: cover;
-  background-position: center right;
+  background-position: center center;
   background-repeat: no-repeat;
-  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.04);
-  border: 1px solid var(--border-light);
+  box-shadow: none;
+  border: none;
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  transition: transform var(--transition-normal);
 }
 
 .subpage-banner-card::before {
@@ -855,11 +907,23 @@ a {
   inset: 0;
   background: linear-gradient(
     90deg,
-    rgba(255, 255, 255, 0.95) 0%,
-    rgba(255, 255, 255, 0.86) 42%,
-    rgba(255, 255, 255, 0.5) 65%,
+    rgba(255, 255, 255, 0.94) 0%,
+    rgba(255, 255, 255, 0.84) 38%,
+    rgba(255, 255, 255, 0.42) 64%,
     rgba(255, 255, 255, 0) 88%
   );
+  z-index: 1;
+  pointer-events: none;
+}
+
+.subpage-banner-card::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 56px;
+  background: linear-gradient(to bottom, rgba(251, 251, 253, 0) 0%, var(--bg-page) 100%);
   z-index: 1;
   pointer-events: none;
 }
@@ -867,8 +931,10 @@ a {
 .subpage-banner-overlay {
   position: relative;
   z-index: 2;
-  max-width: 680px;
-  padding: 40px 48px;
+  width: 100%;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 48px 22px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -920,52 +986,50 @@ a {
   color: var(--text-secondary);
   line-height: 1.6;
   margin: 0;
-  max-width: 620px;
+  max-width: 600px;
 }
 
 @media (max-width: 900px) {
   .subpage-banner-card {
-    height: 320px;
-    min-height: 300px;
-    background-position: 70% center;
+    min-height: clamp(320px, 46vh, 460px);
+    background-position: 68% center;
   }
   .subpage-banner-card::before {
     background: linear-gradient(
       90deg,
-      rgba(255, 255, 255, 0.96) 0%,
-      rgba(255, 255, 255, 0.88) 55%,
-      rgba(255, 255, 255, 0.4) 100%
+      rgba(255, 255, 255, 0.95) 0%,
+      rgba(255, 255, 255, 0.86) 55%,
+      rgba(255, 255, 255, 0.35) 100%
     );
   }
   .subpage-banner-overlay {
-    padding: 30px 28px;
-    max-width: 100%;
+    padding: 36px 22px;
   }
 }
 
 @media (max-width: 640px) {
   .subpage-banner-section {
-    padding: 12px 0 18px;
+    padding: 0 0 18px;
   }
   .subpage-banner-wrap {
-    padding: 0 12px;
+    padding: 0;
   }
   .subpage-banner-card {
     height: auto;
-    min-height: 260px;
-    border-radius: var(--radius-md);
-    background-position: right center;
+    min-height: clamp(260px, 42vh, 360px);
+    border-radius: 0;
+    background-position: center center;
   }
   .subpage-banner-card::before {
     background: linear-gradient(
       180deg,
-      rgba(255, 255, 255, 0.95) 0%,
-      rgba(255, 255, 255, 0.92) 65%,
-      rgba(255, 255, 255, 0.75) 100%
+      rgba(255, 255, 255, 0.94) 0%,
+      rgba(255, 255, 255, 0.88) 65%,
+      rgba(255, 255, 255, 0.7) 100%
     );
   }
   .subpage-banner-overlay {
-    padding: 24px 20px;
+    padding: 28px 20px;
   }
   .subpage-banner-title {
     font-size: 1.85rem;
@@ -1000,9 +1064,14 @@ a {
   font-size: clamp(2.5rem, 5.5vw, 4.4rem);
   font-weight: 700;
   letter-spacing: -0.035em;
-  color: var(--text-primary);
+  background: linear-gradient(90deg, #1b6df0 0%, #385bf5 15%, #6a4bf7 30%, #a43cf8 48%, #c63dae 65%, #dc4273 80%, #ef6126 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+  display: inline-block;
   margin-bottom: 16px;
-  line-height: 1.08;
+  line-height: 1.1;
 }
 
 .hero-desc {

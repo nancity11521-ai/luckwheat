@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=20261116_v7">
+  <link rel="stylesheet" href="css/style.css?v=20261123_v13">
 </head>
 <body>
   <a href="#main-content" class="skip-link">跳转到主要内容</a>
@@ -115,10 +115,10 @@
           <div>
             <span class="badge badge-live" style="margin-bottom: 12px;">核心旗舰品 · 首发亮相</span>
             <h1 id="mini-title" class="section-title" style="margin-bottom: 16px;">Lucky Mini 3.7 英寸</h1>
-            <p style="font-size: 1.15rem; color: #fff; font-weight: 500; margin-bottom: 18px; line-height: 1.6;">
+            <p id="mini-sub" style="font-size: 1.15rem; color: var(--text-primary); font-weight: 500; margin-bottom: 18px; line-height: 1.6;">
               巴掌大小的完整安卓 AI 智能小机。尺寸比例与主流旗舰一致，配件通用；专属 Lucky 键，一键唤醒 AI。
             </p>
-            <p class="section-desc" style="margin-bottom: 28px;">
+            <p id="mini-desc" class="section-desc" style="margin-bottom: 28px;">
               Lucky Mini 是幸运无限的第一款核心旗舰产品，也是「幸运之选」的第一个具象载体。它不追求堆料，而是把“幸运感”做实：拿起来顺手、按键即用、配件随处可买、外观一眼与众不同。
             </p>
 
@@ -126,15 +126,15 @@
             <div id="pricing" class="card" style="background: #ffffff; border-color: var(--border-hairline); padding: 28px; margin-bottom: 28px;">
               <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px;">
                 <div>
-                  <span style="font-size: 0.85rem; color: var(--text-muted); display: block;">海外官方定价</span>
+                  <span class="mini-price-label" style="font-size: 0.85rem; color: var(--text-muted); display: block;">海外官方定价</span>
                   <div style="display: flex; align-items: baseline; gap: 8px;">
-                    <span style="font-size: 2.4rem; font-weight: 900; color: #fff; font-family: var(--font-mono);">$299</span>
-                    <span style="font-size: 0.95rem; color: var(--text-secondary);">约 ¥1999 RMB / 约 4 万余日元</span>
+                    <span class="mini-price-val" style="font-size: 2.4rem; font-weight: 900; color: var(--text-primary); font-family: var(--font-mono);">$299</span>
+                    <span class="mini-price-sub" style="font-size: 0.95rem; color: var(--text-secondary);">约 ¥1999 RMB / 约 4 万余日元</span>
                   </div>
                 </div>
                 <span class="badge badge-live">限时首发特权</span>
               </div>
-              <p style="font-size: 0.9rem; color: var(--brand-primary); margin-bottom: 20px;">
+              <p class="mini-promo-tip" style="font-size: 0.9rem; color: var(--brand-primary); margin-bottom: 20px;">
                 🔥 首发活动：前 1000 名下单用户可享限时优惠礼包与优先交付，详情以官方独立站为准。
               </p>
               <div style="display: flex; gap: 14px; flex-wrap: wrap;">
@@ -333,7 +333,7 @@
     </section>
 
     <!-- 4.8 相关产品 -->
-    <section class="section" style="">
+    <section class="section" id="mini-related-section">
       <div class="container" style="text-align: center;">
         <h2 style="font-size: 1.6rem; margin-bottom: 20px;">探索更多 LUCK WHEAT 幸运无限硬件</h2>
         <p style="color: var(--text-secondary); margin-bottom: 30px;">
@@ -360,6 +360,7 @@
             </div>
           </div>
           <p class="footer-desc">AI 时代的幸运数码品牌。国内「幸运无限」，海外「LUCK WHEAT」。</p>
+          <p class="service-hours-text" style="font-size: 0.82rem; color: var(--text-muted);">服务时间：周一至周六 09:00 - 18:00</p>
         </div>
         <div class="footer-col">
           <h3>产品中心</h3>
@@ -402,8 +403,9 @@
     </div>
   </footer>
 
-  <script src="data/site_default_data.js"></script>
-  <script src="js/cms-bridge.js"></script>
-  <script src="js/main.js"></script>
+  <script src="data/site_default_data.js?v=20261125"></script>
+  <script src="data/site_live_data.js?v=20261125"></script>
+  <script src="js/cms-bridge.js?v=20261125"></script>
+  <script src="js/main.js?v=20261125"></script>
 </body>
 </html>

@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>购买渠道 - 去有幸运的地方 | LUCK WHEAT 幸运无限官方网站</title>
   <meta name="description" content="幸运无限官方购买渠道指南：海外官方独立站（首发299美元）、Lucky OS 商城APP、国内主流电商平台旗舰店、线下体验快闪与企业批量集采。">
-  <link rel="stylesheet" href="css/style.css?v=20261116_v7">
+  <link rel="stylesheet" href="css/style.css?v=20261123_v13">
 </head>
 <body>
   <a href="#main-content" class="skip-link">跳转到主要内容</a>
@@ -297,6 +297,7 @@
             </div>
           </div>
           <p class="footer-desc">AI 时代的幸运数码品牌。国内「幸运无限」，海外「LUCK WHEAT」。</p>
+          <p class="service-hours-text" style="font-size: 0.82rem; color: var(--text-muted);">服务时间：周一至周六 09:00 - 18:00</p>
         </div>
         <div class="footer-col">
           <h3>产品中心</h3>
@@ -339,63 +340,64 @@
     </div>
   </footer>
 
-  <script src="data/site_default_data.js"></script>
-  <script src="js/cms-bridge.js"></script>
-  <script src="js/main.js"></script>
+  <script src="data/site_default_data.js?v=20261125"></script>
+  <script src="data/site_live_data.js?v=20261125"></script>
+  <script src="js/cms-bridge.js?v=20261125"></script>
+  <script src="js/main.js?v=20261125"></script>
   <script>
     (function initChannelProductDirect() {
       const urlParams = new URLSearchParams(window.location.search);
       const pid = urlParams.get('product');
       if (!pid) return;
 
-      let items = [];
-      try {
-        const savedStr = localStorage.getItem('LUCK_SITE_CONTENT_DATA');
-        if (savedStr) {
-          const parsed = JSON.parse(savedStr);
-          if (parsed.content?.products?.items) items = parsed.content.products.items;
-        }
-      } catch (e) {}
+      function applyDirectBar(mergedData) {
+        const items = (mergedData && mergedData.content && mergedData.content.products && mergedData.content.products.items) || [];
+        const item = items.find(p => p.id === pid);
+        if (!item) return;
 
-      if (!items.length && window.LUCK_SITE_DEFAULT_DATA?.content?.products?.items) {
-        items = window.LUCK_SITE_DEFAULT_DATA.content.products.items;
-      }
+        const bar = document.getElementById('channel-product-direct-bar');
+        if (!bar) return;
 
-      const item = items.find(p => p.id === pid);
-      if (!item) return;
+        bar.style.display = 'block';
+        const imgEl = document.getElementById('direct-prod-img');
+        const titleEl = document.getElementById('direct-prod-title');
+        const priceEl = document.getElementById('direct-prod-price');
+        const subEl = document.getElementById('direct-prod-sub');
+        const buyBtn = document.getElementById('direct-prod-buy-btn');
+        const detailBtn = document.getElementById('direct-prod-detail-btn');
+        const consultBtn = document.getElementById('direct-prod-consult-btn');
 
-      const bar = document.getElementById('channel-product-direct-bar');
-      if (!bar) return;
+        if (imgEl && item.image) imgEl.src = item.image;
+        if (titleEl && item.title) titleEl.textContent = item.title;
+        if (priceEl && item.price) priceEl.textContent = item.price;
+        if (subEl && item.priceSub) subEl.textContent = item.priceSub;
+        if (detailBtn) detailBtn.href = `products.html?product=${encodeURIComponent(item.id)}`;
+        if (consultBtn) consultBtn.href = `contact.html?type=consult&product=${encodeURIComponent(item.title || item.id)}`;
 
-      bar.style.display = 'block';
-      const imgEl = document.getElementById('direct-prod-img');
-      const titleEl = document.getElementById('direct-prod-title');
-      const priceEl = document.getElementById('direct-prod-price');
-      const subEl = document.getElementById('direct-prod-sub');
-      const buyBtn = document.getElementById('direct-prod-buy-btn');
-      const detailBtn = document.getElementById('direct-prod-detail-btn');
-      const consultBtn = document.getElementById('direct-prod-consult-btn');
-
-      if (imgEl && item.image) imgEl.src = item.image;
-      if (titleEl && item.title) titleEl.textContent = item.title;
-      if (priceEl && item.price) priceEl.textContent = item.price;
-      if (subEl && item.priceSub) subEl.textContent = item.priceSub;
-      if (detailBtn) detailBtn.href = `products.html?product=${encodeURIComponent(item.id)}`;
-      if (consultBtn) consultBtn.href = `contact.html?type=consult&product=${encodeURIComponent(item.title || item.id)}`;
-
-      if (buyBtn) {
-        // 若配置了外链，则直接跳转外链
-        if (item.buyUrl && /^https?:\/\//i.test(item.buyUrl)) {
-          buyBtn.href = item.buyUrl;
-          buyBtn.textContent = `🛒 前往 ${item.buyText || '官方电商平台/独立站购买'} ↗`;
-        } else {
-          // 默认官方海外独立站 / 天猫旗舰通道
-          buyBtn.href = 'https://shop.luckwheat.com';
-          buyBtn.textContent = '🛒 前往官方独立站购买 ↗';
+        if (buyBtn) {
+          if (item.buyUrl && /^https?:\/\//i.test(item.buyUrl)) {
+            buyBtn.href = item.buyUrl;
+            buyBtn.textContent = `🛒 前往 ${item.buyText || '官方电商平台/独立站购买'} ↗`;
+          } else {
+            buyBtn.href = 'https://shop.luckwheat.com';
+            buyBtn.textContent = '🛒 前往官方独立站购买 ↗';
+          }
         }
       }
 
-      bar.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      if (typeof window.LUCK_GET_MERGED_DATA === 'function') {
+        applyDirectBar(window.LUCK_GET_MERGED_DATA());
+      } else if (window.LUCK_SITE_DEFAULT_DATA) {
+        applyDirectBar(window.LUCK_SITE_DEFAULT_DATA);
+      }
+
+      window.addEventListener('luck:cms-updated', (evt) => {
+        if (evt && evt.detail) applyDirectBar(evt.detail);
+        const bar = document.getElementById('channel-product-direct-bar');
+        if (bar && bar.style.display !== 'none') {
+          bar.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      });
     })();
   </script>
 </body>
